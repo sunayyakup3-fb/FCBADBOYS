@@ -13,6 +13,7 @@
             --accent-gray: #2A2A2A;
             --danger: #FF4444;
             --success: #00C851;
+            --warning: #ffbb00;
         }
 
         * {
@@ -30,7 +31,7 @@
 
         header {
             text-align: center;
-            margin-bottom: 20px;
+            margin-bottom: 15px;
             border-bottom: 2px solid var(--primary-orange);
             padding-bottom: 10px;
         }
@@ -40,6 +41,32 @@
             font-size: 1.8rem;
             text-transform: uppercase;
             letter-spacing: 2px;
+        }
+
+        /* Takım Özet Kutusu */
+        .team-summary {
+            background: var(--card-bg);
+            border: 1px solid var(--accent-gray);
+            border-radius: 8px;
+            padding: 12px;
+            margin-bottom: 20px;
+            display: flex;
+            justify-content: space-around;
+            text-align: center;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+
+        .summary-item {
+            font-size: 0.85rem;
+            color: #aaa;
+        }
+
+        .summary-item span {
+            display: block;
+            font-size: 1.1rem;
+            font-weight: bold;
+            color: var(--primary-orange);
         }
 
         .auth-box {
@@ -80,6 +107,35 @@
             opacity: 0.9;
         }
 
+        /* Ek Yönetim Butonları */
+        .admin-controls {
+            width: 100%;
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            margin-top: 10px;
+            flex-wrap: wrap;
+        }
+
+        .admin-btn {
+            padding: 6px 12px;
+            font-size: 0.8rem;
+            border-radius: 4px;
+            border: none;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        .btn-download {
+            background-color: #008CBA;
+            color: white;
+        }
+
+        .btn-reset {
+            background-color: var(--danger);
+            color: white;
+        }
+
         #status-msg {
             font-size: 0.85rem;
             font-weight: bold;
@@ -105,6 +161,26 @@
             padding: 15px;
             border-left: 5px solid var(--primary-orange);
             box-shadow: 0 4px 6px rgba(0,0,0,0.3);
+            position: relative;
+        }
+
+        /* MVP / Haftanın Yıldızı Rozeti */
+        .player-card.mvp {
+            border-left-color: var(--warning);
+            background: linear-gradient(145deg, #1e1e1e, #262212);
+        }
+
+        .mvp-badge {
+            position: absolute;
+            top: 15px;
+            right: 50px;
+            background: var(--warning);
+            color: #000;
+            font-size: 0.7rem;
+            font-weight: bold;
+            padding: 2px 6px;
+            border-radius: 4px;
+            text-transform: uppercase;
         }
 
         .player-header {
@@ -133,6 +209,9 @@
             color: #aaa;
             margin-bottom: 12px;
             text-transform: uppercase;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
         }
 
         .stats-row {
@@ -188,11 +267,54 @@
             text-align: center;
         }
 
+        /* Kart Renkleri */
+        .yellow-card-indicator {
+            display: inline-block;
+            width: 10px;
+            height: 14px;
+            background: #ffeb3b;
+            border-radius: 2px;
+            margin-right: 3px;
+            vertical-align: middle;
+        }
+
+        .red-card-indicator {
+            display: inline-block;
+            width: 10px;
+            height: 14px;
+            background: var(--danger);
+            border-radius: 2px;
+            margin-right: 3px;
+            vertical-align: middle;
+        }
+
         .locked-notice {
             font-size: 0.75rem;
             color: var(--danger);
             text-align: center;
             margin-top: 10px;
+        }
+
+        .mvp-select-box {
+            margin-top: 10px;
+            font-size: 0.8rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: #252525;
+            padding: 6px 10px;
+            border-radius: 4px;
+        }
+
+        .mvp-select-box button {
+            background: var(--warning);
+            border: none;
+            padding: 3px 8px;
+            border-radius: 3px;
+            font-weight: bold;
+            cursor: pointer;
+            color: #000;
+            font-size: 0.75rem;
         }
     </style>
 </head>
@@ -202,10 +324,19 @@
         <h1>FC BAD BOYS</h1>
     </header>
 
+    <!-- Genel Takım Özet Paneli -->
+    <div class="team-summary" id="team-summary">
+        <!-- JS ile dinamik doldurulacak -->
+    </div>
+
     <div class="auth-box">
         <input type="password" id="password-input" placeholder="Kaptan Şifresi">
         <button onclick="unlockPanel()">Kilidi Aç</button>
         <div id="status-msg" style="color: var(--danger);">Kilitli: Sadece düzenleme yapabilirsiniz.</div>
+        <div class="admin-controls" id="admin-controls" style="display: none;">
+            <button class="admin-btn btn-download" onclick="downloadData()">Verileri İndir (JSON)</button>
+            <button class="admin-btn btn-reset" onclick="resetSeason()">Sezonu Sıfırla</button>
+        </div>
     </div>
 
     <div class="players-container" id="players-list">
@@ -213,21 +344,20 @@
     </div>
 
     <script>
-        // Başlangıç Oyuncu Verileri
+        // Başlangıç Oyuncu Verileri (Gol, Asist, Sarı Kart, Kırmızı Kart, Yediği Gol eklendi)
         const initialPlayers = [
-            { id: 1, name: "Eren Yılmaz", position: "Forvet", number: 37, goals: 0, assists: 0, isGoalKeeper: false },
-            { id: 2, name: "Murat Çaylı", position: "Forvet", number: 10, goals: 0, assists: 0, isGoalKeeper: false },
-            { id: 3, name: "Hüseyin Can Yüksekdağ", position: "Kale", number: 1, goalsConceded: 0, isGoalKeeper: true },
-            { id: 4, name: "Yakup Sunay", position: "Defans", number: 5, goals: 0, assists: 0, isGoalKeeper: false },
-            { id: 5, name: "Süleyman Tunçelik", position: "Defans", number: 3, goals: 0, assists: 0, isGoalKeeper: false },
-            { id: 6, name: "Musa Aksu", position: "Kanat", number: 37, goals: 0, assists: 0, isGoalKeeper: false },
-            { id: 7, name: "Burak Yavuz", position: "Defans", number: 4, goals: 0, assists: 0, isGoalKeeper: false },
-            { id: 8, name: "Ahmet", position: "Kale", number: 99, goalsConceded: 0, isGoalKeeper: true }
+            { id: 1, name: "Eren Yılmaz", position: "Forvet", number: 37, goals: 0, assists: 0, yellowCards: 0, redCards: 0, isGoalKeeper: false, isMvp: false },
+            { id: 2, name: "Murat Çaylı", position: "Forvet", number: 10, goals: 0, assists: 0, yellowCards: 0, redCards: 0, isGoalKeeper: false, isMvp: false },
+            { id: 3, name: "Hüseyin Can Yüksekdağ", position: "Kale", number: 1, goalsConceded: 0, yellowCards: 0, redCards: 0, isGoalKeeper: true, isMvp: false },
+            { id: 4, name: "Yakup Sunay", position: "Defans", number: 5, goals: 0, assists: 0, yellowCards: 0, redCards: 0, isGoalKeeper: false, isMvp: false },
+            { id: 5, name: "Süleyman Tunçelik", position: "Defans", number: 3, goals: 0, assists: 0, yellowCards: 0, redCards: 0, isGoalKeeper: false, isMvp: false },
+            { id: 6, name: "Musa Aksu", position: "Kanat", number: 37, goals: 0, assists: 0, yellowCards: 0, redCards: 0, isGoalKeeper: false, isMvp: false },
+            { id: 7, name: "Burak Yavuz", position: "Defans", number: 4, goals: 0, assists: 0, yellowCards: 0, redCards: 0, isGoalKeeper: false, isMvp: false },
+            { id: 8, name: "Ahmet", position: "Kale", number: 99, goalsConceded: 0, yellowCards: 0, redCards: 0, isGoalKeeper: true, isMvp: false }
         ];
 
         let isUnlocked = false;
 
-        // Verileri localStorage'dan çekme veya ilk yükleme
         function getPlayersData() {
             const savedData = localStorage.getItem('takim_istatistikleri');
             if (savedData) {
@@ -245,15 +375,37 @@
         function unlockPanel() {
             const pass = document.getElementById('password-input').value;
             const msg = document.getElementById('status-msg');
+            const adminControls = document.getElementById('admin-controls');
 
             if (pass === "Yy++1907") {
                 isUnlocked = true;
                 msg.style.color = "var(--success)";
                 msg.textContent = "Kilit Açıldı! Değişiklik yapabilirsiniz.";
+                adminControls.style.display = "flex";
                 renderPlayers();
             } else {
                 alert("Hatalı Şifre!");
                 document.getElementById('password-input').value = "";
+            }
+        }
+
+        // Özellik 5: Verileri İndir ve Sezonu Sıfırla Fonksiyonları
+        function downloadData() {
+            const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(players, null, 2));
+            const downloadAnchor = document.createElement('a');
+            downloadAnchor.setAttribute("href", dataStr);
+            downloadAnchor.setAttribute("download", "fc_bad_boys_istatistikler.json");
+            document.body.appendChild(downloadAnchor);
+            downloadAnchor.click();
+            downloadAnchor.remove();
+        }
+
+        function resetSeason() {
+            if (confirm("Tüm oyuncu istatistikleri ve MVP seçimi sıfırlanacak. Emin misiniz?")) {
+                players = initialPlayers.map(p => ({ ...p }));
+                saveData();
+                renderPlayers();
+                alert("Sezon başarıyla sıfırlandı!");
             }
         }
 
@@ -265,25 +417,51 @@
 
             const player = players.find(p => p.id === id);
             if (player) {
-                if (statType === 'goals') {
-                    player.goals = Math.max(0, player.goals + change);
-                } else if (statType === 'assists') {
-                    player.assists = Math.max(0, player.assists + change);
-                } else if (statType === 'conceded') {
-                    player.goalsConceded = Math.max(0, player.goalsConceded + change);
-                }
+                if (statType === 'goals') player.goals = Math.max(0, player.goals + change);
+                else if (statType === 'assists') player.assists = Math.max(0, player.assists + change);
+                else if (statType === 'conceded') player.goalsConceded = Math.max(0, player.goalsConceded + change);
+                else if (statType === 'yellow') player.yellowCards = Math.max(0, player.yellowCards + change);
+                else if (statType === 'red') player.redCards = Math.max(0, player.redCards + change);
+                
                 saveData();
                 renderPlayers();
             }
         }
 
+        // Özellik 4: MVP (Haftanın Yıldızı) Belirleme
+        function setMvp(id) {
+            if (!isUnlocked) return;
+            players.forEach(p => p.isMvp = (p.id === id));
+            saveData();
+            renderPlayers();
+        }
+
+        // Özellik 1: Takım Özet Hesaplamaları
+        function renderSummary() {
+            let totalGoals = players.reduce((sum, p) => sum + (p.goals || 0), 0);
+            let totalAssists = players.reduce((sum, p) => sum + (p.assists || 0), 0);
+            let totalConceded = players.reduce((sum, p) => sum + (p.goalsConceded || 0), 0);
+            let totalYellow = players.reduce((sum, p) => sum + (p.yellowCards || 0), 0);
+            let totalRed = players.reduce((sum, p) => sum + (p.redCards || 0), 0);
+
+            const summaryContainer = document.getElementById('team-summary');
+            summaryContainer.innerHTML = `
+                <div class="summary-item">Toplam Gol<span>⚽ ${totalGoals}</span></div>
+                <div class="summary-item">Toplam Asist<span>🎯 ${totalAssists}</span></div>
+                <div class="summary-item">Yenen Gol<span>🥅 ${totalConceded}</span></div>
+                <div class="summary-item">Kartlar<span><span class="yellow-card-indicator"></span>${totalYellow} <span class="red-card-indicator"></span>${totalRed}</span></div>
+            `;
+        }
+
         function renderPlayers() {
+            renderSummary();
             const container = document.getElementById('players-list');
             container.innerHTML = "";
 
             players.forEach(player => {
                 let statsHTML = "";
 
+                // Özellik 3: Gol/Asist yanına Sarı ve Kırmızı Kart eklendi
                 if (player.isGoalKeeper) {
                     statsHTML = `
                         <div class="stats-row">
@@ -316,22 +494,57 @@
                     `;
                 }
 
+                // Sarı ve Kırmızı Kart Satırları (Her oyuncuda ortak)
+                statsHTML += `
+                    <div class="stats-row">
+                        <span class="stat-label"><span class="yellow-card-indicator"></span> Sarı Kart:</span>
+                        <div class="stat-controls">
+                            <button class="stat-btn minus" onclick="updateStat(${player.id}, 'yellow', -1)" ${!isUnlocked ? 'disabled style="opacity:0.5"' : ''}>-</button>
+                            <span class="stat-value">${player.yellowCards || 0}</span>
+                            <button class="stat-btn plus" onclick="updateStat(${player.id}, 'yellow', 1)" ${!isUnlocked ? 'disabled style="opacity:0.5"' : ''}>+</button>
+                        </div>
+                    </div>
+                    <div class="stats-row">
+                        <span class="stat-label"><span class="red-card-indicator"></span> Kırmızı Kart:</span>
+                        <div class="stat-controls">
+                            <button class="stat-btn minus" onclick="updateStat(${player.id}, 'red', -1)" ${!isUnlocked ? 'disabled style="opacity:0.5"' : ''}>-</button>
+                            <span class="stat-value">${player.redCards || 0}</span>
+                            <button class="stat-btn plus" onclick="updateStat(${player.id}, 'red', 1)" ${!isUnlocked ? 'disabled style="opacity:0.5"' : ''}>+</button>
+                        </div>
+                    </div>
+                `;
+
                 const card = document.createElement('div');
-                card.className = 'player-card';
+                card.className = `player-card ${player.isMvp ? 'mvp' : ''}`;
+                
+                let mvpSection = "";
+                if (isUnlocked) {
+                    mvpSection = `
+                        <div class="mvp-select-box">
+                            <span>Haftanın Yıldızı (MVP)</span>
+                            <button onclick="setMvp(${player.id})">${player.isMvp ? '⭐ Seçildi' : 'Seç'}</button>
+                        </div>
+                    `;
+                }
+
                 card.innerHTML = `
+                    ${player.isMvp ? '<div class="mvp-badge">⭐ MVP</div>' : ''}
                     <div class="player-header">
                         <span class="player-name">${player.name}</span>
                         <span class="player-number">${player.number}</span>
                     </div>
-                    <div class="player-details">Mevki: ${player.position}</div>
+                    <div class="player-details">
+                        <span>Mevki: ${player.position}</span>
+                    </div>
                     ${statsHTML}
+                    ${mvpSection}
                     ${!isUnlocked ? '<div class="locked-notice">Düzenlemek için kilit açılmalıdır</div>' : ''}
                 `;
                 container.appendChild(card);
             });
         }
 
-        // Sayfa açıldığında kartları listele
+        // Sayfa açıldığında başlat
         renderPlayers();
     </script>
 </body>

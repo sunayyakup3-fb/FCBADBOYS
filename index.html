@@ -20,6 +20,7 @@
             --danger: #FF4444;
             --success: #00C851;
             --warning: #ffbb00;
+            --info: #3182ce;
         }
 
         * {
@@ -61,7 +62,7 @@
             flex-wrap: wrap;
             gap: 10px;
         }
-
+        
         .summary-item {
             font-size: 0.85rem;
             color: #aaa;
@@ -112,7 +113,8 @@
             opacity: 0.9;
         }
 
-        .admin-controls {
+        /* Yönetici Kontrol Alanları */
+        .admin-controls-top {
             width: 100%;
             display: flex;
             justify-content: center;
@@ -121,18 +123,45 @@
             flex-wrap: wrap;
         }
 
+        .admin-controls-bottom {
+            width: 100%;
+            margin-top: 15px;
+            padding-top: 12px;
+            border-top: 1px dashed #444;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
         .admin-btn {
-            padding: 6px 12px;
+            padding: 8px 12px;
             font-size: 0.8rem;
             border-radius: 4px;
             border: none;
             font-weight: bold;
             cursor: pointer;
+            color: white;
+            transition: 0.2s;
+        }
+
+        .admin-btn:hover {
+            opacity: 0.9;
         }
 
         .btn-reset {
             background-color: var(--danger);
-            color: white;
+        }
+
+        .btn-download {
+            background-color: var(--info);
+        }
+
+        .btn-toggle-open {
+            background-color: var(--success);
+        }
+
+        .btn-toggle-close {
+            background-color: #718096;
         }
 
         #status-msg {
@@ -143,6 +172,18 @@
         }
 
         .players-container {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 15px;
+            margin-bottom: 25px;
+        }
+
+        @media (min-width: 768px) {
+            .players-container {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+                .players-container {
             display: grid;
             grid-template-columns: 1fr;
             gap: 15px;
@@ -263,26 +304,6 @@
             text-align: center;
         }
 
-        .yellow-card-indicator {
-            display: inline-block;
-            width: 10px;
-            height: 14px;
-            background: #ffeb3b;
-            border-radius: 2px;
-            margin-right: 3px;
-            vertical-align: middle;
-        }
-
-        .red-card-indicator {
-            display: inline-block;
-            width: 10px;
-            height: 14px;
-            background: var(--danger);
-            border-radius: 2px;
-            margin-right: 3px;
-            vertical-align: middle;
-        }
-
         .mvp-select-box {
             margin-top: 10px;
             font-size: 0.8rem;
@@ -305,7 +326,7 @@
             font-size: 0.75rem;
         }
 
-        /* YENİ EKLENEN BÖLÜMLERİN TASARIMI */
+        /* BÖLÜMLERİN TASARIMI */
         .section-container {
             background: var(--card-bg);
             border: 1px solid var(--accent-gray);
@@ -313,8 +334,7 @@
             padding: 15px;
             margin-bottom: 20px;
         }
-
-        .section-title {
+                .section-title {
             color: var(--primary-orange);
             font-size: 1.1rem;
             margin-bottom: 12px;
@@ -345,7 +365,7 @@
             border-radius: 4px;
         }
 
-        /* Herkese Açık Oylama */
+        /* Oylama Alanı */
         .vote-grid {
             display: grid;
             grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
@@ -367,8 +387,12 @@
         .vote-card:hover {
             border-color: var(--primary-orange);
         }
+        
+        .vote-card.voted-active {
+            border: 2px solid var(--success);
+            background: #1a261a;
+        }
 
-        /* Turuncu ve Siyah Buton Tasarımı */
         .vote-btn {
             background-color: var(--primary-orange);
             color: #ffffff;
@@ -395,8 +419,12 @@
             cursor: not-allowed;
             box-shadow: none;
         }
+        
+        .vote-btn.voted-btn {
+            background-color: var(--success);
+            border-color: #009940;
+        }
 
-        /* Kazanan Bannerı (Oylama Bitince Üstte Çıkar) */
         .winner-banner {
             background: linear-gradient(135deg, #FF6600 0%, #121212 100%);
             border: 2px solid var(--primary-orange);
@@ -418,7 +446,6 @@
             100% { transform: scale(1.01); opacity: 1; }
         }
 
-        /* Liderlik Tablosu (Gol/Asist Krallığı) */
         .rank-row {
             display: flex;
             justify-content: space-between;
@@ -441,41 +468,38 @@
         <input type="password" id="password-input" placeholder="Kaptan Şifresi">
         <button onclick="unlockPanel()">Kilidi Aç</button>
         <div id="status-msg" style="color: var(--danger);">Kilitli: Sadece düzenleme yapabilirsiniz.</div>
-        <div class="admin-controls" id="admin-controls" style="display: none;">
+        
+        <!-- YUKARIDAKİ YÖNETİCİ BUTONLARI (Sezonu Sıfırla & Verileri İndir) -->
+        <div class="admin-controls-top" id="admin-controls-top" style="display: none;">
             <button class="admin-btn btn-reset" onclick="resetSeason()">Sezonu Sıfırla</button>
-            <button class="admin-btn" style="background-color: var(--primary-orange); color: white;" onclick="toggleVotingState()">Oylamayı Bitir / Aç</button>
+            <button class="admin-btn btn-download" onclick="downloadData()">Verileri İndir</button>
         </div>
     </div>
 
     <div class="players-container" id="players-list"></div>
 
-    <!-- ALT KISIM: YENİ EKLENEN ÖZELLİKLER -->
+    <!-- ALT KISIM -->
     
     <!-- Maç Sonuçları ve Skor Arşivi -->
     <div class="section-container">
         <div class="section-title">
             <span>⚽ Maç Skorları & Fikstür</span>
-            <button class="admin-btn" id="add-match-btn" style="display:none; background:var(--primary-orange); color:white;" onclick="addMatchModal()">+ Maç Ekle</button>
+            <button class="admin-btn btn-download" id="add-match-btn" style="display:none;" onclick="addMatchModal()">+ Maç Ekle</button>
         </div>
-        <div id="matches-list">
-            <!-- JavaScript ile doldurulacak -->
-        </div>
+        <div id="matches-list"></div>
     </div>
 
     <!-- Herkese Açık Oylama Alanı -->
     <div class="section-container">
         <div class="section-title">⭐ Haftanın Oyuncusu Oylaması</div>
         
-        <!-- Kazanan Oyuncu Buraya Çıkacak -->
         <div id="winner-display"></div>
 
-        <div id="vote-status" style="font-size:0.85rem; margin-bottom:10px; color:#aaa;">Her cihazın/tarayıcının 1 oy hakkı vardır.</div>
-        <div class="vote-grid" id="vote-container">
-            <!-- JavaScript ile doldurulacak -->
-        </div>
+        <div id="vote-status" style="font-size:0.85rem; margin-bottom:10px; color:#aaa;">Herkesin 1 oy hakkı vardır, oyunuzu dilediğiniz zaman değiştirebilirsiniz.</div>
+        <div class="vote-grid" id="vote-container"></div>
     </div>
 
-    <!-- Gol ve Asist Krallığı (Liderlik Tablosu) -->
+    <!-- Gol ve Asist Krallığı -->
     <div class="section-container">
         <div class="section-title">👑 Gol ve Asist Krallığı</div>
         <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px;">
@@ -500,8 +524,7 @@
             appId: "1:394322712916:web:8fb96c51cbf2f113e8d0c1",
             measurementId: "G-WT2ECTZ2K0"
         };
-
-        firebase.initializeApp(firebaseConfig);
+                firebase.initializeApp(firebaseConfig);
         const db = firebase.database();
 
         const initialPlayers = [
@@ -526,7 +549,6 @@
         let votes = {};
         let votingClosed = false;
 
-        // Firebase Veri Senkronizasyonu
         db.ref('players').on('value', (snapshot) => {
             const data = snapshot.val();
             if (data) { players = data; } 
@@ -558,14 +580,14 @@
         function unlockPanel() {
             const pass = document.getElementById('password-input').value;
             const msg = document.getElementById('status-msg');
-            const adminControls = document.getElementById('admin-controls');
+            const adminControlsTop = document.getElementById('admin-controls-top');
             const addMatchBtn = document.getElementById('add-match-btn');
 
             if (pass === "Yy++1907") {
                 isUnlocked = true;
                 msg.style.color = "var(--success)";
-                msg.textContent = "Kilit Açıldı! Değişiklik yapabilirsiniz.";
-                adminControls.style.display = "flex";
+                msg.textContent = "Kilit Açıldı! Düzenleme yapabilirsiniz.";
+                adminControlsTop.style.display = "flex";
                 addMatchBtn.style.display = "inline-block";
                 renderAll();
             } else {
@@ -580,9 +602,30 @@
                 saveData();
                 db.ref('votes').remove();
                 db.ref('votingClosed').set(false);
-                localStorage.removeItem("badboys_voted");
+                localStorage.removeItem("badboys_voted_id");
                 alert("Sezon başarıyla sıfırlandı!");
             }
+        }
+
+        function downloadData() {
+            const exportData = {
+                players: players,
+                matches: matches,
+                votes: votes,
+                votingClosed: votingClosed
+            };
+            const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(exportData, null, 2));
+            const downloadAnchor = document.createElement('a');
+            downloadAnchor.setAttribute("href", dataStr);
+            downloadAnchor.setAttribute("download", "fc_bad_boys_yedek.json");
+            document.body.appendChild(downloadAnchor);
+            downloadAnchor.click();
+            downloadAnchor.remove();
+        }
+
+        function toggleVotingState() {
+            if (!isUnlocked) return;
+            db.ref('votingClosed').set(!votingClosed);
         }
 
         function updateStat(id, statType, change) {
@@ -619,33 +662,40 @@
             matches.push({ opponent, score, date });
             db.ref('matches').set(matches);
 
-            // Yeni maç verisi eklendiğinde oylama sıfırlanır ve açılır
             db.ref('votes').remove();
             db.ref('votingClosed').set(false);
-            localStorage.removeItem("badboys_voted");
+            localStorage.removeItem("badboys_voted_id");
         }
 
-        function toggleVotingState() {
-            if (!isUnlocked) return;
-            db.ref('votingClosed').set(!votingClosed);
-        }
-
-        function castVote(playerId) {
+        function castVote(newPlayerId) {
             if (votingClosed) {
                 alert("Oylama sona ermiştir.");
                 return;
             }
-            if (localStorage.getItem("badboys_voted")) {
-                alert("Zaten daha önce oy kullandınız! Her cihazın 1 oy hakkı vardır.");
+
+            const oldVotedId = localStorage.getItem("badboys_voted_id");
+
+            if (oldVotedId && parseInt(oldVotedId) === newPlayerId) {
+                alert("Zaten bu oyuncuya oy verdiniz!");
                 return;
             }
 
-            db.ref('votes/' + playerId).transaction((currentVotes) => {
-                return (currentVotes || 0) + 1;
-            }, (error, committed) => {
-                if (committed) {
-                    localStorage.setItem("badboys_voted", "true");
-                    alert("Oylamanız başarıyla kaydedildi!");
+            const updates = {};
+            
+            if (oldVotedId) {
+                const currentOldVotes = votes[oldVotedId] || 1;
+                updates['votes/' + oldVotedId] = Math.max(0, currentOldVotes - 1);
+            }
+            
+            const currentNewVotes = votes[newPlayerId] || 0;
+            updates['votes/' + newPlayerId] = currentNewVotes + 1;
+
+            db.ref().update(updates, (error) => {
+                if (!error) {
+                    localStorage.setItem("badboys_voted_id", newPlayerId);
+                    alert(oldVotedId ? "Oyunuz başarıyla değiştirildi!" : "Oylamanız başarıyla kaydedildi!");
+                } else {
+                    alert("Oy gönderilirken bir hata oluştu.");
                 }
             });
         }
@@ -757,9 +807,8 @@
             const container = document.getElementById('vote-container');
             const winnerDisplay = document.getElementById('winner-display');
             const voteStatus = document.getElementById('vote-status');
-            const hasVoted = localStorage.getItem("badboys_voted");
+            const myVotedId = localStorage.getItem("badboys_voted_id");
 
-            // En çok oyu alanı bul
             let maxVotes = -1;
             let winner = null;
             players.forEach(p => {
@@ -770,10 +819,8 @@
                 }
             });
 
-            // Oylama Sona Erdi veya Kaptan Tarafından Kapatıldıysa
             if (votingClosed) {
                 if (winner) {
-                    // İstenilen Format: 👑 İSİM SOYİSİM 👑
                     const formattedName = `👑 ${winner.name.toUpperCase()} 👑`;
                     winnerDisplay.innerHTML = `<div class="winner-banner">${formattedName}</div>`;
                 } else {
@@ -782,26 +829,52 @@
                 voteStatus.textContent = "Haftanın oyuncusu oylaması tamamlandı!";
             } else {
                 winnerDisplay.innerHTML = '';
-                voteStatus.textContent = hasVoted ? "Oy kullandınız. Teşekkürler!" : "Her cihazın 1 oy hakkı vardır.";
+                voteStatus.textContent = myVotedId 
+                    ? "Oyunuz kaydedildi. İsterseniz aşağıdaki butonlardan başka bir oyuncuya tıklayarak oyunuzu değiştirebilirsiniz." 
+                    : "Herkesin 1 oy hakkı vardır. Oyunuzu dilediğiniz zaman değiştirebilirsiniz.";
             }
 
-            // Oy Kullanma Kartları
             container.innerHTML = players.map(p => {
                 const count = votes[p.id] || 0;
+                const isMyVote = myVotedId && parseInt(myVotedId) === p.id;
+                
                 return `
-                    <div class="vote-card">
+                    <div class="vote-card ${isMyVote ? 'voted-active' : ''}">
                         <div>
                             <strong>${p.name}</strong>
                             <div style="font-size:0.8rem; color:var(--primary-orange); margin-top:2px;">Oy: ${count}</div>
                         </div>
-                        <button class="vote-btn" 
-                            ${(hasVoted || votingClosed) ? 'disabled' : ''} 
+                        <button class="vote-btn ${isMyVote ? 'voted-btn' : ''}" 
+                            ${votingClosed ? 'disabled' : ''} 
                             onclick="castVote(${p.id})">
-                            ${votingClosed ? 'Kapandı' : (hasVoted ? 'Oy Verildi' : 'Oy Ver')}
+                            ${votingClosed ? 'Kapandı' : (isMyVote ? 'Oyunuz (Değiştir)' : 'Oy Ver')}
                         </button>
                     </div>
                 `;
             }).join('');
+
+            // Oylama kontrol butonlarını oylama alanının altına güvenli şekilde yerleştiriyoruz
+            let adminBottomDiv = document.getElementById('admin-controls-bottom-container');
+            if (!adminBottomDiv) {
+                adminBottomDiv = document.createElement('div');
+                adminBottomDiv.id = 'admin-controls-bottom-container';
+                document.getElementById('vote-container').parentNode.appendChild(adminBottomDiv);
+            }
+
+            if (isUnlocked) {
+                adminBottomDiv.innerHTML = `
+                    <div class="admin-controls-bottom">
+                        <div style="font-size:0.75rem; color:#aaa; text-align:center;">Oylama Kontrol Paneli</div>
+                        <div style="display: flex; gap: 10px; justify-content: center;">
+                            <button class="admin-btn ${votingClosed ? 'btn-toggle-open' : 'btn-toggle-close'}" onclick="toggleVotingState()">
+                                ${votingClosed ? 'Oylamayı Tekrar Aç' : 'Oylamayı Bitir'}
+                            </button>
+                        </div>
+                    </div>
+                `;
+            } else {
+                adminBottomDiv.innerHTML = '';
+            }
         }
 
         function renderLeaderboards() {

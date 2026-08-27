@@ -4,6 +4,11 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>FC BAD BOYS</title>
+    
+    <!-- Firebase SDK Kütüphaneleri -->
+    <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-database-compat.js"></script>
+
     <style>
         :root {
             --primary-orange: #FF6600;
@@ -43,7 +48,6 @@
             letter-spacing: 2px;
         }
 
-        /* Takım Özet Kutusu */
         .team-summary {
             background: var(--card-bg);
             border: 1px solid var(--accent-gray);
@@ -107,7 +111,6 @@
             opacity: 0.9;
         }
 
-        /* Ek Yönetim Butonları */
         .admin-controls {
             width: 100%;
             display: flex;
@@ -124,11 +127,6 @@
             border: none;
             font-weight: bold;
             cursor: pointer;
-        }
-
-        .btn-download {
-            background-color: #008CBA;
-            color: white;
         }
 
         .btn-reset {
@@ -164,7 +162,6 @@
             position: relative;
         }
 
-        /* MVP / Haftanın Yıldızı Rozeti */
         .player-card.mvp {
             border-left-color: var(--warning);
             background: linear-gradient(145deg, #1e1e1e, #262212);
@@ -209,9 +206,6 @@
             color: #aaa;
             margin-bottom: 12px;
             text-transform: uppercase;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
         }
 
         .stats-row {
@@ -267,7 +261,6 @@
             text-align: center;
         }
 
-        /* Kart Renkleri */
         .yellow-card-indicator {
             display: inline-block;
             width: 10px;
@@ -324,27 +317,35 @@
         <h1>FC BAD BOYS</h1>
     </header>
 
-    <!-- Genel Takım Özet Paneli -->
-    <div class="team-summary" id="team-summary">
-        <!-- JS ile dinamik doldurulacak -->
-    </div>
+    <div class="team-summary" id="team-summary"></div>
 
     <div class="auth-box">
         <input type="password" id="password-input" placeholder="Kaptan Şifresi">
         <button onclick="unlockPanel()">Kilidi Aç</button>
         <div id="status-msg" style="color: var(--danger);">Kilitli: Sadece düzenleme yapabilirsiniz.</div>
         <div class="admin-controls" id="admin-controls" style="display: none;">
-            <button class="admin-btn btn-download" onclick="downloadData()">Verileri İndir (JSON)</button>
             <button class="admin-btn btn-reset" onclick="resetSeason()">Sezonu Sıfırla</button>
         </div>
     </div>
 
-    <div class="players-container" id="players-list">
-        <!-- Oyuncular JavaScript ile dinamik yüklenecek -->
-    </div>
+    <div class="players-container" id="players-list"></div>
 
     <script>
-        // Başlangıç Oyuncu Verileri (Gol, Asist, Sarı Kart, Kırmızı Kart, Yediği Gol eklendi)
+        // Senin Firebase Bilgilerin Buraya Eklendi
+        const firebaseConfig = {
+            apiKey: "AIzaSyCSw0nzgbHrFCAJLpvmhZwYAV_aQeBMw4g",
+            authDomain: "fcbadboys-bfc96.firebaseapp.com",
+            projectId: "fcbadboys-bfc96",
+            storageBucket: "fcbadboys-bfc96.firebasestorage.app",
+            messagingSenderId: "394322712916",
+            appId: "1:394322712916:web:8fb96c51cbf2f113e8d0c1",
+            measurementId: "G-WT2ECTZ2K0"
+        };
+
+        // Firebase Başlatma
+        firebase.initializeApp(firebaseConfig);
+        const db = firebase.database();
+
         const initialPlayers = [
             { id: 1, name: "Eren Yılmaz", position: "Forvet", number: 37, goals: 0, assists: 0, yellowCards: 0, redCards: 0, isGoalKeeper: false, isMvp: false },
             { id: 2, name: "Murat Çaylı", position: "Forvet", number: 10, goals: 0, assists: 0, yellowCards: 0, redCards: 0, isGoalKeeper: false, isMvp: false },
@@ -357,19 +358,23 @@
         ];
 
         let isUnlocked = false;
+        let players = [];
 
-        function getPlayersData() {
-            const savedData = localStorage.getItem('takim_istatistikleri');
-            if (savedData) {
-                return JSON.parse(savedData);
+        // Veritabanından Anlık Dinleme (Senkronizasyon)
+        const dbRef = db.ref('players');
+        dbRef.on('value', (snapshot) => {
+            const data = snapshot.val();
+            if (data) {
+                players = data;
+            } else {
+                dbRef.set(initialPlayers);
+                players = initialPlayers;
             }
-            return initialPlayers;
-        }
-
-        let players = getPlayersData();
+            renderPlayers();
+        });
 
         function saveData() {
-            localStorage.setItem('takim_istatistikleri', JSON.stringify(players));
+            dbRef.set(players);
         }
 
         function unlockPanel() {
@@ -389,22 +394,10 @@
             }
         }
 
-        // Özellik 5: Verileri İndir ve Sezonu Sıfırla Fonksiyonları
-        function downloadData() {
-            const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(players, null, 2));
-            const downloadAnchor = document.createElement('a');
-            downloadAnchor.setAttribute("href", dataStr);
-            downloadAnchor.setAttribute("download", "fc_bad_boys_istatistikler.json");
-            document.body.appendChild(downloadAnchor);
-            downloadAnchor.click();
-            downloadAnchor.remove();
-        }
-
         function resetSeason() {
             if (confirm("Tüm oyuncu istatistikleri ve MVP seçimi sıfırlanacak. Emin misiniz?")) {
                 players = initialPlayers.map(p => ({ ...p }));
                 saveData();
-                renderPlayers();
                 alert("Sezon başarıyla sıfırlandı!");
             }
         }
@@ -424,19 +417,15 @@
                 else if (statType === 'red') player.redCards = Math.max(0, player.redCards + change);
                 
                 saveData();
-                renderPlayers();
             }
         }
 
-        // Özellik 4: MVP (Haftanın Yıldızı) Belirleme
         function setMvp(id) {
             if (!isUnlocked) return;
             players.forEach(p => p.isMvp = (p.id === id));
             saveData();
-            renderPlayers();
         }
 
-        // Özellik 1: Takım Özet Hesaplamaları
         function renderSummary() {
             let totalGoals = players.reduce((sum, p) => sum + (p.goals || 0), 0);
             let totalAssists = players.reduce((sum, p) => sum + (p.assists || 0), 0);
@@ -461,7 +450,6 @@
             players.forEach(player => {
                 let statsHTML = "";
 
-                // Özellik 3: Gol/Asist yanına Sarı ve Kırmızı Kart eklendi
                 if (player.isGoalKeeper) {
                     statsHTML = `
                         <div class="stats-row">
@@ -494,7 +482,6 @@
                     `;
                 }
 
-                // Sarı ve Kırmızı Kart Satırları (Her oyuncuda ortak)
                 statsHTML += `
                     <div class="stats-row">
                         <span class="stat-label"><span class="yellow-card-indicator"></span> Sarı Kart:</span>
@@ -543,9 +530,6 @@
                 container.appendChild(card);
             });
         }
-
-        // Sayfa açıldığında başlat
-        renderPlayers();
     </script>
 </body>
 </html>

@@ -145,6 +145,7 @@
             display: grid;
             grid-template-columns: 1fr;
             gap: 15px;
+            margin-bottom: 25px;
         }
 
         @media (min-width: 768px) {
@@ -309,6 +310,85 @@
             color: #000;
             font-size: 0.75rem;
         }
+
+        /* YENİ EKLENEN BÖLÜMLERİN TASARIMI (Alt Alan) */
+        .section-container {
+            background: var(--card-bg);
+            border: 1px solid var(--accent-gray);
+            border-radius: 8px;
+            padding: 15px;
+            margin-bottom: 20px;
+        }
+
+        .section-title {
+            color: var(--primary-orange);
+            font-size: 1.1rem;
+            margin-bottom: 12px;
+            text-transform: uppercase;
+            border-bottom: 1px solid var(--accent-gray);
+            padding-bottom: 6px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        /* Maç Sonuçları Listesi */
+        .match-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: var(--accent-gray);
+            padding: 10px;
+            border-radius: 6px;
+            margin-bottom: 8px;
+            font-size: 0.9rem;
+        }
+        .match-score {
+            font-weight: bold;
+            background: var(--primary-orange);
+            color: white;
+            padding: 3px 10px;
+            border-radius: 4px;
+        }
+
+        /* Herkese Açık Oylama */
+        .vote-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+            gap: 8px;
+        }
+        .vote-card {
+            background: var(--accent-gray);
+            padding: 10px;
+            border-radius: 6px;
+            text-align: center;
+            font-size: 0.85rem;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            gap: 6px;
+        }
+        .vote-btn {
+            background-color: var(--warning);
+            color: #000;
+            border: none;
+            padding: 5px;
+            border-radius: 4px;
+            font-weight: bold;
+            cursor: pointer;
+            font-size: 0.8rem;
+        }
+        .vote-btn:hover { opacity: 0.9; }
+
+        /* Liderlik Tablosu (Gol/Asist Krallığı) */
+        .rank-row {
+            display: flex;
+            justify-content: space-between;
+            padding: 6px 10px;
+            border-bottom: 1px solid #2a2a2a;
+            font-size: 0.85rem;
+        }
+        .rank-row:last-child { border-bottom: none; }
     </style>
 </head>
 <body>
@@ -330,8 +410,44 @@
 
     <div class="players-container" id="players-list"></div>
 
+    <!-- ALT KISIM: YENİ EKLENEN ÖZELLİKLER -->
+    
+    <!-- 2 Numaralı İstek: Maç Sonuçları ve Skor Arşivi -->
+    <div class="section-container">
+        <div class="section-title">
+            <span>⚽ Maç Skorları & Fikstür</span>
+            <button class="admin-btn" id="add-match-btn" style="display:none; background:var(--primary-orange); color:white;" onclick="addMatchModal()">+ Maç Ekle</button>
+        </div>
+        <div id="matches-list">
+            <!-- JavaScript ile doldurulacak -->
+        </div>
+    </div>
+
+    <!-- 4 Numaralı İstek: Herkese Açık Oylama Alanı (1 Oy Hakkı) -->
+    <div class="section-container">
+        <div class="section-title">⭐ Haftanın Oyuncusu Oylaması</div>
+        <div id="vote-status" style="font-size:0.85rem; margin-bottom:10px; color:#aaa;">Her cihazın/tarayıcının 1 oy hakkı vardır.</div>
+        <div class="vote-grid" id="vote-container">
+            <!-- JavaScript ile doldurulacak -->
+        </div>
+    </div>
+
+    <!-- 6 Numaralı İstek: Gol ve Asist Krallığı (Liderlik Tablosu) -->
+    <div class="section-container">
+        <div class="section-title">👑 Gol ve Asist Krallığı</div>
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px;">
+            <div>
+                <h4 style="font-size:0.9rem; color:var(--primary-orange); margin-bottom:8px;">⚽ Gol Krallığı</h4>
+                <div id="top-scorers" style="background:var(--accent-gray); border-radius:6px; padding:5px;"></div>
+            </div>
+            <div>
+                <h4 style="font-size:0.9rem; color:var(--primary-orange); margin-bottom:8px;">🎯 Asist Krallığı</h4>
+                <div id="top-assists" style="background:var(--accent-gray); border-radius:6px; padding:5px;"></div>
+            </div>
+        </div>
+    </div>
+
     <script>
-        // Senin Firebase Bilgilerin Buraya Eklendi
         const firebaseConfig = {
             apiKey: "AIzaSyCSw0nzgbHrFCAJLpvmhZwYAV_aQeBMw4g",
             authDomain: "fcbadboys-bfc96.firebaseapp.com",
@@ -342,7 +458,6 @@
             measurementId: "G-WT2ECTZ2K0"
         };
 
-        // Firebase Başlatma
         firebase.initializeApp(firebaseConfig);
         const db = firebase.database();
 
@@ -357,37 +472,53 @@
             { id: 8, name: "Ahmet", position: "Kale", number: 99, goalsConceded: 0, yellowCards: 0, redCards: 0, isGoalKeeper: true, isMvp: false }
         ];
 
+        const initialMatches = [
+            { opponent: "Rakip Takım 1", score: "4 - 2", date: "12.10.2026", status: "Kazandı" },
+            { opponent: "Rakip Takım 2", score: "3 - 3", date: "19.10.2026", status: "Berabere" }
+        ];
+
         let isUnlocked = false;
         let players = [];
+        let matches = [];
+        let votes = {}; // Oy sayılarını tutar
 
-        // Veritabanından Anlık Dinleme (Senkronizasyon)
-        const dbRef = db.ref('players');
-        dbRef.on('value', (snapshot) => {
+        // Firebase Veri Senkronizasyonu
+        db.ref('players').on('value', (snapshot) => {
             const data = snapshot.val();
-            if (data) {
-                players = data;
-            } else {
-                dbRef.set(initialPlayers);
-                players = initialPlayers;
-            }
-            renderPlayers();
+            if (data) { players = data; } 
+            else { db.ref('players').set(initialPlayers); players = initialPlayers; }
+            renderAll();
+        });
+
+        db.ref('matches').on('value', (snapshot) => {
+            const data = snapshot.val();
+            if (data) { matches = data; } 
+            else { db.ref('matches').set(initialMatches); matches = initialMatches; }
+            renderMatches();
+        });
+
+        db.ref('votes').on('value', (snapshot) => {
+            votes = snapshot.val() || {};
+            renderVoting();
         });
 
         function saveData() {
-            dbRef.set(players);
+            db.ref('players').set(players);
         }
 
         function unlockPanel() {
             const pass = document.getElementById('password-input').value;
             const msg = document.getElementById('status-msg');
             const adminControls = document.getElementById('admin-controls');
+            const addMatchBtn = document.getElementById('add-match-btn');
 
             if (pass === "Yy++1907") {
                 isUnlocked = true;
                 msg.style.color = "var(--success)";
                 msg.textContent = "Kilit Açıldı! Değişiklik yapabilirsiniz.";
                 adminControls.style.display = "flex";
-                renderPlayers();
+                addMatchBtn.style.display = "inline-block";
+                renderAll();
             } else {
                 alert("Hatalı Şifre!");
                 document.getElementById('password-input').value = "";
@@ -398,6 +529,7 @@
             if (confirm("Tüm oyuncu istatistikleri ve MVP seçimi sıfırlanacak. Emin misiniz?")) {
                 players = initialPlayers.map(p => ({ ...p }));
                 saveData();
+                db.ref('votes').remove();
                 alert("Sezon başarıyla sıfırlandı!");
             }
         }
@@ -426,6 +558,41 @@
             saveData();
         }
 
+        // Maç Ekleme Fonksiyonu (Kaptan Yetkili)
+        function addMatchModal() {
+            const opponent = prompt("Rakip Takım Adı:");
+            if (!opponent) return;
+            const score = prompt("Skor (Örn: 5 - 2):");
+            if (!score) return;
+            const date = prompt("Maç Tarihi (Örn: 25.10.2026):", "Bugün");
+
+            matches.push({ opponent, score, date });
+            db.ref('matches').set(matches);
+        }
+
+        // Herkese Açık Oylama Sistemi (Lokal Storage ile 1 Oy Sınırı)
+        function castVote(playerId) {
+            if (localStorage.getItem("badboys_voted")) {
+                alert("Zaten daha önce oy kullandınız! Her cihazın 1 oy hakkı vardır.");
+                return;
+            }
+
+            db.ref('votes/' + playerId).transaction((currentVotes) => {
+                return (currentVotes || 0) + 1;
+            }, (error, committed) => {
+                if (committed) {
+                    localStorage.setItem("badboys_voted", "true");
+                    alert("Oylamanız başarıyla kaydedildi!");
+                }
+            });
+        }
+
+        function renderAll() {
+            renderSummary();
+            renderPlayers();
+            renderLeaderboards();
+        }
+
         function renderSummary() {
             let totalGoals = players.reduce((sum, p) => sum + (p.goals || 0), 0);
             let totalAssists = players.reduce((sum, p) => sum + (p.assists || 0), 0);
@@ -433,8 +600,7 @@
             let totalYellow = players.reduce((sum, p) => sum + (p.yellowCards || 0), 0);
             let totalRed = players.reduce((sum, p) => sum + (p.redCards || 0), 0);
 
-            const summaryContainer = document.getElementById('team-summary');
-            summaryContainer.innerHTML = `
+            document.getElementById('team-summary').innerHTML = `
                 <div class="summary-item">Toplam Gol<span>⚽ ${totalGoals}</span></div>
                 <div class="summary-item">Toplam Asist<span>🎯 ${totalAssists}</span></div>
                 <div class="summary-item">Yenen Gol<span>🥅 ${totalConceded}</span></div>
@@ -443,13 +609,11 @@
         }
 
         function renderPlayers() {
-            renderSummary();
             const container = document.getElementById('players-list');
             container.innerHTML = "";
 
             players.forEach(player => {
                 let statsHTML = "";
-
                 if (player.isGoalKeeper) {
                     statsHTML = `
                         <div class="stats-row">
@@ -459,8 +623,7 @@
                                 <span class="stat-value">${player.goalsConceded}</span>
                                 <button class="stat-btn plus" onclick="updateStat(${player.id}, 'conceded', 1)" ${!isUnlocked ? 'disabled style="opacity:0.5"' : ''}>+</button>
                             </div>
-                        </div>
-                    `;
+                        </div>`;
                 } else {
                     statsHTML = `
                         <div class="stats-row">
@@ -478,8 +641,7 @@
                                 <span class="stat-value">${player.assists}</span>
                                 <button class="stat-btn plus" onclick="updateStat(${player.id}, 'assists', 1)" ${!isUnlocked ? 'disabled style="opacity:0.5"' : ''}>+</button>
                             </div>
-                        </div>
-                    `;
+                        </div>`;
                 }
 
                 statsHTML += `
@@ -498,21 +660,16 @@
                             <span class="stat-value">${player.redCards || 0}</span>
                             <button class="stat-btn plus" onclick="updateStat(${player.id}, 'red', 1)" ${!isUnlocked ? 'disabled style="opacity:0.5"' : ''}>+</button>
                         </div>
-                    </div>
-                `;
+                    </div>`;
 
                 const card = document.createElement('div');
                 card.className = `player-card ${player.isMvp ? 'mvp' : ''}`;
                 
-                let mvpSection = "";
-                if (isUnlocked) {
-                    mvpSection = `
-                        <div class="mvp-select-box">
-                            <span>Haftanın Yıldızı (MVP)</span>
-                            <button onclick="setMvp(${player.id})">${player.isMvp ? '⭐ Seçildi' : 'Seç'}</button>
-                        </div>
-                    `;
-                }
+                let mvpSection = isUnlocked ? `
+                    <div class="mvp-select-box">
+                        <span>Haftanın Yıldızı (MVP)</span>
+                        <button onclick="setMvp(${player.id})">${player.isMvp ? '⭐ Seçildi' : 'Seç'}</button>
+                    </div>` : "";
 
                 card.innerHTML = `
                     ${player.isMvp ? '<div class="mvp-badge">⭐ MVP</div>' : ''}
@@ -520,15 +677,64 @@
                         <span class="player-name">${player.name}</span>
                         <span class="player-number">${player.number}</span>
                     </div>
-                    <div class="player-details">
-                        <span>Mevki: ${player.position}</span>
-                    </div>
+                    <div class="player-details"><span>Mevki: ${player.position}</span></div>
                     ${statsHTML}
                     ${mvpSection}
                     ${!isUnlocked ? '<div class="locked-notice">Düzenlemek için kilit açılmalıdır</div>' : ''}
                 `;
                 container.appendChild(card);
             });
+        }
+
+        function renderMatches() {
+            const container = document.getElementById('matches-list');
+            container.innerHTML = "";
+            matches.forEach(m => {
+                container.innerHTML += `
+                    <div class="match-item">
+                        <span><b>FC Bad Boys</b> vs ${m.opponent} <small style="color:#aaa;">(${m.date})</small></span>
+                        <span class="match-score">${m.score}</span>
+                    </div>`;
+            });
+        }
+
+        function renderVoting() {
+            const container = document.getElementById('vote-container');
+            container.innerHTML = "";
+            const hasVoted = localStorage.getItem("badboys_voted");
+
+            if (hasVoted) {
+                document.getElementById('vote-status').innerHTML = "✅ Oyunuz başarıyla kaydedildi. Teşekkürler!";
+            }
+
+            players.forEach(p => {
+                let voteCount = votes[p.id] || 0;
+                container.innerHTML += `
+                    <div class="vote-card">
+                        <div><b>${p.name}</b><br><small style="color:#aaa">${voteCount} Oy</small></div>
+                        <button class="vote-btn" onclick="castVote(${p.id})" ${hasVoted ? 'disabled style="background:#555; cursor:not-allowed;"' : ''}>Oy Ver</button>
+                    </div>`;
+            });
+        }
+
+        function renderLeaderboards() {
+            // Sadece kaleci olmayanları filtrele ve sırala
+            const outfield = players.filter(p => !p.isGoalKeeper);
+            
+            const topScorersList = [...outfield].sort((a, b) => b.goals - a.goals).slice(0, 5);
+            const topAssistsList = [...outfield].sort((a, b) => b.assists - a.assists).slice(0, 5);
+
+            let scorerHTML = "";
+            topScorersList.forEach((p, idx) => {
+                scorerHTML += `<div class="rank-row"><span>${idx+1}. ${p.name}</span><strong>⚽ ${p.goals}</strong></div>`;
+            });
+            document.getElementById('top-scorers').innerHTML = scorerHTML || '<div style="padding:8px; text-align:center; font-size:0.8rem;">Veri yok</div>';
+
+            let assistHTML = "";
+            topAssistsList.forEach((p, idx) => {
+                assistHTML += `<div class="rank-row"><span>${idx+1}. ${p.name}</span><strong>🎯 ${p.assists}</strong></div>`;
+            });
+            document.getElementById('top-assists').innerHTML = assistHTML || '<div style="padding:8px; text-align:center; font-size:0.8rem;">Veri yok</div>';
         }
     </script>
 </body>

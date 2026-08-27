@@ -12,6 +12,7 @@
     <style>
         :root {
             --primary-orange: #FF6600;
+            --primary-orange-hover: #e65c00;
             --dark-black: #121212;
             --card-bg: #1E1E1E;
             --text-light: #F4F4F4;
@@ -164,16 +165,16 @@
         }
 
         .player-card.mvp {
-            border-left-color: var(--warning);
-            background: linear-gradient(145deg, #1e1e1e, #262212);
+            border-left-color: var(--primary-orange);
+            background: linear-gradient(145deg, #1e1e1e, #2d1908);
         }
 
         .mvp-badge {
             position: absolute;
             top: 15px;
             right: 50px;
-            background: var(--warning);
-            color: #000;
+            background: var(--primary-orange);
+            color: #fff;
             font-size: 0.7rem;
             font-weight: bold;
             padding: 2px 6px;
@@ -282,13 +283,6 @@
             vertical-align: middle;
         }
 
-        .locked-notice {
-            font-size: 0.75rem;
-            color: var(--danger);
-            text-align: center;
-            margin-top: 10px;
-        }
-
         .mvp-select-box {
             margin-top: 10px;
             font-size: 0.8rem;
@@ -301,17 +295,17 @@
         }
 
         .mvp-select-box button {
-            background: var(--warning);
+            background: var(--primary-orange);
             border: none;
             padding: 3px 8px;
             border-radius: 3px;
             font-weight: bold;
             cursor: pointer;
-            color: #000;
+            color: #fff;
             font-size: 0.75rem;
         }
 
-        /* YENİ EKLENEN BÖLÜMLERİN TASARIMI (Alt Alan) */
+        /* YENİ EKLENEN BÖLÜMLERİN TASARIMI */
         .section-container {
             background: var(--card-bg);
             border: 1px solid var(--accent-gray);
@@ -355,30 +349,74 @@
         .vote-grid {
             display: grid;
             grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
-            gap: 8px;
+            gap: 10px;
         }
         .vote-card {
-            background: var(--accent-gray);
-            padding: 10px;
-            border-radius: 6px;
+            background: #181818;
+            border: 1px solid var(--accent-gray);
+            padding: 12px;
+            border-radius: 8px;
             text-align: center;
             font-size: 0.85rem;
             display: flex;
             flex-direction: column;
             justify-content: space-between;
-            gap: 6px;
+            gap: 8px;
+            transition: border-color 0.2s;
         }
+        .vote-card:hover {
+            border-color: var(--primary-orange);
+        }
+
+        /* Turuncu ve Siyah Buton Tasarımı */
         .vote-btn {
-            background-color: var(--warning);
-            color: #000;
-            border: none;
-            padding: 5px;
-            border-radius: 4px;
+            background-color: var(--primary-orange);
+            color: #ffffff;
+            border: 1px solid #cc5200;
+            padding: 7px;
+            border-radius: 5px;
             font-weight: bold;
             cursor: pointer;
-            font-size: 0.8rem;
+            font-size: 0.85rem;
+            transition: all 0.2s ease;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
         }
-        .vote-btn:hover { opacity: 0.9; }
+
+        .vote-btn:hover {
+            background-color: var(--primary-orange-hover);
+            box-shadow: 0 0 8px rgba(255, 102, 0, 0.4);
+        }
+
+        .vote-btn:disabled {
+            background-color: #333333;
+            color: #777777;
+            border-color: #444444;
+            cursor: not-allowed;
+            box-shadow: none;
+        }
+
+        /* Kazanan Bannerı (Oylama Bitince Üstte Çıkar) */
+        .winner-banner {
+            background: linear-gradient(135deg, #FF6600 0%, #121212 100%);
+            border: 2px solid var(--primary-orange);
+            color: #ffffff;
+            padding: 15px;
+            border-radius: 8px;
+            text-align: center;
+            margin-bottom: 15px;
+            font-size: 1.3rem;
+            font-weight: bold;
+            letter-spacing: 2px;
+            text-shadow: 0 2px 4px rgba(0,0,0,0.8);
+            box-shadow: 0 4px 15px rgba(255, 102, 0, 0.3);
+            animation: pulse 2s infinite alternate;
+        }
+
+        @keyframes pulse {
+            0% { transform: scale(0.99); opacity: 0.9; }
+            100% { transform: scale(1.01); opacity: 1; }
+        }
 
         /* Liderlik Tablosu (Gol/Asist Krallığı) */
         .rank-row {
@@ -405,6 +443,7 @@
         <div id="status-msg" style="color: var(--danger);">Kilitli: Sadece düzenleme yapabilirsiniz.</div>
         <div class="admin-controls" id="admin-controls" style="display: none;">
             <button class="admin-btn btn-reset" onclick="resetSeason()">Sezonu Sıfırla</button>
+            <button class="admin-btn" style="background-color: var(--primary-orange); color: white;" onclick="toggleVotingState()">Oylamayı Bitir / Aç</button>
         </div>
     </div>
 
@@ -412,7 +451,7 @@
 
     <!-- ALT KISIM: YENİ EKLENEN ÖZELLİKLER -->
     
-    <!-- 2 Numaralı İstek: Maç Sonuçları ve Skor Arşivi -->
+    <!-- Maç Sonuçları ve Skor Arşivi -->
     <div class="section-container">
         <div class="section-title">
             <span>⚽ Maç Skorları & Fikstür</span>
@@ -423,16 +462,20 @@
         </div>
     </div>
 
-    <!-- 4 Numaralı İstek: Herkese Açık Oylama Alanı (1 Oy Hakkı) -->
+    <!-- Herkese Açık Oylama Alanı -->
     <div class="section-container">
         <div class="section-title">⭐ Haftanın Oyuncusu Oylaması</div>
+        
+        <!-- Kazanan Oyuncu Buraya Çıkacak -->
+        <div id="winner-display"></div>
+
         <div id="vote-status" style="font-size:0.85rem; margin-bottom:10px; color:#aaa;">Her cihazın/tarayıcının 1 oy hakkı vardır.</div>
         <div class="vote-grid" id="vote-container">
             <!-- JavaScript ile doldurulacak -->
         </div>
     </div>
 
-    <!-- 6 Numaralı İstek: Gol ve Asist Krallığı (Liderlik Tablosu) -->
+    <!-- Gol ve Asist Krallığı (Liderlik Tablosu) -->
     <div class="section-container">
         <div class="section-title">👑 Gol ve Asist Krallığı</div>
         <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px;">
@@ -480,7 +523,8 @@
         let isUnlocked = false;
         let players = [];
         let matches = [];
-        let votes = {}; // Oy sayılarını tutar
+        let votes = {};
+        let votingClosed = false;
 
         // Firebase Veri Senkronizasyonu
         db.ref('players').on('value', (snapshot) => {
@@ -499,6 +543,11 @@
 
         db.ref('votes').on('value', (snapshot) => {
             votes = snapshot.val() || {};
+            renderVoting();
+        });
+
+        db.ref('votingClosed').on('value', (snapshot) => {
+            votingClosed = snapshot.val() || false;
             renderVoting();
         });
 
@@ -526,10 +575,12 @@
         }
 
         function resetSeason() {
-            if (confirm("Tüm oyuncu istatistikleri ve MVP seçimi sıfırlanacak. Emin misiniz?")) {
+            if (confirm("Tüm oyuncu istatistikleri ve oylamalar sıfırlanacak. Emin misiniz?")) {
                 players = initialPlayers.map(p => ({ ...p }));
                 saveData();
                 db.ref('votes').remove();
+                db.ref('votingClosed').set(false);
+                localStorage.removeItem("badboys_voted");
                 alert("Sezon başarıyla sıfırlandı!");
             }
         }
@@ -544,7 +595,7 @@
             if (player) {
                 if (statType === 'goals') player.goals = Math.max(0, player.goals + change);
                 else if (statType === 'assists') player.assists = Math.max(0, player.assists + change);
-                else if (statType === 'conceded') player.goalsConceded = Math.max(0, player.goalsConceded + change);
+                else if (statType === 'conceded') player.goalsConceded = Math.max(0, (player.goalsConceded || 0) + change);
                 else if (statType === 'yellow') player.yellowCards = Math.max(0, player.yellowCards + change);
                 else if (statType === 'red') player.redCards = Math.max(0, player.redCards + change);
                 
@@ -558,7 +609,6 @@
             saveData();
         }
 
-        // Maç Ekleme Fonksiyonu (Kaptan Yetkili)
         function addMatchModal() {
             const opponent = prompt("Rakip Takım Adı:");
             if (!opponent) return;
@@ -568,10 +618,23 @@
 
             matches.push({ opponent, score, date });
             db.ref('matches').set(matches);
+
+            // Yeni maç verisi eklendiğinde oylama sıfırlanır ve açılır
+            db.ref('votes').remove();
+            db.ref('votingClosed').set(false);
+            localStorage.removeItem("badboys_voted");
         }
 
-        // Herkese Açık Oylama Sistemi (Lokal Storage ile 1 Oy Sınırı)
+        function toggleVotingState() {
+            if (!isUnlocked) return;
+            db.ref('votingClosed').set(!votingClosed);
+        }
+
         function castVote(playerId) {
+            if (votingClosed) {
+                alert("Oylama sona ermiştir.");
+                return;
+            }
             if (localStorage.getItem("badboys_voted")) {
                 alert("Zaten daha önce oy kullandınız! Her cihazın 1 oy hakkı vardır.");
                 return;
@@ -591,150 +654,180 @@
             renderSummary();
             renderPlayers();
             renderLeaderboards();
+            renderMatches();
+            renderVoting();
         }
 
         function renderSummary() {
             let totalGoals = players.reduce((sum, p) => sum + (p.goals || 0), 0);
             let totalAssists = players.reduce((sum, p) => sum + (p.assists || 0), 0);
             let totalConceded = players.reduce((sum, p) => sum + (p.goalsConceded || 0), 0);
-            let totalYellow = players.reduce((sum, p) => sum + (p.yellowCards || 0), 0);
-            let totalRed = players.reduce((sum, p) => sum + (p.redCards || 0), 0);
 
             document.getElementById('team-summary').innerHTML = `
                 <div class="summary-item">Toplam Gol<span>⚽ ${totalGoals}</span></div>
                 <div class="summary-item">Toplam Asist<span>🎯 ${totalAssists}</span></div>
                 <div class="summary-item">Yenen Gol<span>🥅 ${totalConceded}</span></div>
-                <div class="summary-item">Kartlar<span><span class="yellow-card-indicator"></span>${totalYellow} <span class="red-card-indicator"></span>${totalRed}</span></div>
             `;
         }
 
         function renderPlayers() {
             const container = document.getElementById('players-list');
-            container.innerHTML = "";
-
-            players.forEach(player => {
-                let statsHTML = "";
-                if (player.isGoalKeeper) {
-                    statsHTML = `
-                        <div class="stats-row">
-                            <span class="stat-label">Yediği Gol:</span>
-                            <div class="stat-controls">
-                                <button class="stat-btn minus" onclick="updateStat(${player.id}, 'conceded', -1)" ${!isUnlocked ? 'disabled style="opacity:0.5"' : ''}>-</button>
-                                <span class="stat-value">${player.goalsConceded}</span>
-                                <button class="stat-btn plus" onclick="updateStat(${player.id}, 'conceded', 1)" ${!isUnlocked ? 'disabled style="opacity:0.5"' : ''}>+</button>
-                            </div>
-                        </div>`;
-                } else {
-                    statsHTML = `
-                        <div class="stats-row">
-                            <span class="stat-label">Gol:</span>
-                            <div class="stat-controls">
-                                <button class="stat-btn minus" onclick="updateStat(${player.id}, 'goals', -1)" ${!isUnlocked ? 'disabled style="opacity:0.5"' : ''}>-</button>
-                                <span class="stat-value">${player.goals}</span>
-                                <button class="stat-btn plus" onclick="updateStat(${player.id}, 'goals', 1)" ${!isUnlocked ? 'disabled style="opacity:0.5"' : ''}>+</button>
-                            </div>
-                        </div>
-                        <div class="stats-row">
-                            <span class="stat-label">Asist:</span>
-                            <div class="stat-controls">
-                                <button class="stat-btn minus" onclick="updateStat(${player.id}, 'assists', -1)" ${!isUnlocked ? 'disabled style="opacity:0.5"' : ''}>-</button>
-                                <span class="stat-value">${player.assists}</span>
-                                <button class="stat-btn plus" onclick="updateStat(${player.id}, 'assists', 1)" ${!isUnlocked ? 'disabled style="opacity:0.5"' : ''}>+</button>
-                            </div>
-                        </div>`;
-                }
-
-                statsHTML += `
-                    <div class="stats-row">
-                        <span class="stat-label"><span class="yellow-card-indicator"></span> Sarı Kart:</span>
-                        <div class="stat-controls">
-                            <button class="stat-btn minus" onclick="updateStat(${player.id}, 'yellow', -1)" ${!isUnlocked ? 'disabled style="opacity:0.5"' : ''}>-</button>
-                            <span class="stat-value">${player.yellowCards || 0}</span>
-                            <button class="stat-btn plus" onclick="updateStat(${player.id}, 'yellow', 1)" ${!isUnlocked ? 'disabled style="opacity:0.5"' : ''}>+</button>
-                        </div>
-                    </div>
-                    <div class="stats-row">
-                        <span class="stat-label"><span class="red-card-indicator"></span> Kırmızı Kart:</span>
-                        <div class="stat-controls">
-                            <button class="stat-btn minus" onclick="updateStat(${player.id}, 'red', -1)" ${!isUnlocked ? 'disabled style="opacity:0.5"' : ''}>-</button>
-                            <span class="stat-value">${player.redCards || 0}</span>
-                            <button class="stat-btn plus" onclick="updateStat(${player.id}, 'red', 1)" ${!isUnlocked ? 'disabled style="opacity:0.5"' : ''}>+</button>
-                        </div>
-                    </div>`;
-
-                const card = document.createElement('div');
-                card.className = `player-card ${player.isMvp ? 'mvp' : ''}`;
-                
-                let mvpSection = isUnlocked ? `
-                    <div class="mvp-select-box">
-                        <span>Haftanın Yıldızı (MVP)</span>
-                        <button onclick="setMvp(${player.id})">${player.isMvp ? '⭐ Seçildi' : 'Seç'}</button>
-                    </div>` : "";
-
-                card.innerHTML = `
-                    ${player.isMvp ? '<div class="mvp-badge">⭐ MVP</div>' : ''}
+            container.innerHTML = players.map(p => `
+                <div class="player-card ${p.isMvp ? 'mvp' : ''}">
+                    ${p.isMvp ? '<div class="mvp-badge">MVP</div>' : ''}
                     <div class="player-header">
-                        <span class="player-name">${player.name}</span>
-                        <span class="player-number">${player.number}</span>
+                        <span class="player-name">${p.name}</span>
+                        <span class="player-number">#${p.number}</span>
                     </div>
-                    <div class="player-details"><span>Mevki: ${player.position}</span></div>
-                    ${statsHTML}
-                    ${mvpSection}
-                    ${!isUnlocked ? '<div class="locked-notice">Düzenlemek için kilit açılmalıdır</div>' : ''}
-                `;
-                container.appendChild(card);
-            });
+                    <div class="player-details">${p.position}</div>
+
+                    ${!p.isGoalKeeper ? `
+                        <div class="stats-row">
+                            <span class="stat-label">⚽ Gol</span>
+                            <div class="stat-controls">
+                                ${isUnlocked ? `<button class="stat-btn minus" onclick="updateStat(${p.id}, 'goals', -1)">-</button>` : ''}
+                                <span class="stat-value">${p.goals || 0}</span>
+                                ${isUnlocked ? `<button class="stat-btn plus" onclick="updateStat(${p.id}, 'goals', 1)">+</button>` : ''}
+                            </div>
+                        </div>
+                        <div class="stats-row">
+                            <span class="stat-label">🎯 Asist</span>
+                            <div class="stat-controls">
+                                ${isUnlocked ? `<button class="stat-btn minus" onclick="updateStat(${p.id}, 'assists', -1)">-</button>` : ''}
+                                <span class="stat-value">${p.assists || 0}</span>
+                                ${isUnlocked ? `<button class="stat-btn plus" onclick="updateStat(${p.id}, 'assists', 1)">+</button>` : ''}
+                            </div>
+                        </div>
+                    ` : `
+                        <div class="stats-row">
+                            <span class="stat-label">🥅 Yenen Gol</span>
+                            <div class="stat-controls">
+                                ${isUnlocked ? `<button class="stat-btn minus" onclick="updateStat(${p.id}, 'conceded', -1)">-</button>` : ''}
+                                <span class="stat-value">${p.goalsConceded || 0}</span>
+                                ${isUnlocked ? `<button class="stat-btn plus" onclick="updateStat(${p.id}, 'conceded', 1)">+</button>` : ''}
+                            </div>
+                        </div>
+                    `}
+
+                    <div class="stats-row">
+                        <span class="stat-label">🟨 Sarı Kart</span>
+                        <div class="stat-controls">
+                            ${isUnlocked ? `<button class="stat-btn minus" onclick="updateStat(${p.id}, 'yellow', -1)">-</button>` : ''}
+                            <span class="stat-value">${p.yellowCards || 0}</span>
+                            ${isUnlocked ? `<button class="stat-btn plus" onclick="updateStat(${p.id}, 'yellow', 1)">+</button>` : ''}
+                        </div>
+                    </div>
+                    <div class="stats-row">
+                        <span class="stat-label">🟥 Kırmızı Kart</span>
+                        <div class="stat-controls">
+                            ${isUnlocked ? `<button class="stat-btn minus" onclick="updateStat(${p.id}, 'red', -1)">-</button>` : ''}
+                            <span class="stat-value">${p.redCards || 0}</span>
+                            ${isUnlocked ? `<button class="stat-btn plus" onclick="updateStat(${p.id}, 'red', 1)">+</button>` : ''}
+                        </div>
+                    </div>
+
+                    ${isUnlocked ? `
+                        <div class="mvp-select-box">
+                            <span>Maçın Adamı (MVP) Yap</span>
+                            <button onclick="setMvp(${p.id})">${p.isMvp ? 'Seçili' : 'Seç'}</button>
+                        </div>
+                    ` : ''}
+                </div>
+            `).join('');
         }
 
         function renderMatches() {
             const container = document.getElementById('matches-list');
-            container.innerHTML = "";
-            matches.forEach(m => {
-                container.innerHTML += `
-                    <div class="match-item">
-                        <span><b>FC Bad Boys</b> vs ${m.opponent} <small style="color:#aaa;">(${m.date})</small></span>
-                        <span class="match-score">${m.score}</span>
-                    </div>`;
-            });
+            if (matches.length === 0) {
+                container.innerHTML = '<div style="font-size:0.85rem; color:#888;">Henüz maç verisi girilmedi.</div>';
+                return;
+            }
+            container.innerHTML = matches.map(m => `
+                <div class="match-item">
+                    <div>
+                        <strong>FC BAD BOYS vs ${m.opponent}</strong>
+                        <div style="font-size:0.75rem; color:#aaa;">${m.date}</div>
+                    </div>
+                    <div class="match-score">${m.score}</div>
+                </div>
+            `).join('');
         }
 
         function renderVoting() {
             const container = document.getElementById('vote-container');
-            container.innerHTML = "";
+            const winnerDisplay = document.getElementById('winner-display');
+            const voteStatus = document.getElementById('vote-status');
             const hasVoted = localStorage.getItem("badboys_voted");
 
-            if (hasVoted) {
-                document.getElementById('vote-status').innerHTML = "✅ Oyunuz başarıyla kaydedildi. Teşekkürler!";
+            // En çok oyu alanı bul
+            let maxVotes = -1;
+            let winner = null;
+            players.forEach(p => {
+                const count = votes[p.id] || 0;
+                if (count > maxVotes && count > 0) {
+                    maxVotes = count;
+                    winner = p;
+                }
+            });
+
+            // Oylama Sona Erdi veya Kaptan Tarafından Kapatıldıysa
+            if (votingClosed) {
+                if (winner) {
+                    // İstenilen Format: 👑 İSİM SOYİSİM 👑
+                    const formattedName = `👑 ${winner.name.toUpperCase()} 👑`;
+                    winnerDisplay.innerHTML = `<div class="winner-banner">${formattedName}</div>`;
+                } else {
+                    winnerDisplay.innerHTML = `<div class="winner-banner">👑 KAZANAN BELİRLENEMEDİ 👑</div>`;
+                }
+                voteStatus.textContent = "Haftanın oyuncusu oylaması tamamlandı!";
+            } else {
+                winnerDisplay.innerHTML = '';
+                voteStatus.textContent = hasVoted ? "Oy kullandınız. Teşekkürler!" : "Her cihazın 1 oy hakkı vardır.";
             }
 
-            players.forEach(p => {
-                let voteCount = votes[p.id] || 0;
-                container.innerHTML += `
+            // Oy Kullanma Kartları
+            container.innerHTML = players.map(p => {
+                const count = votes[p.id] || 0;
+                return `
                     <div class="vote-card">
-                        <div><b>${p.name}</b><br><small style="color:#aaa">${voteCount} Oy</small></div>
-                        <button class="vote-btn" onclick="castVote(${p.id})" ${hasVoted ? 'disabled style="background:#555; cursor:not-allowed;"' : ''}>Oy Ver</button>
-                    </div>`;
-            });
+                        <div>
+                            <strong>${p.name}</strong>
+                            <div style="font-size:0.8rem; color:var(--primary-orange); margin-top:2px;">Oy: ${count}</div>
+                        </div>
+                        <button class="vote-btn" 
+                            ${(hasVoted || votingClosed) ? 'disabled' : ''} 
+                            onclick="castVote(${p.id})">
+                            ${votingClosed ? 'Kapandı' : (hasVoted ? 'Oy Verildi' : 'Oy Ver')}
+                        </button>
+                    </div>
+                `;
+            }).join('');
         }
 
         function renderLeaderboards() {
-            // Sadece kaleci olmayanları filtrele ve sırala
-            const outfield = players.filter(p => !p.isGoalKeeper);
-            
-            const topScorersList = [...outfield].sort((a, b) => b.goals - a.goals).slice(0, 5);
-            const topAssistsList = [...outfield].sort((a, b) => b.assists - a.assists).slice(0, 5);
+            const topScorers = [...players]
+                .filter(p => !p.isGoalKeeper)
+                .sort((a, b) => (b.goals || 0) - (a.goals || 0))
+                .slice(0, 5);
 
-            let scorerHTML = "";
-            topScorersList.forEach((p, idx) => {
-                scorerHTML += `<div class="rank-row"><span>${idx+1}. ${p.name}</span><strong>⚽ ${p.goals}</strong></div>`;
-            });
-            document.getElementById('top-scorers').innerHTML = scorerHTML || '<div style="padding:8px; text-align:center; font-size:0.8rem;">Veri yok</div>';
+            const topAssists = [...players]
+                .filter(p => !p.isGoalKeeper)
+                .sort((a, b) => (b.assists || 0) - (a.assists || 0))
+                .slice(0, 5);
 
-            let assistHTML = "";
-            topAssistsList.forEach((p, idx) => {
-                assistHTML += `<div class="rank-row"><span>${idx+1}. ${p.name}</span><strong>🎯 ${p.assists}</strong></div>`;
-            });
-            document.getElementById('top-assists').innerHTML = assistHTML || '<div style="padding:8px; text-align:center; font-size:0.8rem;">Veri yok</div>';
+            document.getElementById('top-scorers').innerHTML = topScorers.map((p, index) => `
+                <div class="rank-row">
+                    <span>${index + 1}. ${p.name}</span>
+                    <strong>${p.goals || 0} Gol</strong>
+                </div>
+            `).join('');
+
+            document.getElementById('top-assists').innerHTML = topAssists.map((p, index) => `
+                <div class="rank-row">
+                    <span>${index + 1}. ${p.name}</span>
+                    <strong>${p.assists || 0} Asist</strong>
+                </div>
+            `).join('');
         }
     </script>
 </body>

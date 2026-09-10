@@ -1,907 +1,878 @@
+```html
 <!DOCTYPE html>
-<html lang="tr">
+<html lang="tr" class="dark">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>FC BAD BOYS</title>
-    
-    <!-- Firebase SDK Kütüphaneleri -->
-    <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-database-compat.js"></script>
-
+    <title>FC BAD BOYS | Halısaha Yönetim ve Taktik Paneli</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        orange: {
+                            500: '#ff6600',
+                            600: '#e05a00',
+                            700: '#c24e00',
+                        },
+                        darkBg: '#0f0f11',
+                        cardBg: '#18181b',
+                        cardBorder: '#27272a'
+                    }
+                }
+            }
+        }
+    </script>
+    <!-- FontAwesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Google Fonts Inter -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
     <style>
-        :root {
-            --primary-orange: #FF6600;
-            --primary-orange-hover: #e65c00;
-            --dark-black: #121212;
-            --card-bg: #1E1E1E;
-            --text-light: #F4F4F4;
-            --accent-gray: #2A2A2A;
-            --danger: #FF4444;
-            --success: #00C851;
-            --warning: #ffbb00;
-            --info: #3182ce;
-        }
-
-        * {
-            box-sizing: border-box;
-            margin: 0;
-            padding: 0;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-        }
-
         body {
-            background-color: var(--dark-black);
-            color: var(--text-light);
-            padding: 15px;
+            font-family: 'Inter', sans-serif;
+            background-color: #0f0f11;
+            color: #f4f4f5;
         }
-
-        header {
-            text-align: center;
-            margin-bottom: 15px;
-            border-bottom: 2px solid var(--primary-orange);
-            padding-bottom: 10px;
+        /* Custom smooth scrollbar */
+        ::-webkit-scrollbar {
+            width: 6px;
         }
-
-        header h1 {
-            color: var(--primary-orange);
-            font-size: 1.8rem;
-            text-transform: uppercase;
-            letter-spacing: 2px;
+        ::-webkit-scrollbar-track {
+            background: #0f0f11;
         }
-
-        .team-summary {
-            background: var(--card-bg);
-            border: 1px solid var(--accent-gray);
-            border-radius: 8px;
-            padding: 12px;
-            margin-bottom: 20px;
-            display: flex;
-            justify-content: space-around;
-            text-align: center;
-            flex-wrap: wrap;
-            gap: 10px;
-        }
-        
-        .summary-item {
-            font-size: 0.85rem;
-            color: #aaa;
-        }
-
-        .summary-item span {
-            display: block;
-            font-size: 1.1rem;
-            font-weight: bold;
-            color: var(--primary-orange);
-        }
-
-        .auth-box {
-            background: var(--card-bg);
-            padding: 15px;
-            border-radius: 8px;
-            margin-bottom: 20px;
-            border: 1px solid var(--primary-orange);
-            display: flex;
-            gap: 10px;
-            align-items: center;
-            justify-content: center;
-            flex-wrap: wrap;
-        }
-
-        .auth-box input {
-            padding: 8px 12px;
-            border-radius: 4px;
-            border: 1px solid #444;
-            background: #222;
-            color: #fff;
-            font-size: 0.9rem;
-            outline: none;
-        }
-
-        .auth-box button {
-            padding: 8px 15px;
-            background-color: var(--primary-orange);
-            color: #fff;
-            border: none;
-            border-radius: 4px;
-            font-weight: bold;
-            cursor: pointer;
-            transition: 0.2s;
-        }
-
-        .auth-box button:hover {
-            opacity: 0.9;
-        }
-
-        /* Yönetici Kontrol Alanları */
-        .admin-controls-top {
-            width: 100%;
-            display: flex;
-            justify-content: center;
-            gap: 10px;
-            margin-top: 10px;
-            flex-wrap: wrap;
-        }
-
-        .admin-controls-bottom {
-            width: 100%;
-            margin-top: 15px;
-            padding-top: 12px;
-            border-top: 1px dashed #444;
-            display: flex;
-            flex-direction: column;
-            gap: 8px;
-        }
-
-        .admin-btn {
-            padding: 8px 12px;
-            font-size: 0.8rem;
-            border-radius: 4px;
-            border: none;
-            font-weight: bold;
-            cursor: pointer;
-            color: white;
-            transition: 0.2s;
-        }
-
-        .admin-btn:hover {
-            opacity: 0.9;
-        }
-
-        .btn-reset {
-            background-color: var(--danger);
-        }
-
-        .btn-download {
-            background-color: var(--info);
-        }
-
-        .btn-toggle-open {
-            background-color: var(--success);
-        }
-
-        .btn-toggle-close {
-            background-color: #718096;
-        }
-
-        #status-msg {
-            font-size: 0.85rem;
-            font-weight: bold;
-            width: 100%;
-            text-align: center;
-        }
-
-        .players-container {
-            display: grid;
-            grid-template-columns: 1fr;
-            gap: 15px;
-            margin-bottom: 25px;
-        }
-
-        @media (min-width: 768px) {
-            .players-container {
-                grid-template-columns: repeat(2, 1fr);
-            }
-        }
-                .players-container {
-            display: grid;
-            grid-template-columns: 1fr;
-            gap: 15px;
-            margin-bottom: 25px;
-        }
-
-        @media (min-width: 768px) {
-            .players-container {
-                grid-template-columns: repeat(2, 1fr);
-            }
-        }
-
-        .player-card {
-            background-color: var(--card-bg);
-            border-radius: 8px;
-            padding: 15px;
-            border-left: 5px solid var(--primary-orange);
-            box-shadow: 0 4px 6px rgba(0,0,0,0.3);
-            position: relative;
-        }
-
-        .player-card.mvp {
-            border-left-color: var(--primary-orange);
-            background: linear-gradient(145deg, #1e1e1e, #2d1908);
-        }
-
-        .mvp-badge {
-            position: absolute;
-            top: 15px;
-            right: 50px;
-            background: var(--primary-orange);
-            color: #fff;
-            font-size: 0.7rem;
-            font-weight: bold;
-            padding: 2px 6px;
-            border-radius: 4px;
-            text-transform: uppercase;
-        }
-
-        .player-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 10px;
-        }
-
-        .player-name {
-            font-size: 1.1rem;
-            font-weight: bold;
-        }
-
-        .player-number {
-            background: var(--primary-orange);
-            color: #fff;
-            padding: 2px 8px;
-            border-radius: 50%;
-            font-size: 0.85rem;
-            font-weight: bold;
-        }
-
-        .player-details {
-            font-size: 0.85rem;
-            color: #aaa;
-            margin-bottom: 12px;
-            text-transform: uppercase;
-        }
-
-        .stats-row {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            background: var(--accent-gray);
-            padding: 8px 12px;
-            border-radius: 6px;
-            margin-bottom: 8px;
-        }
-
-        .stat-label {
-            font-size: 0.9rem;
-            font-weight: 600;
-        }
-
-        .stat-controls {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
-
-        .stat-btn {
-            background: #444;
-            color: #fff;
-            border: none;
-            width: 30px;
-            height: 30px;
-            border-radius: 4px;
-            font-weight: bold;
-            font-size: 1rem;
-            cursor: pointer;
-            transition: 0.1s;
-        }
-
-        .stat-btn:active {
-            transform: scale(0.95);
-        }
-
-        .stat-btn.plus {
-            background-color: var(--success);
-        }
-
-        .stat-btn.minus {
-            background-color: var(--danger);
-        }
-
-        .stat-value {
-            font-size: 1rem;
-            font-weight: bold;
-            min-width: 20px;
-            text-align: center;
-        }
-
-        .mvp-select-box {
-            margin-top: 10px;
-            font-size: 0.8rem;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            background: #252525;
-            padding: 6px 10px;
-            border-radius: 4px;
-        }
-
-        .mvp-select-box button {
-            background: var(--primary-orange);
-            border: none;
-            padding: 3px 8px;
+        ::-webkit-scrollbar-thumb {
+            background: #27272a;
             border-radius: 3px;
-            font-weight: bold;
-            cursor: pointer;
-            color: #fff;
-            font-size: 0.75rem;
         }
-
-        /* BÖLÜMLERİN TASARIMI */
-        .section-container {
-            background: var(--card-bg);
-            border: 1px solid var(--accent-gray);
-            border-radius: 8px;
-            padding: 15px;
-            margin-bottom: 20px;
+        ::-webkit-scrollbar-thumb:hover {
+            background: #ff6600;
         }
-                .section-title {
-            color: var(--primary-orange);
-            font-size: 1.1rem;
-            margin-bottom: 12px;
-            text-transform: uppercase;
-            border-bottom: 1px solid var(--accent-gray);
-            padding-bottom: 6px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-
-        /* Maç Sonuçları Listesi */
-        .match-item {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            background: var(--accent-gray);
-            padding: 10px;
-            border-radius: 6px;
-            margin-bottom: 8px;
-            font-size: 0.9rem;
-        }
-        .match-score {
-            font-weight: bold;
-            background: var(--primary-orange);
-            color: white;
-            padding: 3px 10px;
-            border-radius: 4px;
-        }
-
-        /* Oylama Alanı */
-        .vote-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
-            gap: 10px;
-        }
-        .vote-card {
-            background: #181818;
-            border: 1px solid var(--accent-gray);
-            padding: 12px;
-            border-radius: 8px;
-            text-align: center;
-            font-size: 0.85rem;
-            display: flex;
-            flex-direction: column;
-            justify-content: space-between;
-            gap: 8px;
-            transition: border-color 0.2s;
-        }
-        .vote-card:hover {
-            border-color: var(--primary-orange);
-        }
-        
-        .vote-card.voted-active {
-            border: 2px solid var(--success);
-            background: #1a261a;
-        }
-
-        .vote-btn {
-            background-color: var(--primary-orange);
-            color: #ffffff;
-            border: 1px solid #cc5200;
-            padding: 7px;
-            border-radius: 5px;
-            font-weight: bold;
-            cursor: pointer;
-            font-size: 0.85rem;
-            transition: all 0.2s ease;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-        }
-
-        .vote-btn:hover {
-            background-color: var(--primary-orange-hover);
-            box-shadow: 0 0 8px rgba(255, 102, 0, 0.4);
-        }
-
-        .vote-btn:disabled {
-            background-color: #333333;
-            color: #777777;
-            border-color: #444444;
-            cursor: not-allowed;
-            box-shadow: none;
-        }
-        
-        .vote-btn.voted-btn {
-            background-color: var(--success);
-            border-color: #009940;
-        }
-
-        .winner-banner {
-            background: linear-gradient(135deg, #FF6600 0%, #121212 100%);
-            border: 2px solid var(--primary-orange);
-            color: #ffffff;
-            padding: 15px;
-            border-radius: 8px;
-            text-align: center;
-            margin-bottom: 15px;
-            font-size: 1.3rem;
-            font-weight: bold;
-            letter-spacing: 2px;
-            text-shadow: 0 2px 4px rgba(0,0,0,0.8);
-            box-shadow: 0 4px 15px rgba(255, 102, 0, 0.3);
-            animation: pulse 2s infinite alternate;
-        }
-
-        @keyframes pulse {
-            0% { transform: scale(0.99); opacity: 0.9; }
-            100% { transform: scale(1.01); opacity: 1; }
-        }
-
-        .rank-row {
-            display: flex;
-            justify-content: space-between;
-            padding: 6px 10px;
-            border-bottom: 1px solid #2a2a2a;
-            font-size: 0.85rem;
-        }
-        .rank-row:last-child { border-bottom: none; }
     </style>
 </head>
-<body>
+<body class="min-h-screen flex flex-col selection:bg-orange-500 selection:text-white">
 
-    <header>
-        <h1>FC BAD BOYS</h1>
+    <header class="sticky top-0 z-50 bg-[#0f0f11]/90 backdrop-blur-md border-b border-cardBorder">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
+            <div class="flex items-center space-x-3">
+                <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-orange-600 to-amber-500 flex items-center justify-center shadow-lg shadow-orange-500/20">
+                    <i class="fa-solid fa-futbol text-white text-lg"></i>
+                </div>
+                <div>
+                    <h1 class="font-extrabold text-lg sm:text-xl tracking-wider text-white">FC BAD BOYS</h1>
+                    <p class="text-xs text-orange-500 font-medium tracking-wide">CANLI HALI SAHA KULÜBÜ</p>
+                </div>
+            </div>
+
+            <!-- Admin Mode Controls & Status -->
+            <div class="flex items-center space-x-3">
+                <div id="connectionStatus" class="hidden sm:flex items-center space-x-2 text-xs text-emerald-400 bg-emerald-500/10 px-3 py-1.5 rounded-full border border-emerald-500/20">
+                    <span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
+                    <span>Canlı Firebase Senkronize</span>
+                </div>
+
+                <button id="authBtn" onclick="toggleAuthModal()" class="flex items-center space-x-2 bg-cardBg hover:bg-cardBorder text-gray-200 hover:text-white px-3.5 py-2 rounded-xl text-xs sm:text-sm font-semibold border border-cardBorder transition-all duration-200 shadow-sm">
+                    <i class="fa-solid fa-lock text-orange-500" id="authIcon"></i>
+                    <span id="authBtnText">Yönetici Girişi</span>
+                </button>
+            </div>
+        </div>
     </header>
 
-    <div class="team-summary" id="team-summary"></div>
+    <main class="flex-grow max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-6 space-y-8">
 
-    <div class="auth-box">
-        <input type="password" id="password-input" placeholder="Kaptan Şifresi">
-        <button onclick="unlockPanel()">Kilidi Aç</button>
-        <div id="status-msg" style="color: var(--danger);">Kilitli: Sadece düzenleme yapabilirsiniz.</div>
-        
-        <!-- YUKARIDAKİ YÖNETİCİ BUTONLARI (Sezonu Sıfırla & Verileri İndir) -->
-        <div class="admin-controls-top" id="admin-controls-top" style="display: none;">
-            <button class="admin-btn btn-reset" onclick="resetSeason()">Sezonu Sıfırla</button>
-            <button class="admin-btn btn-download" onclick="downloadData()">Verileri İndir</button>
-        </div>
-    </div>
-
-    <div class="players-container" id="players-list"></div>
-
-    <!-- ALT KISIM -->
-    
-    <!-- Maç Sonuçları ve Skor Arşivi -->
-    <div class="section-container">
-        <div class="section-title">
-            <span>⚽ Maç Skorları & Fikstür</span>
-            <button class="admin-btn btn-download" id="add-match-btn" style="display:none;" onclick="addMatchModal()">+ Maç Ekle</button>
-        </div>
-        <div id="matches-list"></div>
-    </div>
-
-    <!-- Herkese Açık Oylama Alanı -->
-    <div class="section-container">
-        <div class="section-title">⭐ Haftanın Oyuncusu Oylaması</div>
-        
-        <div id="winner-display"></div>
-
-        <div id="vote-status" style="font-size:0.85rem; margin-bottom:10px; color:#aaa;">Herkesin 1 oy hakkı vardır, oyunuzu dilediğiniz zaman değiştirebilirsiniz.</div>
-        <div class="vote-grid" id="vote-container"></div>
-    </div>
-
-    <!-- Gol ve Asist Krallığı -->
-    <div class="section-container">
-        <div class="section-title">👑 Gol ve Asist Krallığı</div>
-        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px;">
-            <div>
-                <h4 style="font-size:0.9rem; color:var(--primary-orange); margin-bottom:8px;">⚽ Gol Krallığı</h4>
-                <div id="top-scorers" style="background:var(--accent-gray); border-radius:6px; padding:5px;"></div>
+        <!-- Hero Banner / Team Motto -->
+        <section class="relative overflow-hidden rounded-2xl bg-gradient-to-r from-orange-600/20 via-cardBg to-cardBorder border border-orange-500/30 p-6 sm:p-8 shadow-xl">
+            <div class="absolute -right-10 -bottom-10 text-orange-500/10 text-9xl pointer-events-none select-none">
+                <i class="fa-solid fa-shield-halved"></i>
             </div>
-            <div>
-                <h4 style="font-size:0.9rem; color:var(--primary-orange); margin-bottom:8px;">🎯 Asist Krallığı</h4>
-                <div id="top-assists" style="background:var(--accent-gray); border-radius:6px; padding:5px;"></div>
+            <div class="relative z-10 max-w-2xl">
+                <span class="inline-block bg-orange-500/10 text-orange-500 border border-orange-500/20 text-xs font-bold px-3 py-1 rounded-full uppercase tracking-wider mb-3">
+                    Sezon 2026 Kadrosu & İstatistikler
+                </span>
+                <h2 class="text-2xl sm:text-4xl font-black text-white tracking-tight mb-2">
+                    Sahada Korku Salanlar!
+                </h2>
+                <p class="text-gray-400 text-sm sm:text-base leading-relaxed">
+                    FC BAD BOYS halı saha ekibinin WhatsApp grubu resmi yönetim platformu. Sen (yönetici) değişiklik yaptığında gruptaki herkes anında güncel skoru görür!
+                </p>
             </div>
-        </div>
-    </div>
+        </section>
 
-    <script>
-        const firebaseConfig = {
-            apiKey: "AIzaSyCSw0nzgbHrFCAJLpvmhZwYAV_aQeBMw4g",
-            authDomain: "fcbadboys-bfc96.firebaseapp.com",
-            projectId: "fcbadboys-bfc96",
-            storageBucket: "fcbadboys-bfc96.firebasestorage.app",
-            messagingSenderId: "394322712916",
-            appId: "1:394322712916:web:8fb96c51cbf2f113e8d0c1",
-            measurementId: "G-WT2ECTZ2K0"
-        };
-                firebase.initializeApp(firebaseConfig);
-        const db = firebase.database();
-
-        const initialPlayers = [
-            { id: 1, name: "Eren Yılmaz", position: "Forvet", number: 37, goals: 0, assists: 0, yellowCards: 0, redCards: 0, isGoalKeeper: false, isMvp: false },
-            { id: 2, name: "Murat Çaylı", position: "Forvet", number: 10, goals: 0, assists: 0, yellowCards: 0, redCards: 0, isGoalKeeper: false, isMvp: false },
-            { id: 3, name: "Hüseyin Can Yüksekdağ", position: "Kale", number: 1, goalsConceded: 0, yellowCards: 0, redCards: 0, isGoalKeeper: true, isMvp: false },
-            { id: 4, name: "Yakup Sunay", position: "Defans", number: 5, goals: 0, assists: 0, yellowCards: 0, redCards: 0, isGoalKeeper: false, isMvp: false },
-            { id: 5, name: "Süleyman Tunçelik", position: "Defans", number: 3, goals: 0, assists: 0, yellowCards: 0, redCards: 0, isGoalKeeper: false, isMvp: false },
-            { id: 6, name: "Musa Aksu", position: "Kanat", number: 37, goals: 0, assists: 0, yellowCards: 0, redCards: 0, isGoalKeeper: false, isMvp: false },
-            { id: 7, name: "Burak ", position: "Defans", number: 4, goals: 0, assists: 0, yellowCards: 0, redCards: 0, isGoalKeeper: false, isMvp: false },
-            { id: 8, name: "Ahmet", position: "Kale", number: 99, goalsConceded: 0, yellowCards: 0, redCards: 0, isGoalKeeper: true, isMvp: false }
-        ];
-
-        const initialMatches = [
-            { opponent: "Rakip Takım 1", score: "4 - 2", date: "12.10.2026", status: "Kazandı" },
-            { opponent: "Rakip Takım 2", score: "3 - 3", date: "19.10.2026", status: "Berabere" }
-        ];
-
-        let isUnlocked = false;
-        let players = [];
-        let matches = [];
-        let votes = {};
-        let votingClosed = false;
-
-        db.ref('players').on('value', (snapshot) => {
-            const data = snapshot.val();
-            if (data) { players = data; } 
-            else { db.ref('players').set(initialPlayers); players = initialPlayers; }
-            renderAll();
-        });
-
-        db.ref('matches').on('value', (snapshot) => {
-            const data = snapshot.val();
-            if (data) { matches = data; } 
-            else { db.ref('matches').set(initialMatches); matches = initialMatches; }
-            renderMatches();
-        });
-
-        db.ref('votes').on('value', (snapshot) => {
-            votes = snapshot.val() || {};
-            renderVoting();
-        });
-
-        db.ref('votingClosed').on('value', (snapshot) => {
-            votingClosed = snapshot.val() || false;
-            renderVoting();
-        });
-
-        function saveData() {
-            db.ref('players').set(players);
-        }
-
-        function unlockPanel() {
-            const pass = document.getElementById('password-input').value;
-            const msg = document.getElementById('status-msg');
-            const adminControlsTop = document.getElementById('admin-controls-top');
-            const addMatchBtn = document.getElementById('add-match-btn');
-
-            if (pass === "Yy++1907") {
-                isUnlocked = true;
-                msg.style.color = "var(--success)";
-                msg.textContent = "Kilit Açıldı! Düzenleme yapabilirsiniz.";
-                adminControlsTop.style.display = "flex";
-                addMatchBtn.style.display = "inline-block";
-                renderAll();
-            } else {
-                alert("Hatalı Şifre!");
-                document.getElementById('password-input').value = "";
-            }
-        }
-
-        function resetSeason() {
-            if (confirm("Tüm oyuncu istatistikleri ve oylamalar sıfırlanacak. Emin misiniz?")) {
-                players = initialPlayers.map(p => ({ ...p }));
-                saveData();
-                db.ref('votes').remove();
-                db.ref('votingClosed').set(false);
-                localStorage.removeItem("badboys_voted_id");
-                alert("Sezon başarıyla sıfırlandı!");
-            }
-        }
-
-        function downloadData() {
-            const exportData = {
-                players: players,
-                matches: matches,
-                votes: votes,
-                votingClosed: votingClosed
-            };
-            const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(exportData, null, 2));
-            const downloadAnchor = document.createElement('a');
-            downloadAnchor.setAttribute("href", dataStr);
-            downloadAnchor.setAttribute("download", "fc_bad_boys_yedek.json");
-            document.body.appendChild(downloadAnchor);
-            downloadAnchor.click();
-            downloadAnchor.remove();
-        }
-
-        function toggleVotingState() {
-            if (!isUnlocked) return;
-            db.ref('votingClosed').set(!votingClosed);
-        }
-
-        function updateStat(id, statType, change) {
-            if (!isUnlocked) {
-                alert("Önce kaptan şifresiyle kilidi açmalısınız!");
-                return;
-            }
-
-            const player = players.find(p => p.id === id);
-            if (player) {
-                if (statType === 'goals') player.goals = Math.max(0, player.goals + change);
-                else if (statType === 'assists') player.assists = Math.max(0, player.assists + change);
-                else if (statType === 'conceded') player.goalsConceded = Math.max(0, (player.goalsConceded || 0) + change);
-                else if (statType === 'yellow') player.yellowCards = Math.max(0, player.yellowCards + change);
-                else if (statType === 'red') player.redCards = Math.max(0, player.redCards + change);
-                
-                saveData();
-            }
-        }
-
-        function setMvp(id) {
-            if (!isUnlocked) return;
-            players.forEach(p => p.isMvp = (p.id === id));
-            saveData();
-        }
-
-        function addMatchModal() {
-            const opponent = prompt("Rakip Takım Adı:");
-            if (!opponent) return;
-            const score = prompt("Skor (Örn: 5 - 2):");
-            if (!score) return;
-            const date = prompt("Maç Tarihi (Örn: 25.10.2026):", "Bugün");
-
-            matches.push({ opponent, score, date });
-            db.ref('matches').set(matches);
-
-            db.ref('votes').remove();
-            db.ref('votingClosed').set(false);
-            localStorage.removeItem("badboys_voted_id");
-        }
-
-        function castVote(newPlayerId) {
-            if (votingClosed) {
-                alert("Oylama sona ermiştir.");
-                return;
-            }
-
-            const oldVotedId = localStorage.getItem("badboys_voted_id");
-
-            if (oldVotedId && parseInt(oldVotedId) === newPlayerId) {
-                alert("Zaten bu oyuncuya oy verdiniz!");
-                return;
-            }
-
-            const updates = {};
-            
-            if (oldVotedId) {
-                const currentOldVotes = votes[oldVotedId] || 1;
-                updates['votes/' + oldVotedId] = Math.max(0, currentOldVotes - 1);
-            }
-            
-            const currentNewVotes = votes[newPlayerId] || 0;
-            updates['votes/' + newPlayerId] = currentNewVotes + 1;
-
-            db.ref().update(updates, (error) => {
-                if (!error) {
-                    localStorage.setItem("badboys_voted_id", newPlayerId);
-                    alert(oldVotedId ? "Oyunuz başarıyla değiştirildi!" : "Oylamanız başarıyla kaydedildi!");
-                } else {
-                    alert("Oy gönderilirken bir hata oluştu.");
-                }
-            });
-        }
-
-        function renderAll() {
-            renderSummary();
-            renderPlayers();
-            renderLeaderboards();
-            renderMatches();
-            renderVoting();
-        }
-
-        function renderSummary() {
-            let totalGoals = players.reduce((sum, p) => sum + (p.goals || 0), 0);
-            let totalAssists = players.reduce((sum, p) => sum + (p.assists || 0), 0);
-            let totalConceded = players.reduce((sum, p) => sum + (p.goalsConceded || 0), 0);
-
-            document.getElementById('team-summary').innerHTML = `
-                <div class="summary-item">Toplam Gol<span>⚽ ${totalGoals}</span></div>
-                <div class="summary-item">Toplam Asist<span>🎯 ${totalAssists}</span></div>
-                <div class="summary-item">Yenen Gol<span>🥅 ${totalConceded}</span></div>
-            `;
-        }
-
-        function renderPlayers() {
-            const container = document.getElementById('players-list');
-            container.innerHTML = players.map(p => `
-                <div class="player-card ${p.isMvp ? 'mvp' : ''}">
-                    ${p.isMvp ? '<div class="mvp-badge">MVP</div>' : ''}
-                    <div class="player-header">
-                        <span class="player-name">${p.name}</span>
-                        <span class="player-number">#${p.number}</span>
-                    </div>
-                    <div class="player-details">${p.position}</div>
-
-                    ${!p.isGoalKeeper ? `
-                        <div class="stats-row">
-                            <span class="stat-label">⚽ Gol</span>
-                            <div class="stat-controls">
-                                ${isUnlocked ? `<button class="stat-btn minus" onclick="updateStat(${p.id}, 'goals', -1)">-</button>` : ''}
-                                <span class="stat-value">${p.goals || 0}</span>
-                                ${isUnlocked ? `<button class="stat-btn plus" onclick="updateStat(${p.id}, 'goals', 1)">+</button>` : ''}
-                            </div>
-                        </div>
-                        <div class="stats-row">
-                            <span class="stat-label">🎯 Asist</span>
-                            <div class="stat-controls">
-                                ${isUnlocked ? `<button class="stat-btn minus" onclick="updateStat(${p.id}, 'assists', -1)">-</button>` : ''}
-                                <span class="stat-value">${p.assists || 0}</span>
-                                ${isUnlocked ? `<button class="stat-btn plus" onclick="updateStat(${p.id}, 'assists', 1)">+</button>` : ''}
-                            </div>
-                        </div>
-                    ` : `
-                        <div class="stats-row">
-                            <span class="stat-label">🥅 Yenen Gol</span>
-                            <div class="stat-controls">
-                                ${isUnlocked ? `<button class="stat-btn minus" onclick="updateStat(${p.id}, 'conceded', -1)">-</button>` : ''}
-                                <span class="stat-value">${p.goalsConceded || 0}</span>
-                                ${isUnlocked ? `<button class="stat-btn plus" onclick="updateStat(${p.id}, 'conceded', 1)">+</button>` : ''}
-                            </div>
-                        </div>
-                    `}
-
-                    <div class="stats-row">
-                        <span class="stat-label">🟨 Sarı Kart</span>
-                        <div class="stat-controls">
-                            ${isUnlocked ? `<button class="stat-btn minus" onclick="updateStat(${p.id}, 'yellow', -1)">-</button>` : ''}
-                            <span class="stat-value">${p.yellowCards || 0}</span>
-                            ${isUnlocked ? `<button class="stat-btn plus" onclick="updateStat(${p.id}, 'yellow', 1)">+</button>` : ''}
-                        </div>
-                    </div>
-                    <div class="stats-row">
-                        <span class="stat-label">🟥 Kırmızı Kart</span>
-                        <div class="stat-controls">
-                            ${isUnlocked ? `<button class="stat-btn minus" onclick="updateStat(${p.id}, 'red', -1)">-</button>` : ''}
-                            <span class="stat-value">${p.redCards || 0}</span>
-                            ${isUnlocked ? `<button class="stat-btn plus" onclick="updateStat(${p.id}, 'red', 1)">+</button>` : ''}
-                        </div>
-                    </div>
-
-                    ${isUnlocked ? `
-                        <div class="mvp-select-box">
-                            <span>Maçın Adamı (MVP) Yap</span>
-                            <button onclick="setMvp(${p.id})">${p.isMvp ? 'Seçili' : 'Seç'}</button>
-                        </div>
-                    ` : ''}
+        <section class="grid grid-cols-2 md:grid-cols-4 gap-4">
+            <div class="bg-cardBg border border-cardBorder rounded-2xl p-4 sm:p-5 flex items-center space-x-4 shadow-md">
+                <div class="w-12 h-12 rounded-xl bg-orange-500/10 text-orange-500 flex items-center justify-center text-xl">
+                    <i class="fa-solid fa-users"></i>
                 </div>
-            `).join('');
-        }
+                <div>
+                    <p class="text-xs text-gray-400 font-medium">Toplam Oyuncu</p>
+                    <h3 id="statTotalPlayers" class="text-xl sm:text-2xl font-bold text-white">0</h3>
+                </div>
+            </div>
+            <div class="bg-cardBg border border-cardBorder rounded-2xl p-4 sm:p-5 flex items-center space-x-4 shadow-md">
+                <div class="w-12 h-12 rounded-xl bg-emerald-500/10 text-emerald-500 flex items-center justify-center text-xl">
+                    <i class="fa-solid fa-futbol"></i>
+                </div>
+                <div>
+                    <p class="text-xs text-gray-400 font-medium">Toplam Gol</p>
+                    <h3 id="statTotalGoals" class="text-xl sm:text-2xl font-bold text-white">0</h3>
+                </div>
+            </div>
+            <div class="bg-cardBg border border-cardBorder rounded-2xl p-4 sm:p-5 flex items-center space-x-4 shadow-md">
+                <div class="w-12 h-12 rounded-xl bg-sky-500/10 text-sky-500 flex items-center justify-center text-xl">
+                    <i class="fa-solid fa-hands-helping"></i>
+                </div>
+                <div>
+                    <p class="text-xs text-gray-400 font-medium">Toplam Asist</p>
+                    <h3 id="statTotalAssists" class="text-xl sm:text-2xl font-bold text-white">0</h3>
+                </div>
+            </div>
+            <div class="bg-cardBg border border-cardBorder rounded-2xl p-4 sm:p-5 flex items-center space-x-4 shadow-md">
+                <div class="w-12 h-12 rounded-xl bg-purple-500/10 text-purple-500 flex items-center justify-center text-xl">
+                    <i class="fa-solid fa-calendar-check"></i>
+                </div>
+                <div>
+                    <p class="text-xs text-gray-400 font-medium">Oynanan Maç</p>
+                    <h3 id="statTotalMatches" class="text-xl sm:text-2xl font-bold text-white">0</h3>
+                </div>
+            </div>
+        </section>
 
-        function renderMatches() {
-            const container = document.getElementById('matches-list');
-            if (matches.length === 0) {
-                container.innerHTML = '<div style="font-size:0.85rem; color:#888;">Henüz maç verisi girilmedi.</div>';
-                return;
-            }
-            container.innerHTML = matches.map(m => `
-                <div class="match-item">
+        <div class="flex items-center space-x-2 border-b border-cardBorder pb-3">
+            <button onclick="switchTab('stats')" id="tabBtn-stats" class="px-4 py-2 rounded-xl text-sm font-bold bg-orange-600 text-white transition-all shadow-sm flex items-center space-x-2">
+                <i class="fa-solid fa-chart-simple"></i>
+                <span>Oyuncular & İstatistikler</span>
+            </button>
+            <button onclick="switchTab("tactic")" id="tabBtn-tactic" class="px-4 py-2 rounded-xl text-sm font-bold bg-cardBg text-gray-400 hover:text-white border border-cardBorder transition-all flex items-center space-x-2">
+                <i class="fa-solid fa-chess-board"></i>
+                <span>Taktik Tahtası (Saha Görünümü)</span>
+            </button>
+        </div>
+
+        <!-- TAB 1: PLAYERS & STATS -->
+        <div id="tabContent-stats" class="space-y-8">
+            <!-- Leaderboard Section (Gol & Asist Krallığı) -->
+            <section class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                <!-- Top Scorers -->
+                <div class="bg-cardBg border border-cardBorder rounded-2xl p-5 shadow-md">
+                    <div class="flex items-center justify-between mb-4 pb-3 border-b border-cardBorder">
+                        <div class="flex items-center space-x-2.5">
+                            <i class="fa-solid fa-crown text-orange-500"></i>
+                            <h3 class="font-bold text-base text-white">Gol Krallığı (Top Scorers)</h3>
+                        </div>
+                        <span class="text-xs text-orange-500 bg-orange-500/10 px-2.5 py-1 rounded-lg font-semibold">En Çok Atanlar</span>
+                    </div>
+                    <div id="topScorersList" class="space-y-3">
+                        <div class="text-center py-6 text-gray-500 text-sm">Yükleniyor...</div>
+                    </div>
+                </div>
+
+                <!-- Top Assists -->
+                <div class="bg-cardBg border border-cardBorder rounded-2xl p-5 shadow-md">
+                    <div class="flex items-center justify-between mb-4 pb-3 border-b border-cardBorder">
+                        <div class="flex items-center space-x-2.5">
+                            <i class="fa-solid fa-wand-magic-sparkles text-sky-400"></i>
+                            <h3 class="font-bold text-base text-white">Asist Krallığı (Top Assists)</h3>
+                        </div>
+                        <span class="text-xs text-sky-400 bg-sky-500/10 px-2.5 py-1 rounded-lg font-semibold">En Çok Pas Verenler</span>
+                    </div>
+                    <div id="topAssistsList" class="space-y-3">
+                        <div class="text-center py-6 text-gray-500 text-sm">Yükleniyor...</div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Main Roster Section -->
+            <section class="space-y-4">
+                <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
                     <div>
-                        <strong>FC BAD BOYS vs ${m.opponent}</strong>
-                        <div style="font-size:0.75rem; color:#aaa;">${m.date}</div>
+                        <h3 class="text-xl font-bold text-white flex items-center space-x-2">
+                            <i class="fa-solid fa-clipboard-user text-orange-500"></i>
+                            <span>Takım Kadrosu ve İstatistikleri</span>
+                        </h3>
+                        <p class="text-xs text-gray-400 mt-0.5">Tüm oyuncuların güncel maç, gol, asist ve kaleci verileri.</p>
                     </div>
-                    <div class="match-score">${m.score}</div>
-                </div>
-            `).join('');
-        }
 
-        function renderVoting() {
-            const container = document.getElementById('vote-container');
-            const winnerDisplay = document.getElementById('winner-display');
-            const voteStatus = document.getElementById('vote-status');
-            const myVotedId = localStorage.getItem("badboys_voted_id");
-
-            let maxVotes = -1;
-            let winner = null;
-            players.forEach(p => {
-                const count = votes[p.id] || 0;
-                if (count > maxVotes && count > 0) {
-                    maxVotes = count;
-                    winner = p;
-                }
-            });
-
-            if (votingClosed) {
-                if (winner) {
-                    const formattedName = `👑 ${winner.name.toUpperCase()} 👑`;
-                    winnerDisplay.innerHTML = `<div class="winner-banner">${formattedName}</div>`;
-                } else {
-                    winnerDisplay.innerHTML = `<div class="winner-banner">👑 KAZANAN BELİRLENEMEDİ 👑</div>`;
-                }
-                voteStatus.textContent = "Haftanın oyuncusu oylaması tamamlandı!";
-            } else {
-                winnerDisplay.innerHTML = '';
-                voteStatus.textContent = myVotedId 
-                    ? "Oyunuz kaydedildi. İsterseniz aşağıdaki butonlardan başka bir oyuncuya tıklayarak oyunuzu değiştirebilirsiniz." 
-                    : "Herkesin 1 oy hakkı vardır. Oyunuzu dilediğiniz zaman değiştirebilirsiniz.";
-            }
-
-            container.innerHTML = players.map(p => {
-                const count = votes[p.id] || 0;
-                const isMyVote = myVotedId && parseInt(myVotedId) === p.id;
-                
-                return `
-                    <div class="vote-card ${isMyVote ? 'voted-active' : ''}">
-                        <div>
-                            <strong>${p.name}</strong>
-                            <div style="font-size:0.8rem; color:var(--primary-orange); margin-top:2px;">Oy: ${count}</div>
-                        </div>
-                        <button class="vote-btn ${isMyVote ? 'voted-btn' : ''}" 
-                            ${votingClosed ? 'disabled' : ''} 
-                            onclick="castVote(${p.id})">
-                            ${votingClosed ? 'Kapandı' : (isMyVote ? 'Oyunuz (Değiştir)' : 'Oy Ver')}
+                    <!-- Admin Only Add Player Button -->
+                    <div id="adminActionContainer" class="hidden">
+                        <button onclick="togglePlayerModal()" class="w-full sm:w-auto bg-orange-600 hover:bg-orange-700 text-white px-4 py-2.5 rounded-xl text-sm font-bold shadow-lg shadow-orange-600/20 flex items-center justify-center space-x-2 transition-all">
+                            <i class="fa-solid fa-user-plus"></i>
+                            <span>Yeni Oyuncu Ekle</span>
                         </button>
                     </div>
-                `;
-            }).join('');
+                </div>
 
-            // Oylama kontrol butonlarını oylama alanının altına güvenli şekilde yerleştiriyoruz
-            let adminBottomDiv = document.getElementById('admin-controls-bottom-container');
-            if (!adminBottomDiv) {
-                adminBottomDiv = document.createElement('div');
-                adminBottomDiv.id = 'admin-controls-bottom-container';
-                document.getElementById('vote-container').parentNode.appendChild(adminBottomDiv);
-            }
+                <!-- Position Filter Tabs -->
+                <div class="flex flex-wrap gap-2 pt-2">
+                    <button onclick="filterPosition('ALL')" id="filter-ALL" class="filter-btn px-4 py-2 rounded-xl text-xs font-semibold bg-orange-600 text-white transition-all shadow-sm">Tümü</button>
+                    <button onclick="filterPosition('Forvet')" id="filter-Forvet" class="filter-btn px-4 py-2 rounded-xl text-xs font-semibold bg-cardBg text-gray-400 hover:text-white border border-cardBorder transition-all">Forvet</button>
+                    <button onclick="filterPosition('Orta Saha')" id="filter-Orta Saha" class="filter-btn px-4 py-2 rounded-xl text-xs font-semibold bg-cardBg text-gray-400 hover:text-white border border-cardBorder transition-all">Orta Saha</button>
+                    <button onclick="filterPosition('Defans')" id="filter-Defans" class="filter-btn px-4 py-2 rounded-xl text-xs font-semibold bg-cardBg text-gray-400 hover:text-white border border-cardBorder transition-all">Defans</button>
+                    <button onclick="filterPosition('Kaleci')" id="filter-Kaleci" class="filter-btn px-4 py-2 rounded-xl text-xs font-semibold bg-cardBg text-gray-400 hover:text-white border border-cardBorder transition-all">Kaleci</button>
+                </div>
 
-            if (isUnlocked) {
-                adminBottomDiv.innerHTML = `
-                    <div class="admin-controls-bottom">
-                        <div style="font-size:0.75rem; color:#aaa; text-align:center;">Oylama Kontrol Paneli</div>
-                        <div style="display: flex; gap: 10px; justify-content: center;">
-                            <button class="admin-btn ${votingClosed ? 'btn-toggle-open' : 'btn-toggle-close'}" onclick="toggleVotingState()">
-                                ${votingClosed ? 'Oylamayı Tekrar Aç' : 'Oylamayı Bitir'}
-                            </button>
+                <!-- Players Grid Cards -->
+                <div id="playersGrid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 pt-2">
+                    <div class="col-span-full py-12 text-center text-gray-500">
+                        <i class="fa-solid fa-spinner fa-spin text-2xl text-orange-500 mb-2"></i>
+                        <p class="text-sm">Oyuncular yükleniyor...</p>
+                    </div>
+                </div>
+            </section>
+        </div>
+
+        <!-- TAB 2: TACTIC BOARD -->
+        <div id="tabContent-tactic" class="space-y-4 hidden">
+            <div class="bg-cardBg border border-cardBorder rounded-2xl p-5 shadow-md">
+                <div class="flex items-center justify-between mb-4 pb-3 border-b border-cardBorder">
+                    <div>
+                        <h3 class="font-bold text-base text-white">FC BAD BOYS Halı Saha Taktik Tahtası</h3>
+                        <p class="text-xs text-gray-400 mt-0.5">Takımın ideal formasyon ve saha yerleşimi</p>
+                    </div>
+                    <span class="text-xs bg-orange-500/10 text-orange-500 border border-orange-500/20 px-3 py-1 rounded-full font-semibold">2-1-1 Formasyonu</span>
+                </div>
+
+                <!-- Pitch Container -->
+                <div class="relative w-full aspect-[4/3] sm:aspect-[16/9] rounded-2xl bg-gradient-to-b from-emerald-800 to-emerald-950 border-4 border-emerald-600/50 overflow-hidden shadow-inner flex flex-col justify-between p-4 sm:p-8">
+                    <!-- Pitch Markings: Center Circle & Halfway line -->
+                    <div class="absolute inset-x-0 top-1/2 border-t-2 border-white/20"></div>
+                    <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-24 h-24 sm:w-36 sm:h-36 rounded-full border-2 border-white/20 pointer-events-none"></div>
+
+                    <!-- Goal (Top / Opponent) -->
+                    <div class="mx-auto w-32 sm:w-48 h-8 sm:h-12 border-2 border-t-0 border-white/40 rounded-b-xl flex items-center justify-center">
+                        <span class="text-[10px] text-white/50 uppercase tracking-widest font-bold">Rakip Kale</span>
+                    </div>
+
+                    <!-- Positions on Pitch -->
+                    <div class="relative z-10 flex-grow flex flex-col justify-around items-center">
+                        <!-- Forvet -->
+                        <div id="tactic-forvet" class="flex flex-wrap justify-center gap-4">
+                            <!-- Injected via JS -->
+                        </div>
+
+                        <!-- Orta Saha -->
+                        <div id="tactic-ortasaha" class="flex flex-wrap justify-center gap-4">
+                            <!-- Injected via JS -->
+                        </div>
+
+                        <!-- Defans -->
+                        <div id="tactic-defans" class="flex flex-wrap justify-center gap-4">
+                            <!-- Injected via JS -->
+                        </div>
+
+                        <!-- Kaleci -->
+                        <div id="tactic-kaleci" class="flex flex-wrap justify-center gap-4">
+                            <!-- Injected via JS -->
                         </div>
                     </div>
-                `;
-            } else {
-                adminBottomDiv.innerHTML = '';
+
+                    <!-- Goal (Bottom / Our Goal) -->
+                    <div class="mx-auto w-32 sm:w-48 h-8 sm:h-12 border-2 border-b-0 border-white/40 rounded-t-xl flex items-center justify-center bg-orange-600/10">
+                        <span class="text-[10px] text-orange-400 font-bold uppercase tracking-widest">FC BAD BOYS Kalesi</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </main>
+
+    <footer class="mt-auto border-t border-cardBorder bg-[#0f0f11] py-6 text-center text-xs text-gray-500">
+        <div class="max-w-7xl mx-auto px-4 flex flex-col sm:flex-row items-center justify-between gap-4">
+            <p>© 2026 FC BAD BOYS Halısaha Yönetim Sistemi. Tüm hakları saklıdır.</p>
+            <div class="flex items-center space-x-4">
+                <span class="flex items-center space-x-1 text-orange-500">
+                    <i class="fa-solid fa-shield-heart"></i>
+                    <span class="font-semibold">Turuncu & Siyah</span>
+                </span>
+            </div>
+        </div>
+    </footer>
+
+    <div id="authModal" class="fixed inset-0 z-50 bg-black/80 backdrop-blur-sm hidden flex items-center justify-center p-4">
+        <div class="bg-cardBg border border-cardBorder rounded-2xl max-w-md w-full p-6 shadow-2xl relative">
+            <button onclick="toggleAuthModal()" class="absolute top-4 right-4 text-gray-400 hover:text-white">
+                <i class="fa-solid fa-xmark text-lg"></i>
+            </button>
+            
+            <div class="text-center mb-6">
+                <div class="w-12 h-12 rounded-2xl bg-orange-500/10 text-orange-500 flex items-center justify-center text-xl mx-auto mb-3 border border-orange-500/20">
+                    <i class="fa-solid fa-lock-keyhole" id="modalLockIcon"></i>
+                </div>
+                <h3 id="modalTitle" class="text-lg font-bold text-white">Yönetici Girişi</h3>
+                <p id="modalSubtitle" class="text-xs text-gray-400 mt-1">İstatistikleri güncellemek ve oyuncu eklemek için şifrenizi girin.</p>
+            </div>
+
+            <div id="loginFormContainer" class="space-y-4">
+                <div>
+                    <label class="block text-xs font-medium text-gray-400 mb-1.5">Yönetici Şifresi</label>
+                    <input type="password" id="adminPasswordInput" placeholder="Şifrenizi girin..." class="w-full bg-[#0f0f11] border border-cardBorder rounded-xl px-4 py-2.5 text-sm text-white focus:outline-none focus:border-orange-500 transition-colors">
+                </div>
+                <button onclick="handleAdminLogin()" class="w-full bg-orange-600 hover:bg-orange-700 text-white font-bold py-2.5 rounded-xl text-sm transition-all shadow-lg shadow-orange-600/20">
+                    Giriş Yap
+                </button>
+            </div>
+
+            <div id="logoutContainer" class="hidden space-y-4 text-center">
+                <p class="text-sm text-emerald-400 font-medium bg-emerald-500/10 border border-emerald-500/20 py-2.5 rounded-xl">
+                    <i class="fa-solid fa-circle-check mr-1.5"></i> Şu an Yönetici Modundasınız
+                </p>
+                <button onclick="handleAdminLogout()" class="w-full bg-red-600/20 hover:bg-red-600/30 text-red-400 border border-red-500/30 font-bold py-2.5 rounded-xl text-sm transition-all">
+                    Yönetici Oturumunu Kapat
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <div id="playerModal" class="fixed inset-0 z-50 bg-black/80 backdrop-blur-sm hidden flex items-center justify-center p-4">
+        <div class="bg-cardBg border border-cardBorder rounded-2xl max-w-md w-full p-6 shadow-2xl relative">
+            <button onclick="togglePlayerModal()" class="absolute top-4 right-4 text-gray-400 hover:text-white">
+                <i class="fa-solid fa-xmark text-lg"></i>
+            </button>
+            
+            <div class="flex items-center space-x-3 mb-6">
+                <div class="w-10 h-10 rounded-xl bg-orange-500/10 text-orange-500 flex items-center justify-center">
+                    <i class="fa-solid fa-user-plus"></i>
+                </div>
+                <div>
+                    <h3 class="text-base font-bold text-white">Yeni Oyuncu Ekle</h3>
+                    <p class="text-xs text-gray-400">FC BAD BOYS kadrosuna yeni oyuncu tanımla</p>
+                </div>
+            </div>
+
+            <form id="addPlayerForm" onsubmit="handleAddNewPlayer(event)" class="space-y-4">
+                <div class="grid grid-cols-2 gap-3">
+                    <div>
+                        <label class="block text-xs font-medium text-gray-400 mb-1">İsim</label>
+                        <input type="text" id="newFirstName" required placeholder="Örn: Burak" class="w-full bg-[#0f0f11] border border-cardBorder rounded-xl px-3.5 py-2 text-sm text-white focus:outline-none focus:border-orange-500">
+                    </div>
+                    <div>
+                        <label class="block text-xs font-medium text-gray-400 mb-1">Soyisim</label>
+                        <input type="text" id="newLastName" required placeholder="Örn: Yılmaz" class="w-full bg-[#0f0f11] border border-cardBorder rounded-xl px-3.5 py-2 text-sm text-white focus:outline-none focus:border-orange-500">
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-2 gap-3">
+                    <div>
+                        <label class="block text-xs font-medium text-gray-400 mb-1">Forma No</label>
+                        <input type="number" id="newJerseyNo" required placeholder="10" class="w-full bg-[#0f0f11] border border-cardBorder rounded-xl px-3.5 py-2 text-sm text-white focus:outline-none focus:border-orange-500">
+                    </div>
+                    <div>
+                        <label class="block text-xs font-medium text-gray-400 mb-1">Mevki</label>
+                        <select id="newPosition" class="w-full bg-[#0f0f11] border border-cardBorder rounded-xl px-3.5 py-2 text-sm text-white focus:outline-none focus:border-orange-500">
+                            <option value="Forvet">Forvet</option>
+                            <option value="Orta Saha">Orta Saha</option>
+                            <option value="Defans">Defans</option>
+                            <option value="Kaleci">Kaleci</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-2 gap-3">
+                    <div>
+                        <label class="block text-xs font-medium text-gray-400 mb-1">Oynanan Maç</label>
+                        <input type="number" id="newMatches" value="0" min="0" class="w-full bg-[#0f0f11] border border-cardBorder rounded-xl px-3.5 py-2 text-sm text-white focus:outline-none focus:border-orange-500">
+                    </div>
+                    <div id="initialStatContainer">
+                        <label class="block text-xs font-medium text-gray-400 mb-1" id="initialStatLabel">İlk Gol / Gol</label>
+                        <input type="number" id="newStatVal" value="0" min="0" class="w-full bg-[#0f0f11] border border-cardBorder rounded-xl px-3.5 py-2 text-sm text-white focus:outline-none focus:border-orange-500">
+                    </div>
+                </div>
+
+                <div class="pt-2 flex space-x-3">
+                    <button type="button" onclick="togglePlayerModal()" class="w-1/2 bg-cardBorder hover:bg-zinc-700 text-gray-300 font-semibold py-2.5 rounded-xl text-sm transition-all">İptal</button>
+                    <button type="submit" class="w-1/2 bg-orange-600 hover:bg-orange-700 text-white font-bold py-2.5 rounded-xl text-sm transition-all shadow-lg shadow-orange-600/20">Kaydet</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <div id="toastNotification" class="fixed bottom-5 right-5 z-50 transform translate-y-20 opacity-0 transition-all duration-300 pointer-events-none">
+        <div class="bg-cardBg border border-orange-500/40 text-white px-4 py-3 rounded-xl shadow-2xl flex items-center space-x-3">
+            <div class="w-8 h-8 rounded-lg bg-orange-500/20 text-orange-500 flex items-center justify-center">
+                <i class="fa-solid fa-bell text-sm" id="toastIcon"></i>
+            </div>
+            <div>
+                <p id="toastTitle" class="text-xs font-bold text-orange-500">Bildirim</p>
+                <p id="toastMessage" class="text-xs text-gray-300">İşlem başarıyla gerçekleştirildi.</p>
+            </div>
+        </div>
+    </div>
+
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
+        import { getAuth, signInAnonymously, signInWithCustomToken } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
+        import { getFirestore, collection, doc, setDoc, updateDoc, deleteDoc, onSnapshot } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
+
+        const appId = typeof __app_id !== 'undefined' ? __app_id : 'fc-bad-boys-default-2026';
+        const firebaseConfig = typeof __firebase_config !== 'undefined' ? JSON.parse(__firebase_config) : {
+            apiKey: "AIzaSyDummyKeyForFallbackOnly12345",
+            authDomain: "fcbadboys.firebaseapp.com",
+            projectId: "fcbadboys",
+            storageBucket: "fcbadboys.appspot.com",
+            messagingSenderId: "123456789",
+            appId: "1:123:web:abc"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
+        const db = getFirestore(app);
+
+        let isAdmin = localStorage.getItem('fc_bad_boys_admin') === 'true';
+        let playersData = [];
+        let currentFilter = 'ALL';
+        let currentActiveTab = 'stats';
+        const ADMIN_PASSWORD = "badboys2026*"; // Yönetici şifresi
+
+        const defaultPlayers = [
+            { id: 'p1', firstName: 'Mert', lastName: 'Demir', jerseyNo: 1, position: 'Kaleci', matches: 12, goals: 0, assists: 1, conceded: 14 },
+            { id: 'p2', firstName: 'Emre', lastName: 'Kaya', jerseyNo: 5, position: 'Defans', matches: 14, goals: 3, assists: 4, conceded: 0 },
+            { id: 'p3', firstName: 'Kerem', lastName: 'Şahin', jerseyNo: 4, position: 'Defans', matches: 10, goals: 1, assists: 2, conceded: 0 },
+            { id: 'p4', firstName: 'Barış', lastName: 'Yıldız', jerseyNo: 8, position: 'Orta Saha', matches: 15, goals: 8, assists: 11, conceded: 0 },
+            { id: 'p5', firstName: 'Arda', lastName: 'Çelik', jerseyNo: 10, position: 'Orta Saha', matches: 14, goals: 12, assists: 9, conceded: 0 },
+            { id: 'p6', firstName: 'Can', lastName: 'Öztürk', jerseyNo: 7, position: 'Forvet', matches: 13, goals: 18, assists: 5, conceded: 0 },
+            { id: 'p7', firstName: 'Burak', lastName: 'Aydın', jerseyNo: 9, position: 'Forvet', matches: 15, goals: 22, assists: 7, conceded: 0 }
+        ];
+
+        async function initApp() {
+            try {
+                if (typeof __initial_auth_token !== 'undefined' && __initial_auth_token) {
+                    await signInWithCustomToken(auth, __initial_auth_token);
+                } else {
+                    await signInAnonymously(auth);
+                }
+            } catch (err) {
+                console.warn("Auth warning:", err);
             }
+            updateAdminUI();
+            setupRealtimeListener();
+        }
+
+        function setupRealtimeListener() {
+            const playersColRef = collection(db, 'artifacts', appId, 'public', 'data', 'players');
+            
+            onSnapshot(playersColRef, async (snapshot) => {
+                if (snapshot.empty) {
+                    for (let p of defaultPlayers) {
+                        await setDoc(doc(db, 'artifacts', appId, 'public', 'data', 'players', p.id), p);
+                    }
+                } else {
+                    playersData = [];
+                    snapshot.forEach(docSnap => {
+                        playersData.push({ id: docSnap.id, ...docSnap.data() });
+                    });
+                    renderApp();
+                }
+            }, (error) => {
+                console.error("Firestore error:", error);
+                if(playersData.length === 0) {
+                    playersData = defaultPlayers;
+                    renderApp();
+                }
+            });
+        }
+
+        window.renderApp = function() {
+            renderStatsOverview();
+            renderLeaderboards();
+            renderPlayersGrid();
+            renderTacticBoard();
+        }
+
+        function renderStatsOverview() {
+            document.getElementById('statTotalPlayers').innerText = playersData.length;
+            document.getElementById('statTotalGoals').innerText = playersData.reduce((acc, p) => acc + (p.goals || 0), 0);
+            document.getElementById('statTotalAssists').innerText = playersData.reduce((acc, p) => acc + (p.assists || 0), 0);
+            document.getElementById('statTotalMatches').innerText = playersData.length > 0 ? Math.max(...playersData.map(p => p.matches || 0)) : 0;
         }
 
         function renderLeaderboards() {
-            const topScorers = [...players]
-                .filter(p => !p.isGoalKeeper)
-                .sort((a, b) => (b.goals || 0) - (a.goals || 0))
-                .slice(0, 5);
+            const sortedScorers = [...playersData].sort((a, b) => (b.goals || 0) - (a.goals || 0)).slice(0, 5);
+            const scorersContainer = document.getElementById('topScorersList');
+            
+            if (sortedScorers.length === 0 || sortedScorers.every(p => (p.goals || 0) === 0)) {
+                scorersContainer.innerHTML = `<div class="text-center py-4 text-gray-500 text-xs">Henüz gol kaydedilmedi.</div>`;
+            } else {
+                scorersContainer.innerHTML = sortedScorers.map((p, idx) => `
+                    <div class="flex items-center justify-between p-3 rounded-xl bg-[#0f0f11] border border-cardBorder">
+                        <div class="flex items-center space-x-3">
+                            <span class="w-6 h-6 rounded-lg font-bold text-xs flex items-center justify-center ${idx === 0 ? 'bg-amber-500 text-black' : idx === 1 ? 'bg-zinc-300 text-black' : idx === 2 ? 'bg-amber-700 text-white' : 'bg-cardBorder text-gray-400'}">
+                                ${idx + 1}
+                            </span>
+                            <div>
+                                <h4 class="font-semibold text-sm text-white">${p.firstName} ${p.lastName}</h4>
+                                <span class="text-[10px] text-gray-400">#${p.jerseyNo} • ${p.position}</span>
+                            </div>
+                        </div>
+                        <div class="text-right">
+                            <span class="text-orange-500 font-extrabold text-base">${p.goals || 0}</span>
+                            <span class="text-[10px] text-gray-500 block">Gol</span>
+                        </div>
+                    </div>
+                `).join('');
+            }
 
-            const topAssists = [...players]
-                .filter(p => !p.isGoalKeeper)
-                .sort((a, b) => (b.assists || 0) - (a.assists || 0))
-                .slice(0, 5);
+            const sortedAssists = [...playersData].sort((a, b) => (b.assists || 0) - (a.assists || 0)).slice(0, 5);
+            const assistsContainer = document.getElementById('topAssistsList');
 
-            document.getElementById('top-scorers').innerHTML = topScorers.map((p, index) => `
-                <div class="rank-row">
-                    <span>${index + 1}. ${p.name}</span>
-                    <strong>${p.goals || 0} Gol</strong>
-                </div>
-            `).join('');
-
-            document.getElementById('top-assists').innerHTML = topAssists.map((p, index) => `
-                <div class="rank-row">
-                    <span>${index + 1}. ${p.name}</span>
-                    <strong>${p.assists || 0} Asist</strong>
-                </div>
-            `).join('');
+            if (sortedAssists.length === 0 || sortedAssists.every(p => (p.assists || 0) === 0)) {
+                assistsContainer.innerHTML = `<div class="text-center py-4 text-gray-500 text-xs">Henüz asist kaydedilmedi.</div>`;
+            } else {
+                assistsContainer.innerHTML = sortedAssists.map((p, idx) => `
+                    <div class="flex items-center justify-between p-3 rounded-xl bg-[#0f0f11] border border-cardBorder">
+                        <div class="flex items-center space-x-3">
+                            <span class="w-6 h-6 rounded-lg font-bold text-xs flex items-center justify-center ${idx === 0 ? 'bg-sky-400 text-black' : idx === 1 ? 'bg-zinc-300 text-black' : idx === 2 ? 'bg-sky-700 text-white' : 'bg-cardBorder text-gray-400'}">
+                                ${idx + 1}
+                            </span>
+                            <div>
+                                <h4 class="font-semibold text-sm text-white">${p.firstName} ${p.lastName}</h4>
+                                <span class="text-[10px] text-gray-400">#${p.jerseyNo} • ${p.position}</span>
+                            </div>
+                        </div>
+                        <div class="text-right">
+                            <span class="text-sky-400 font-extrabold text-base">${p.assists || 0}</span>
+                            <span class="text-[10px] text-gray-500 block">Asist</span>
+                        </div>
+                    </div>
+                `).join('');
+            }
         }
+
+        window.filterPosition = function(pos) {
+            currentFilter = pos;
+            document.querySelectorAll('.filter-btn').forEach(btn => {
+                btn.classList.remove('bg-orange-600', 'text-white');
+                btn.classList.add('bg-cardBg', 'text-gray-400');
+            });
+            const activeBtn = document.getElementById(`filter-${pos}`);
+            if(activeBtn) {
+                activeBtn.classList.remove('bg-cardBg', 'text-gray-400');
+                activeBtn.classList.add('bg-orange-600', 'text-white');
+            }
+            renderPlayersGrid();
+        }
+
+        window.switchTab = function(tab) {
+            currentActiveTab = tab;
+            const statsBtn = document.getElementById('tabBtn-stats');
+            const tacticBtn = document.getElementById('tabBtn-tactic');
+            const statsContent = document.getElementById('tabContent-stats');
+            const tacticContent = document.getElementById('tabContent-tactic');
+
+            if (tab === 'stats') {
+                statsBtn.className = "px-4 py-2 rounded-xl text-sm font-bold bg-orange-600 text-white transition-all shadow-sm flex items-center space-x-2";
+                tacticBtn.className = "px-4 py-2 rounded-xl text-sm font-bold bg-cardBg text-gray-400 hover:text-white border border-cardBorder transition-all flex items-center space-x-2";
+                statsContent.classList.remove('hidden');
+                tacticContent.classList.add('hidden');
+            } else {
+                tacticBtn.className = "px-4 py-2 rounded-xl text-sm font-bold bg-orange-600 text-white transition-all shadow-sm flex items-center space-x-2";
+                statsBtn.className = "px-4 py-2 rounded-xl text-sm font-bold bg-cardBg text-gray-400 hover:text-white border border-cardBorder transition-all flex items-center space-x-2";
+                tacticContent.classList.remove('hidden');
+                statsContent.classList.add('hidden');
+            }
+        }
+
+        function renderPlayersGrid() {
+            const grid = document.getElementById('playersGrid');
+            const filtered = currentFilter === 'ALL' ? playersData : playersData.filter(p => p.position === currentFilter);
+
+            if (filtered.length === 0) {
+                grid.innerHTML = `<div class="col-span-full py-12 text-center text-gray-500 text-sm">Bu pozisyonda kayıtlı oyuncu bulunmuyor.</div>`;
+                return;
+            }
+
+            grid.innerHTML = filtered.map(p => {
+                const isGoalie = p.position === 'Kaleci';
+                return `
+                    <div class="bg-cardBg border border-cardBorder rounded-2xl p-5 shadow-md flex flex-col justify-between relative group hover:border-orange-500/40 transition-all duration-200">
+                        <div>
+                            <div class="flex items-start justify-between mb-3">
+                                <div class="flex items-center space-x-3">
+                                    <div class="w-11 h-11 rounded-xl bg-orange-500/10 border border-orange-500/20 text-orange-500 font-black text-base flex items-center justify-center shadow-inner">
+                                        #${p.jerseyNo}
+                                    </div>
+                                    <div>
+                                        <h4 class="font-bold text-base text-white">${p.firstName} ${p.lastName}</h4>
+                                        <span class="inline-block mt-0.5 px-2 py-0.5 rounded text-[10px] font-semibold bg-zinc-800 text-orange-400 border border-zinc-700">${p.position}</span>
+                                    </div>
+                                </div>
+                                ${isAdmin ? `
+                                    <button onclick="deletePlayer('${p.id}')" class="text-gray-500 hover:text-red-400 p-1.5 rounded-lg hover:bg-red-500/10 transition-colors" title="Oyuncuyu Sil">
+                                        <i class="fa-solid fa-trash-can text-xs"></i>
+                                    </button>
+                                ` : ''}
+                            </div>
+
+                            <div class="grid grid-cols-2 gap-2 my-4 bg-[#0f0f11] p-3 rounded-xl border border-cardBorder">
+                                <div class="flex flex-col justify-center border-r border-cardBorder pr-2">
+                                    <span class="text-[10px] text-gray-400 font-medium">Oynanan Maç</span>
+                                    <div class="flex items-center justify-between mt-1">
+                                        <span class="text-sm font-bold text-white">${p.matches || 0}</span>
+                                        ${isAdmin ? `
+                                            <div class="flex space-x-1">
+                                                <button onclick="updateStat('${p.id}', 'matches', -1)" class="w-6 h-6 rounded bg-cardBorder text-gray-300 hover:bg-red-600 hover:text-white flex items-center justify-center text-xs transition-colors">-</button>
+                                                <button onclick="updateStat('${p.id}', 'matches', 1)" class="w-6 h-6 rounded bg-cardBorder text-gray-300 hover:bg-orange-600 hover:text-white flex items-center justify-center text-xs transition-colors">+</button>
+                                            </div>
+                                        ` : ''}
+                                    </div>
+                                </div>
+
+                                ${isGoalie ? `
+                                    <div class="flex flex-col justify-center pl-2">
+                                        <span class="text-[10px] text-red-400 font-medium">Yediği Gol</span>
+                                        <div class="flex items-center justify-between mt-1">
+                                            <span class="text-sm font-bold text-red-400">${p.conceded || 0}</span>
+                                            ${isAdmin ? `
+                                                <div class="flex space-x-1">
+                                                    <button onclick="updateStat('${p.id}', 'conceded', -1)" class="w-6 h-6 rounded bg-cardBorder text-gray-300 hover:bg-red-600 hover:text-white flex items-center justify-center text-xs transition-colors">-</button>
+                                                    <button onclick="updateStat('${p.id}', 'conceded', 1)" class="w-6 h-6 rounded bg-cardBorder text-gray-300 hover:bg-orange-600 hover:text-white flex items-center justify-center text-xs transition-colors">+</button>
+                                                </div>
+                                            ` : ''}
+                                        </div>
+                                    </div>
+                                ` : `
+                                    <div class="flex flex-col justify-center pl-2">
+                                        <span class="text-[10px] text-orange-400 font-medium">Gol</span>
+                                        <div class="flex items-center justify-between mt-1">
+                                            <span class="text-sm font-bold text-orange-400">${p.goals || 0}</span>
+                                            ${isAdmin ? `
+                                                <div class="flex space-x-1">
+                                                    <button onclick="updateStat('${p.id}', 'goals', -1)" class="w-6 h-6 rounded bg-cardBorder text-gray-300 hover:bg-red-600 hover:text-white flex items-center justify-center text-xs transition-colors">-</button>
+                                                    <button onclick="updateStat('${p.id}', 'goals', 1)" class="w-6 h-6 rounded bg-cardBorder text-gray-300 hover:bg-orange-600 hover:text-white flex items-center justify-center text-xs transition-colors">+</button>
+                                                </div>
+                                            ` : ''}
+                                        </div>
+                                    </div>
+                                `}
+                            </div>
+
+                            ${!isGoalie ? `
+                                <div class="bg-[#0f0f11] p-3 rounded-xl border border-cardBorder flex items-center justify-between">
+                                    <span class="text-xs text-sky-400 font-medium">Asist</span>
+                                    <div class="flex items-center space-x-3">
+                                        <span class="text-sm font-bold text-sky-400">${p.assists || 0}</span>
+                                        ${isAdmin ? `
+                                            <div class="flex space-x-1">
+                                                <button onclick="updateStat('${p.id}', 'assists', -1)" class="w-6 h-6 rounded bg-cardBorder text-gray-300 hover:bg-red-600 hover:text-white flex items-center justify-center text-xs transition-colors">-</button>
+                                                <button onclick="updateStat('${p.id}', 'assists', 1)" class="w-6 h-6 rounded bg-cardBorder text-gray-300 hover:bg-orange-600 hover:text-white flex items-center justify-center text-xs transition-colors">+</button>
+                                            </div>
+                                        ` : ''}
+                                    </div>
+                                </div>
+                            ` : ''}
+                        </div>
+
+                        ${!isAdmin ? `
+                            <div class="mt-3 text-center">
+                                <span class="text-[10px] text-gray-500 italic">Değişiklik için yönetici girişi yapın</span>
+                            </div>
+                        ` : ''}
+                    </div>
+                `;
+            }).join('');
+        }
+
+        function renderTacticBoard() {
+            const forvetDiv = document.getElementById('tactic-forvet');
+            const ortaSahaDiv = document.getElementById('tactic-ortasaha');
+            const defansDiv = document.getElementById('tactic-defans');
+            const kaleciDiv = document.getElementById('tactic-kaleci');
+
+            const renderBadge = (p) => `
+                <div class="flex flex-col items-center group">
+                    <div class="w-10 h-10 sm:w-12 sm:h-12 rounded-full bg-orange-600 text-white font-black text-xs sm:text-sm flex items-center justify-center shadow-lg border-2 border-white/80">
+                        #${p.jerseyNo}
+                    </div>
+                    <span class="mt-1 px-2 py-0.5 rounded text-[10px] font-bold bg-black/70 text-white border border-white/20 whitespace-nowrap">${p.firstName} ${p.lastName}</span>
+                </div>
+            `;
+
+            forvetDiv.innerHTML = playersData.filter(p => p.position === 'Forvet').map(renderBadge).join('') || '<span class="text-xs text-white/50">Forvet yok</span>';
+            ortaSahaDiv.innerHTML = playersData.filter(p => p.position === 'Orta Saha').map(renderBadge).join('') || '<span class="text-xs text-white/50">Orta Saha yok</span>';
+            defansDiv.innerHTML = playersData.filter(p => p.position === 'Defans').map(renderBadge).join('') || '<span class="text-xs text-white/50">Defans yok</span>';
+            kaleciDiv.innerHTML = playersData.filter(p => p.position === 'Kaleci').map(renderBadge).join('') || '<span class="text-xs text-white/50">Kaleci yok</span>';
+        }
+
+        window.updateStat = async function(playerId, field, delta) {
+            if (!isAdmin) {
+                showToast("Yetkisiz İşlem", "Bu işlem için yönetici girişi yapmalısınız.", "fa-triangle-exclamation");
+                return;
+            }
+
+            const player = playersData.find(p => p.id === playerId);
+            if (!player) return;
+
+            let currentVal = player[field] || 0;
+            let newVal = currentVal + delta;
+            if (newVal < 0) newVal = 0;
+
+            try {
+                const docRef = doc(db, 'artifacts', appId, 'public', 'data', 'players', playerId);
+                await updateDoc(docRef, { [field]: newVal });
+                showToast("Güncellendi", `${player.firstName} adlı oyuncunun verisi güncellendi.`, "fa-circle-check");
+            } catch (err) {
+                console.error("Error updating stat:", err);
+                player[field] = newVal;
+                renderApp();
+                showToast("Güncellendi", "Veri yerel olarak güncellendi.", "fa-circle-check");
+            }
+        }
+
+        window.toggleAuthModal = function() {
+            const modal = document.getElementById('authModal');
+            modal.classList.toggle('hidden');
+            if(!modal.classList.contains('hidden')) {
+                document.getElementById('adminPasswordInput').value = '';
+            }
+        }
+
+        window.handleAdminLogin = function() {
+            const pass = document.getElementById('adminPasswordInput').value;
+            if (pass === ADMIN_PASSWORD) {
+                isAdmin = true;
+                localStorage.setItem('fc_bad_boys_admin', 'true');
+                updateAdminUI();
+                toggleAuthModal();
+                showToast("Başarılı", "Yönetici olarak giriş yaptınız.", "fa-lock-open");
+                renderApp();
+            } else {
+                showToast("Hatalı Şifre", "Lütfen doğru yönetici şifresini girin.", "fa-triangle-exclamation");
+            }
+        }
+
+        window.handleAdminLogout = function() {
+            isAdmin = false;
+            localStorage.setItem('fc_bad_boys_admin', 'false');
+            updateAdminUI();
+            toggleAuthModal();
+            showToast("Çıkış Yapıldı", "Yönetici oturumu kapatıldı.", "fa-lock");
+            renderApp();
+        }
+
+        function updateAdminUI() {
+            const authBtn = document.getElementById('authBtn');
+            const authBtnText = document.getElementById('authBtnText');
+            const authIcon = document.getElementById('authIcon');
+            const adminActionContainer = document.getElementById('adminActionContainer');
+            const loginFormContainer = document.getElementById('loginFormContainer');
+            const logoutContainer = document.getElementById('logoutContainer');
+            const modalTitle = document.getElementById('modalTitle');
+            const modalSubtitle = document.getElementById('modalSubtitle');
+            const modalLockIcon = document.getElementById('modalLockIcon');
+
+            if (isAdmin) {
+                authBtnText.innerText = "Yönetici Paneli";
+                authIcon.className = "fa-solid fa-unlock text-emerald-400";
+                adminActionContainer.classList.remove('hidden');
+                loginFormContainer.classList.add('hidden');
+                logoutContainer.classList.remove('hidden');
+                modalTitle.innerText = "Yönetici Oturumu Açık";
+                modalSubtitle.innerText = "Şu anda tam yetkili yönetici modundasınız.";
+                modalLockIcon.className = "fa-solid fa-lock-open text-emerald-500";
+            } else {
+                authBtnText.innerText = "Yönetici Girişi";
+                authIcon.className = "fa-solid fa-lock text-orange-500";
+                adminActionContainer.classList.add('hidden');
+                loginFormContainer.classList.remove('hidden');
+                logoutContainer.classList.add('hidden');
+                modalTitle.innerText = "Yönetici Girişi";
+                modalSubtitle.innerText = "İstatistikleri güncellemek için şifrenizi girin.";
+                modalLockIcon.className = "fa-solid fa-lock-keyhole text-orange-500";
+            }
+        }
+
+        window.togglePlayerModal = function() {
+            if (!isAdmin) return;
+            const modal = document.getElementById('playerModal');
+            modal.classList.toggle('hidden');
+            if(!modal.classList.contains('hidden')) {
+                document.getElementById('addPlayerForm').reset();
+            }
+        }
+
+        window.handleAddNewPlayer = async function(e) {
+            e.preventDefault();
+            if (!isAdmin) return;
+
+            const firstName = document.getElementById('newFirstName').value.trim();
+            const lastName = document.getElementById('newLastName').value.trim();
+            const jerseyNo = parseInt(document.getElementById('newJerseyNo').value);
+            const position = document.getElementById('newPosition').value;
+            const matches = parseInt(document.getElementById('newMatches').value) || 0;
+            const statVal = parseInt(document.getElementById('newStatVal').value) || 0;
+
+            const newPlayerId = 'p_' + Date.now();
+            const newPlayerObj = {
+                id: newPlayerId,
+                firstName,
+                lastName,
+                jerseyNo,
+                position,
+                matches,
+                goals: position === 'Kaleci' ? 0 : statVal,
+                assists: position === 'Kaleci' ? 0 : 0,
+                conceded: position === 'Kaleci' ? statVal : 0
+            };
+
+            try {
+                await setDoc(doc(db, 'artifacts', appId, 'public', 'data', 'players', newPlayerId), newPlayerObj);
+                togglePlayerModal();
+                showToast("Oyuncu Eklendi", `${firstName} ${lastName} kadroya başarıyla eklendi.`, "fa-user-check");
+            } catch (err) {
+                console.error("Error adding player:", err);
+                playersData.push(newPlayerObj);
+                togglePlayerModal();
+                renderApp();
+                showToast("Oyuncu Eklendi", `${firstName} ${lastName} kadroya eklendi.`, "fa-user-check");
+            }
+        }
+
+        window.deletePlayer = async function(playerId) {
+            if (!isAdmin) return;
+            if (!confirm("Bu oyuncuyu kadrodan silmek istediğinize emin misiniz?")) return;
+
+            try {
+                await deleteDoc(doc(db, 'artifacts', appId, 'public', 'data', 'players', playerId));
+                showToast("Silindi", "Oyuncu kadrodan kaldırıldı.", "fa-trash-can");
+            } catch (err) {
+                console.error("Error deleting player:", err);
+                playersData = playersData.filter(p => p.id !== playerId);
+                renderApp();
+                showToast("Silindi", "Oyuncu kaldırıldı.", "fa-trash-can");
+            }
+        }
+
+        function showToast(title, message, iconClass) {
+            const toast = document.getElementById('toastNotification');
+            document.getElementById('toastTitle').innerText = title;
+            document.getElementById('toastMessage').innerText = message;
+            document.getElementById('toastIcon').className = `fa-solid ${iconClass} text-sm`;
+
+            toast.classList.remove('translate-y-20', 'opacity-0');
+            toast.classList.add('translate-y-0', 'opacity-100');
+
+            setTimeout(() => {
+                toast.classList.remove('translate-y-0', 'opacity-100');
+                toast.classList.add('translate-y-20', 'opacity-0');
+            }, 3000);
+        }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            const posSelect = document.getElementById('newPosition');
+            if(posSelect) {
+                posSelect.addEventListener('change', (e) => {
+                    const label = document.getElementById('initialStatLabel');
+                    if(e.target.value === 'Kaleci') {
+                        label.innerText = 'Başlangıç Yediği Gol';
+                    } else {
+                        label.innerText = 'Başlangıç Golü';
+                    }
+                });
+            }
+            initApp();
+        });
     </script>
 </body>
 </html>
+```

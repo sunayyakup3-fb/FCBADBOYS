@@ -1,3177 +1,373 @@
 <!DOCTYPE html>
 <html lang="tr">
 <head>
-  <meta charset="UTF-8">
-
-  <meta
-    name="viewport"
-    content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"
-  >
-
-  <meta name="theme-color" content="#ff6500">
-
-  <title>FC BAD BOYS</title>
-
-  <style>
-    :root {
-      --orange: #ff6500;
-      --orange-light: #ff8a3d;
-      --black: #080808;
-      --dark: #111111;
-      --dark2: #181818;
-      --dark3: #222222;
-      --gray: #a9a9a9;
-      --white: #ffffff;
-      --green: #25d366;
-      --red: #ff3b30;
-      --border: rgba(255, 255, 255, 0.08);
-      --shadow: 0 12px 35px rgba(0, 0, 0, 0.35);
-    }
-
-    * {
-      box-sizing: border-box;
-      -webkit-tap-highlight-color: transparent;
-    }
-
-    html {
-      scroll-behavior: smooth;
-    }
-
-    body {
-      margin: 0;
-      padding: 0;
-      background:
-        radial-gradient(circle at top right, rgba(255, 101, 0, 0.16), transparent 35%),
-        linear-gradient(180deg, #090909 0%, #111111 50%, #080808 100%);
-      color: var(--white);
-      font-family:
-        Inter,
-        system-ui,
-        -apple-system,
-        BlinkMacSystemFont,
-        "Segoe UI",
-        sans-serif;
-      min-height: 100vh;
-    }
-
-    button,
-    input,
-    select {
-      font: inherit;
-    }
-
-    button {
-      cursor: pointer;
-    }
-
-    .app {
-      width: 100%;
-      max-width: 650px;
-      margin: 0 auto;
-      min-height: 100vh;
-      padding-bottom: 95px;
-    }
-
-    /* =========================
-       HEADER
-    ========================== */
-
-    .top-header {
-      position: sticky;
-      top: 0;
-      z-index: 50;
-      padding: 15px 16px 12px;
-      background: rgba(8, 8, 8, 0.91);
-      backdrop-filter: blur(18px);
-      -webkit-backdrop-filter: blur(18px);
-      border-bottom: 1px solid var(--border);
-    }
-
-    .header-row {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 12px;
-    }
-
-    .brand {
-      display: flex;
-      align-items: center;
-      gap: 11px;
-      min-width: 0;
-    }
-
-    .brand-logo {
-      width: 48px;
-      height: 48px;
-      border-radius: 15px;
-      background:
-        linear-gradient(145deg, #ff8a3d, #ff6500 55%, #c63d00);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 25px;
-      font-weight: 950;
-      color: #000;
-      box-shadow:
-        0 0 0 2px rgba(255, 101, 0, 0.16),
-        0 8px 25px rgba(255, 101, 0, 0.22);
-    }
-
-    .brand-title {
-      font-size: 20px;
-      line-height: 1;
-      font-weight: 950;
-      letter-spacing: 0.5px;
-    }
-
-    .brand-subtitle {
-      color: var(--orange-light);
-      font-size: 11px;
-      font-weight: 800;
-      margin-top: 5px;
-      letter-spacing: 1.4px;
-    }
-
-    .admin-top-btn {
-      border: 1px solid rgba(255, 101, 0, 0.35);
-      background: rgba(255, 101, 0, 0.08);
-      color: var(--orange-light);
-      width: 44px;
-      height: 44px;
-      border-radius: 14px;
-      font-size: 19px;
-      transition: 0.2s;
-    }
-
-    .admin-top-btn:active {
-      transform: scale(0.94);
-    }
-
-    /* =========================
-       HERO
-    ========================== */
-
-    .hero {
-      margin: 18px 15px 0;
-      padding: 23px 20px;
-      border-radius: 24px;
-      position: relative;
-      overflow: hidden;
-      background:
-        linear-gradient(
-          135deg,
-          rgba(255, 101, 0, 0.20),
-          rgba(255, 101, 0, 0.05) 48%,
-          rgba(255, 255, 255, 0.025)
-        );
-      border: 1px solid rgba(255, 101, 0, 0.22);
-      box-shadow: var(--shadow);
-    }
-
-    .hero::after {
-      content: "";
-      position: absolute;
-      width: 180px;
-      height: 180px;
-      right: -70px;
-      top: -80px;
-      border-radius: 50%;
-      background: rgba(255, 101, 0, 0.12);
-      filter: blur(3px);
-    }
-
-    .hero-kicker {
-      color: var(--orange-light);
-      font-size: 11px;
-      font-weight: 900;
-      letter-spacing: 2px;
-      margin-bottom: 7px;
-    }
-
-    .hero h1 {
-      margin: 0;
-      font-size: 30px;
-      font-weight: 950;
-      letter-spacing: -1px;
-    }
-
-    .hero p {
-      margin: 9px 0 0;
-      color: #c4c4c4;
-      font-size: 13px;
-      line-height: 1.5;
-    }
-
-    /* =========================
-       STATS
-    ========================== */
-
-    .summary {
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 9px;
-      padding: 14px 15px 4px;
-    }
-
-    .summary-card {
-      background: rgba(255, 255, 255, 0.045);
-      border: 1px solid var(--border);
-      border-radius: 17px;
-      padding: 14px 8px;
-      text-align: center;
-    }
-
-    .summary-number {
-      color: var(--orange-light);
-      font-size: 22px;
-      font-weight: 950;
-    }
-
-    .summary-label {
-      color: #a5a5a5;
-      font-size: 10px;
-      margin-top: 4px;
-      font-weight: 700;
-    }
-
-    /* =========================
-       SEARCH / FILTER
-    ========================== */
-
-    .tools {
-      padding: 16px 15px 8px;
-    }
-
-    .search-box {
-      position: relative;
-    }
-
-    .search-box input {
-      width: 100%;
-      height: 48px;
-      border-radius: 15px;
-      border: 1px solid var(--border);
-      outline: none;
-      background: #151515;
-      color: white;
-      padding: 0 15px 0 44px;
-      font-size: 14px;
-    }
-
-    .search-box input:focus {
-      border-color: rgba(255, 101, 0, 0.55);
-    }
-
-    .search-icon {
-      position: absolute;
-      left: 15px;
-      top: 13px;
-      color: #999;
-      font-size: 18px;
-    }
-
-    .filters {
-      display: flex;
-      gap: 8px;
-      overflow-x: auto;
-      padding-top: 10px;
-      scrollbar-width: none;
-    }
-
-    .filters::-webkit-scrollbar {
-      display: none;
-    }
-
-    .filter-btn {
-      flex: 0 0 auto;
-      border: 1px solid var(--border);
-      background: #151515;
-      color: #aaa;
-      padding: 9px 13px;
-      border-radius: 12px;
-      font-size: 11px;
-      font-weight: 800;
-    }
-
-    .filter-btn.active {
-      background: var(--orange);
-      color: #000;
-      border-color: var(--orange);
-    }
-
-    /* =========================
-       PLAYER LIST
-    ========================== */
-
-    .section-title {
-      padding: 15px 15px 10px;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-    }
-
-    .section-title h2 {
-      margin: 0;
-      font-size: 18px;
-      font-weight: 900;
-    }
-
-    .section-title span {
-      color: #888;
-      font-size: 11px;
-    }
-
-    .players {
-      padding: 0 15px;
-    }
-
-    .player-card {
-      position: relative;
-      overflow: hidden;
-      background:
-        linear-gradient(
-          145deg,
-          rgba(255,255,255,0.065),
-          rgba(255,255,255,0.025)
-        );
-      border: 1px solid var(--border);
-      border-radius: 21px;
-      margin-bottom: 11px;
-      padding: 15px;
-      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.22);
-    }
-
-    .player-card::before {
-      content: "";
-      position: absolute;
-      left: 0;
-      top: 0;
-      bottom: 0;
-      width: 3px;
-      background: var(--orange);
-    }
-
-    .player-top {
-      display: flex;
-      align-items: center;
-      gap: 12px;
-    }
-
-    .jersey {
-      width: 54px;
-      height: 54px;
-      flex: 0 0 54px;
-      border-radius: 17px;
-      background: #090909;
-      border: 1px solid rgba(255, 101, 0, 0.32);
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-    }
-
-    .jersey-number {
-      color: var(--orange-light);
-      font-size: 20px;
-      line-height: 1;
-      font-weight: 950;
-    }
-
-    .jersey-label {
-      color: #777;
-      font-size: 8px;
-      font-weight: 800;
-      margin-top: 3px;
-    }
-
-    .player-main {
-      flex: 1;
-      min-width: 0;
-    }
-
-    .player-name {
-      font-size: 16px;
-      font-weight: 900;
-      white-space: nowrap;
-      overflow: hidden;
-      text-overflow: ellipsis;
-    }
-
-    .player-position {
-      display: inline-flex;
-      margin-top: 5px;
-      padding: 4px 8px;
-      border-radius: 8px;
-      background: rgba(255, 101, 0, 0.11);
-      color: var(--orange-light);
-      font-size: 10px;
-      font-weight: 850;
-    }
-
-    .match-count {
-      text-align: right;
-    }
-
-    .match-count-number {
-      font-size: 20px;
-      font-weight: 950;
-    }
-
-    .match-count-label {
-      color: #777;
-      font-size: 8px;
-      font-weight: 800;
-      text-transform: uppercase;
-      letter-spacing: 0.6px;
-    }
-
-    .stats-grid {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 9px;
-      margin-top: 14px;
-    }
-
-    .stat-box {
-      background: rgba(0, 0, 0, 0.28);
-      border: 1px solid rgba(255,255,255,0.055);
-      border-radius: 15px;
-      padding: 10px;
-    }
-
-    .stat-title {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      color: #aaa;
-      font-size: 10px;
-      font-weight: 800;
-      margin-bottom: 8px;
-    }
-
-    .stat-value {
-      color: white;
-      font-size: 21px;
-      font-weight: 950;
-    }
-
-    .counter {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 8px;
-    }
-
-    .counter-btn {
-      width: 35px;
-      height: 35px;
-      border: none;
-      border-radius: 11px;
-      background: #292929;
-      color: white;
-      font-size: 20px;
-      font-weight: 900;
-      line-height: 1;
-    }
-
-    .counter-btn.plus {
-      background: var(--orange);
-      color: #000;
-    }
-
-    .counter-btn:active {
-      transform: scale(0.90);
-    }
-
-    .public-stat {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-    }
-
-    .public-stat-value {
-      font-size: 22px;
-      font-weight: 950;
-      color: white;
-    }
-
-    .public-stat-label {
-      font-size: 9px;
-      color: #777;
-      font-weight: 800;
-      margin-top: 2px;
-    }
-
-    /* =========================
-       ADMIN
-    ========================== */
-
-    .admin-panel {
-      margin: 15px;
-      padding: 17px;
-      border-radius: 21px;
-      background:
-        linear-gradient(
-          145deg,
-          rgba(255, 101, 0, 0.12),
-          rgba(255,255,255,0.035)
-        );
-      border: 1px solid rgba(255, 101, 0, 0.22);
-    }
-
-    .admin-header {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      gap: 10px;
-      margin-bottom: 14px;
-    }
-
-    .admin-title {
-      font-size: 16px;
-      font-weight: 900;
-    }
-
-    .admin-email {
-      color: #888;
-      font-size: 10px;
-      margin-top: 3px;
-    }
-
-    .logout-btn {
-      border: 1px solid rgba(255, 59, 48, 0.3);
-      background: rgba(255, 59, 48, 0.08);
-      color: #ff6d66;
-      border-radius: 10px;
-      padding: 8px 10px;
-      font-size: 10px;
-      font-weight: 850;
-    }
-
-    .admin-actions {
-      display: grid;
-      grid-template-columns: 1fr;
-      gap: 9px;
-    }
-
-    .admin-action-btn {
-      border: none;
-      background: var(--orange);
-      color: #000;
-      border-radius: 13px;
-      padding: 12px;
-      font-size: 12px;
-      font-weight: 950;
-    }
-
-    /* =========================
-       LOGIN MODAL
-    ========================== */
-
-    .modal {
-      position: fixed;
-      inset: 0;
-      z-index: 100;
-      display: none;
-      align-items: flex-end;
-      justify-content: center;
-      background: rgba(0,0,0,0.72);
-      backdrop-filter: blur(8px);
-      -webkit-backdrop-filter: blur(8px);
-    }
-
-    .modal.show {
-      display: flex;
-    }
-
-    .modal-card {
-      width: 100%;
-      max-width: 650px;
-      background: #151515;
-      border: 1px solid rgba(255,255,255,0.08);
-      border-radius: 28px 28px 0 0;
-      padding: 24px 18px 30px;
-      box-shadow: 0 -20px 60px rgba(0,0,0,0.45);
-      animation: slideUp 0.22s ease;
-    }
-
-    @keyframes slideUp {
-      from {
-        transform: translateY(30px);
-        opacity: 0;
-      }
-      to {
-        transform: translateY(0);
-        opacity: 1;
-      }
-    }
-
-    .modal-handle {
-      width: 42px;
-      height: 4px;
-      border-radius: 99px;
-      background: #444;
-      margin: -8px auto 20px;
-    }
-
-    .modal-title {
-      font-size: 23px;
-      font-weight: 950;
-      margin-bottom: 5px;
-    }
-
-    .modal-subtitle {
-      color: #888;
-      font-size: 12px;
-      margin-bottom: 20px;
-    }
-
-    .input-group {
-      margin-bottom: 12px;
-    }
-
-    .input-label {
-      display: block;
-      color: #999;
-      font-size: 10px;
-      font-weight: 800;
-      margin: 0 0 6px 3px;
-    }
-
-    .input,
-    .select {
-      width: 100%;
-      height: 49px;
-      border-radius: 13px;
-      border: 1px solid rgba(255,255,255,0.08);
-      background: #0d0d0d;
-      color: white;
-      outline: none;
-      padding: 0 13px;
-    }
-
-    .input:focus,
-    .select:focus {
-      border-color: rgba(255,101,0,0.6);
-    }
-
-    .modal-buttons {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 9px;
-      margin-top: 17px;
-    }
-
-    .primary-btn,
-    .secondary-btn {
-      height: 48px;
-      border-radius: 13px;
-      border: none;
-      font-weight: 900;
-    }
-
-    .primary-btn {
-      background: var(--orange);
-      color: #000;
-    }
-
-    .secondary-btn {
-      background: #282828;
-      color: white;
-    }
-
-    .error {
-      display: none;
-      padding: 10px 12px;
-      margin-bottom: 12px;
-      border-radius: 11px;
-      background: rgba(255,59,48,0.09);
-      border: 1px solid rgba(255,59,48,0.22);
-      color: #ff7b74;
-      font-size: 11px;
-      line-height: 1.4;
-    }
-
-    .error.show {
-      display: block;
-    }
-
-    /* =========================
-       TOAST
-    ========================== */
-
-    .toast {
-      position: fixed;
-      left: 50%;
-      bottom: 23px;
-      z-index: 200;
-      transform: translate(-50%, 100px);
-      opacity: 0;
-      width: calc(100% - 30px);
-      max-width: 620px;
-      padding: 13px 15px;
-      border-radius: 14px;
-      background: #202020;
-      border: 1px solid rgba(255,255,255,0.08);
-      box-shadow: var(--shadow);
-      font-size: 12px;
-      font-weight: 750;
-      transition: 0.25s ease;
-    }
-
-    .toast.show {
-      transform: translate(-50%, 0);
-      opacity: 1;
-    }
-
-    .toast.success {
-      border-color: rgba(37,211,102,0.28);
-    }
-
-    .toast.error-toast {
-      border-color: rgba(255,59,48,0.28);
-    }
-
-    /* =========================
-       EMPTY / LOADING
-    ========================== */
-
-    .loading {
-      padding: 45px 15px;
-      text-align: center;
-      color: #888;
-      font-size: 12px;
-    }
-
-    .spinner {
-      width: 28px;
-      height: 28px;
-      border-radius: 50%;
-      border: 3px solid #333;
-      border-top-color: var(--orange);
-      margin: 0 auto 12px;
-      animation: spin 0.8s linear infinite;
-    }
-
-    @keyframes spin {
-      to {
-        transform: rotate(360deg);
-      }
-    }
-
-    .empty {
-      padding: 40px 15px;
-      text-align: center;
-      color: #777;
-    }
-
-    .empty-icon {
-      font-size: 40px;
-      margin-bottom: 10px;
-    }
-
-    /* =========================
-       BOTTOM NAV
-    ========================== */
-
-    .bottom-nav {
-      position: fixed;
-      left: 50%;
-      bottom: 0;
-      transform: translateX(-50%);
-      width: 100%;
-      max-width: 650px;
-      z-index: 60;
-      padding: 8px 13px calc(8px + env(safe-area-inset-bottom));
-      background: rgba(10,10,10,0.93);
-      backdrop-filter: blur(20px);
-      -webkit-backdrop-filter: blur(20px);
-      border-top: 1px solid var(--border);
-    }
-
-    .nav-inner {
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 6px;
-    }
-
-    .nav-btn {
-      border: none;
-      background: transparent;
-      color: #777;
-      padding: 7px 5px;
-      border-radius: 12px;
-      font-size: 10px;
-      font-weight: 800;
-    }
-
-    .nav-btn.active {
-      color: var(--orange-light);
-      background: rgba(255,101,0,0.08);
-    }
-
-    .nav-icon {
-      display: block;
-      font-size: 18px;
-      margin-bottom: 3px;
-    }
-
-    /* =========================
-       ADMIN ONLY
-    ========================== */
-
-    .admin-only {
-      display: none;
-    }
-
-    body.admin-mode .admin-only {
-      display: block;
-    }
-
-    body.admin-mode .admin-inline {
-      display: flex;
-    }
-
-    .admin-inline {
-      display: none;
-    }
-
-    .admin-edit {
-      margin-top: 11px;
-      display: flex;
-      gap: 8px;
-    }
-
-    .small-btn {
-      flex: 1;
-      border: 1px solid var(--border);
-      background: #222;
-      color: #ccc;
-      border-radius: 10px;
-      padding: 9px;
-      font-size: 10px;
-      font-weight: 850;
-    }
-
-    .small-btn.delete {
-      color: #ff6d66;
-      border-color: rgba(255,59,48,0.2);
-    }
-
-    /* =========================
-       DESKTOP
-    ========================== */
-
-    @media (min-width: 700px) {
-      .app {
-        border-left: 1px solid rgba(255,255,255,0.03);
-        border-right: 1px solid rgba(255,255,255,0.03);
-      }
-
-      .modal {
-        align-items: center;
-      }
-
-      .modal-card {
-        border-radius: 25px;
-        max-width: 500px;
-      }
-    }
-  </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
+<meta name="theme-color" content="#ff6a00">
+<title>FC BAD BOYS</title>
+<style>
+:root{--orange:#ff6a00;--black:#080808;--card:#111;--line:#252525;--text:#fff;--muted:#888;--green:#21c77a;--red:#ff4545;--yellow:#ffc107}
+*{box-sizing:border-box}
+html,body{margin:0;padding:0;background:var(--black);color:var(--text);font-family:Arial,sans-serif}
+body{min-height:100vh;padding-bottom:80px}
+button,input,select{font:inherit}
+button{cursor:pointer}
+.hidden{display:none!important}
+.app{max-width:700px;margin:auto}
+header{position:sticky;top:0;z-index:30;background:rgba(8,8,8,.94);backdrop-filter:blur(12px);border-bottom:1px solid var(--line);padding:14px}
+.logo{text-align:center;font-weight:1000;font-size:25px;letter-spacing:2px;color:var(--orange)}
+.logo span{color:#fff}
+.sub{text-align:center;color:#777;font-size:8px;letter-spacing:3px;margin-top:3px}
+main{padding:14px}
+.card{background:var(--card);border:1px solid var(--line);border-radius:18px;padding:15px;margin-bottom:12px}
+.hero{padding:24px;text-align:center;border-radius:22px;background:linear-gradient(145deg,#17100b,#0e0e0e);border:1px solid rgba(255,106,0,.3)}
+.hero h1{margin:0;color:var(--orange);font-size:30px}
+.hero p{color:#888;font-size:10px}
+.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:12px}
+.stat{background:#151515;border-radius:13px;padding:12px;text-align:center}
+.stat b{display:block;font-size:19px}.stat small{color:#777;font-size:8px}
+.section-head{display:flex;align-items:center;justify-content:space-between;margin:20px 2px 9px}
+.section-title{font-size:14px;margin:0}.section-note{font-size:8px;color:#777}
+.player-grid{display:grid;gap:9px}
+.player{display:flex;align-items:center;gap:11px;background:#111;border:1px solid var(--line);border-radius:15px;padding:11px}
+.avatar{width:45px;height:45px;border-radius:13px;background:linear-gradient(145deg,var(--orange),#9b3200);display:grid;place-items:center;font-weight:1000}
+.player-info{flex:1;min-width:0}.player-name{font-weight:900;font-size:12px}.player-meta{font-size:8px;color:#777;margin-top:3px}
+.number{font-size:18px;font-weight:1000;color:#ff8b3d}
+.badge{display:inline-block;padding:4px 7px;border-radius:7px;background:#202020;color:#aaa;font-size:7px;margin-top:4px}
+.actions{display:flex;gap:6px;flex-wrap:wrap;margin-top:9px}
+.btn{border:0;border-radius:10px;padding:10px 13px;font-weight:900;font-size:10px}
+.btn.primary{background:var(--orange);color:#fff}.btn.dark{background:#222;color:#fff}.btn.red{background:#531919;color:#ff7676}
+.input,select{width:100%;background:#0c0c0c;color:#fff;border:1px solid var(--line);border-radius:10px;padding:11px;outline:0}
+.input:focus,select:focus{border-color:var(--orange)}
+.form-grid{display:grid;gap:8px}
+.bottom-nav{position:fixed;bottom:0;left:0;right:0;height:68px;background:rgba(10,10,10,.97);border-top:1px solid var(--line);display:flex;justify-content:center;z-index:50}
+.nav-inner{max-width:700px;width:100%;display:grid;grid-template-columns:repeat(4,1fr)}
+.nav-btn{background:none;border:0;color:#666;font-size:9px}.nav-btn.active{color:var(--orange)}.nav-icon{display:block;font-size:19px;margin-bottom:3px}
+.modal-bg{position:fixed;inset:0;background:rgba(0,0,0,.75);z-index:80;display:flex;align-items:flex-end}
+.modal{width:100%;max-width:700px;margin:auto;background:#111;border:1px solid var(--line);border-radius:22px 22px 0 0;max-height:90vh;overflow:auto}
+.modal-head{display:flex;justify-content:space-between;padding:15px;border-bottom:1px solid var(--line)}
+.modal-body{padding:15px}.close{background:#222;color:#fff;border:0;border-radius:9px;width:35px;height:35px}
+.empty{text-align:center;color:#666;padding:25px;font-size:10px}
+.match{padding:13px;border:1px solid var(--line);border-radius:15px;background:#111;margin-bottom:8px}
+.match-top{display:flex;justify-content:space-between}.score{font-weight:1000;color:var(--orange)}
+.admin-panel{border:1px solid rgba(255,106,0,.25);background:#110d09;border-radius:18px;padding:15px}
+.music-bar{position:fixed;left:12px;right:12px;bottom:83px;z-index:55;display:none;align-items:center;gap:9px;padding:9px 11px;border:1px solid rgba(255,106,0,.22);border-radius:16px;background:rgba(15,15,15,.94);backdrop-filter:blur(16px);box-shadow:0 12px 35px rgba(0,0,0,.3)}
+.music-bar.show{display:flex}.music-disc{width:34px;height:34px;display:grid;place-items:center;border-radius:50%;background:linear-gradient(145deg,var(--orange),#8f2f00);font-size:17px}
+.music-info{min-width:0;flex:1}.music-title{font-size:10px;font-weight:950;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.music-sub{font-size:8px;color:#777}
+.music-btn{width:36px;height:36px;border:1px solid var(--line);border-radius:10px;background:#202020;color:#fff}.music-range{width:65px;accent-color:var(--orange)}
+.season-card{position:relative;overflow:hidden;padding:18px;border:1px solid rgba(255,106,0,.2);border-radius:20px;background:linear-gradient(145deg,rgba(255,106,0,.13),#111)}
+.season-card h3{margin:0;font-size:11px;color:#ff9a52;letter-spacing:1px}.season-card strong{display:block;margin-top:4px;font-size:25px}.season-card p{margin:5px 0 0;color:#888;font-size:9px}
+.award-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:9px}.award{padding:14px;border:1px solid var(--line);border-radius:16px;background:#111;text-align:center}.award-icon{font-size:25px}.award-name{font-size:10px;font-weight:950;margin-top:5px}.award-player{font-size:10px;color:#aaa;margin-top:3px}
+.gallery-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:8px}.gallery-item{position:relative;aspect-ratio:1/1;border-radius:14px;overflow:hidden;background:#111;border:1px solid var(--line)}.gallery-item img{width:100%;height:100%;object-fit:cover}.gallery-item button{position:absolute;right:6px;top:6px;width:30px;height:30px;border:0;border-radius:9px;background:rgba(0,0,0,.7);color:#fff}
+.vote-grid{display:grid;gap:8px}.vote-row{display:flex;align-items:center;gap:8px;padding:9px;background:#101010;border:1px solid var(--line);border-radius:12px}.vote-row label{flex:1;font-size:10px;font-weight:850}.vote-row select{width:125px;min-height:35px}
+.match-day{padding:20px;text-align:center;border:1px solid rgba(255,106,0,.25);border-radius:20px;background:radial-gradient(circle at 50% 0,rgba(255,106,0,.2),transparent 55%),#111}
+.match-day .big{font-size:28px;font-weight:1000}.match-day .versus{font-size:11px;color:#888;margin:5px}.match-day .date{font-size:10px;color:#aaa;margin-top:9px}
+@media(min-width:650px){.music-bar{left:auto;right:24px;width:360px}.award-grid{grid-template-columns:repeat(4,1fr)}.gallery-grid{grid-template-columns:repeat(4,1fr)}}
+</style>
 </head>
-
 <body>
-
 <div class="app">
+<header><div class="logo">FC <span>BAD BOYS</span></div><div class="sub">HALISAHA • BİRLİK • REKABET</div></header>
 
-  <!-- HEADER -->
-  <header class="top-header">
-    <div class="header-row">
+<main>
+<section id="homeTab">
+<div class="hero"><h1>FC BAD BOYS</h1><p>MAÇLARIMIZ • ANILARIMIZ • İSTATİSTİKLERİMİZ</p>
+<div class="stats"><div class="stat"><b id="totalPlayers">0</b><small>OYUNCU</small></div><div class="stat"><b id="totalMatches">0</b><small>MAÇ</small></div><div class="stat"><b id="totalGoals">0</b><small>GOL</small></div></div></div>
 
-      <div class="brand">
-        <div class="brand-logo">⚽</div>
+<div class="section-head"><h2 class="section-title">🏆 Sezon</h2><span class="section-note">2026 SEZONU</span></div>
+<div class="season-card"><h3>FC BAD BOYS</h3><strong id="seasonRecord">0G • 0B • 0M</strong><p id="seasonSummary">Sezon istatistikleri maçlardan otomatik hesaplanır.</p></div>
 
-        <div>
-          <div class="brand-title">FC BAD BOYS</div>
-          <div class="brand-subtitle">HALI SAHA • TAKIM İSTATİSTİKLERİ</div>
-        </div>
-      </div>
+<div class="section-head"><h2 class="section-title">🏅 Ödüller</h2></div>
+<div class="award-grid" id="awards"></div>
 
-      <button
-        class="admin-top-btn"
-        id="adminOpenBtn"
-        aria-label="Yönetici girişi"
-      >
-        🔐
-      </button>
+<div class="section-head"><h2 class="section-title">🔥 Maç Günü</h2></div>
+<div id="matchDayBox"></div>
 
-    </div>
-  </header>
+<div class="section-head"><h2 class="section-title">⚡ Son Maçlar</h2></div>
+<div id="homeMatches"></div>
 
+<div class="section-head"><h2 class="section-title">📸 Maç Anıları</h2></div>
+<div class="admin-panel">
+<strong>📸 Fotoğraf Ekle</strong>
+<div class="form-grid" style="margin-top:10px">
+<input class="input" id="photoTitle" placeholder="Fotoğraf başlığı">
+<input class="input" id="photoUrl" placeholder="Fotoğraf URL'si (https://...)">
+</div>
+<div class="actions"><button class="btn primary" id="addPhoto">+ Fotoğrafı Kaydet</button></div>
+<small style="color:#777">Fotoğraf eklemek için yönetici hesabı gerekir.</small>
+</div>
+<div class="gallery-grid" id="gallery"></div>
+</section>
 
-  <!-- HERO -->
-  <section class="hero">
-    <div class="hero-kicker">FC BAD BOYS</div>
-    <h1>Takım Kadrosu</h1>
-    <p>
-      Maçlarımızın, oyuncularımızın ve güzel anılarımızın
-      istatistiklerini burada tutuyoruz.
-    </p>
-  </section>
+<section id="squadTab" class="hidden">
+<div class="section-head"><h2 class="section-title">👥 Kadro</h2></div>
+<div class="player-grid" id="players"></div>
+</section>
 
+<section id="matchesTab" class="hidden">
+<div class="section-head"><h2 class="section-title">⚽ Maçlar</h2></div>
+<div id="adminMatchArea"></div>
+<div id="matches"></div>
+</section>
 
-  <!-- SUMMARY -->
-  <section class="summary">
+<section id="statsTab" class="hidden">
+<div class="section-head"><h2 class="section-title">📊 İstatistikler</h2></div>
+<div class="card"><h3>⚽ Gol Krallığı</h3><div id="goalRanking"></div></div>
+<div class="card"><h3>🎯 Asist Krallığı</h3><div id="assistRanking"></div></div>
+<div class="card"><h3>🏟️ En Çok Maç</h3><div id="matchRanking"></div></div>
+</section>
 
-    <div class="summary-card">
-      <div class="summary-number" id="totalPlayers">0</div>
-      <div class="summary-label">OYUNCU</div>
-    </div>
-
-    <div class="summary-card">
-      <div class="summary-number" id="totalGoals">0</div>
-      <div class="summary-label">TOPLAM GOL</div>
-    </div>
-
-    <div class="summary-card">
-      <div class="summary-number" id="totalAssists">0</div>
-      <div class="summary-label">TOPLAM ASİST</div>
-    </div>
-
-  </section>
-
-
-  <!-- SEARCH -->
-  <section class="tools">
-
-    <div class="search-box">
-      <span class="search-icon">⌕</span>
-
-      <input
-        id="searchInput"
-        type="text"
-        placeholder="Oyuncu ara..."
-        autocomplete="off"
-      >
-    </div>
-
-    <div class="filters">
-
-      <button class="filter-btn active" data-filter="all">
-        Tümü
-      </button>
-
-      <button class="filter-btn" data-filter="forvet">
-        ⚽ Forvet
-      </button>
-
-      <button class="filter-btn" data-filter="orta saha">
-        🎯 Orta Saha
-      </button>
-
-      <button class="filter-btn" data-filter="defans">
-        🛡️ Defans
-      </button>
-
-      <button class="filter-btn" data-filter="kaleci">
-        🧤 Kaleci
-      </button>
-
-    </div>
-
-  </section>
-
-
-  <!-- ADMIN PANEL -->
-  <section class="admin-panel admin-only">
-
-    <div class="admin-header">
-
-      <div>
-        <div class="admin-title">👑 Yönetici Paneli</div>
-        <div class="admin-email" id="adminEmail"></div>
-      </div>
-
-      <button class="logout-btn" id="logoutBtn">
-        Çıkış
-      </button>
-
-    </div>
-
-    <div class="admin-actions">
-
-      <button
-        class="admin-action-btn"
-        id="addPlayerBtn"
-      >
-        ＋ Yeni Oyuncu Ekle
-      </button>
-
-    </div>
-
-  </section>
-
-
-  <!-- PLAYERS -->
-  <section id="playersSection">
-
-    <div class="section-title">
-
-      <h2>👥 Oyuncular</h2>
-
-      <span id="playerCountText">
-        0 oyuncu
-      </span>
-
-    </div>
-
-    <div id="players" class="players">
-
-      <div class="loading">
-        <div class="spinner"></div>
-        Oyuncular yükleniyor...
-      </div>
-
-    </div>
-
-  </section>
-
+<section id="adminTab" class="hidden">
+<div class="section-head"><h2 class="section-title">🔐 Yönetici</h2></div>
+<div id="loginBox" class="card">
+<h3>Yönetici Girişi</h3>
+<div class="form-grid">
+<input class="input" id="email" type="email" placeholder="E-posta">
+<input class="input" id="password" type="password" placeholder="Şifre">
+<button class="btn primary" id="loginBtn">Giriş Yap</button>
+</div>
+</div>
+<div id="adminBox" class="hidden">
+<div class="admin-panel">
+<h3>⚙️ Yönetim Paneli</h3>
+<p style="font-size:9px;color:#777">Buradaki işlemleri sadece yönetici hesabı yapabilir.</p>
+<div class="actions">
+<button class="btn primary" id="addMatchBtn">⚽ Yeni Maç</button>
+<button class="btn dark" id="logoutBtn">Çıkış</button>
+</div>
+</div>
+</div>
+</section>
+</main>
 </div>
 
+<nav class="bottom-nav"><div class="nav-inner">
+<button class="nav-btn active" data-tab="homeTab"><span class="nav-icon">🏠</span>Ana Sayfa</button>
+<button class="nav-btn" data-tab="squadTab"><span class="nav-icon">👥</span>Kadro</button>
+<button class="nav-btn" data-tab="matchesTab"><span class="nav-icon">⚽</span>Maçlar</button>
+<button class="nav-btn" data-tab="statsTab"><span class="nav-icon">📊</span>İstatistik</button>
+</div></nav>
 
-<!-- BOTTOM NAV -->
-<nav class="bottom-nav">
-
-  <div class="nav-inner">
-
-    <button
-      class="nav-btn active"
-      id="homeNav"
-    >
-      <span class="nav-icon">🏠</span>
-      Ana Sayfa
-    </button>
-
-    <button
-      class="nav-btn"
-      id="playersNav"
-    >
-      <span class="nav-icon">👥</span>
-      Kadro
-    </button>
-
-    <button
-      class="nav-btn"
-      id="adminNav"
-    >
-      <span class="nav-icon">🔐</span>
-      Yönetim
-    </button>
-
-  </div>
-
-</nav>
-
-
-<!-- LOGIN MODAL -->
-<div
-  class="modal"
-  id="loginModal"
->
-
-  <div class="modal-card">
-
-    <div class="modal-handle"></div>
-
-    <div class="modal-title">
-      🔐 Yönetici Girişi
-    </div>
-
-    <div class="modal-subtitle">
-      Sadece takım yöneticisi istatistikleri değiştirebilir.
-    </div>
-
-    <div
-      class="error"
-      id="loginError"
-    ></div>
-
-    <div class="input-group">
-
-      <label class="input-label">
-        E-POSTA
-      </label>
-
-      <input
-        class="input"
-        id="loginEmail"
-        type="email"
-        value="yakups1661@gmail.com"
-        autocomplete="username"
-      >
-
-    </div>
-
-    <div class="input-group">
-
-      <label class="input-label">
-        ŞİFRE
-      </label>
-
-      <input
-        class="input"
-        id="loginPassword"
-        type="password"
-        placeholder="Şifrenizi girin"
-        autocomplete="current-password"
-      >
-
-    </div>
-
-    <div class="modal-buttons">
-
-      <button
-        class="secondary-btn"
-        id="loginCancelBtn"
-      >
-        Vazgeç
-      </button>
-
-      <button
-        class="primary-btn"
-        id="loginBtn"
-      >
-        Giriş Yap
-      </button>
-
-    </div>
-
-  </div>
-
+<div class="music-bar" id="musicBar">
+<div class="music-disc">🎵</div>
+<div class="music-info"><div class="music-title">FC BAD BOYS • Takım Müziği</div><div class="music-sub">Arka plan müziği</div></div>
+<button class="music-btn" id="musicToggle">▶</button>
+<input class="music-range" id="musicVolume" type="range" min="0" max="1" step=".01" value=".35">
 </div>
+<audio id="teamAudio" loop preload="metadata"></audio>
 
+<div id="modalBg" class="modal-bg hidden"><div class="modal">
+<div class="modal-head"><b id="modalTitle">FC BAD BOYS</b><button class="close" id="closeModal">×</button></div>
+<div class="modal-body" id="modalBody"></div>
+<div id="matchVoteArea"></div>
+</div></div>
 
-<!-- PLAYER MODAL -->
-<div
-  class="modal"
-  id="playerModal"
->
-
-  <div class="modal-card">
-
-    <div class="modal-handle"></div>
-
-    <div
-      class="modal-title"
-      id="playerModalTitle"
-    >
-      Oyuncu Ekle
-    </div>
-
-    <div class="modal-subtitle">
-      Oyuncu bilgilerini gir.
-    </div>
-
-    <div
-      class="error"
-      id="playerError"
-    ></div>
-
-    <input
-      type="hidden"
-      id="editingPlayerId"
-    >
-
-    <div class="input-group">
-
-      <label class="input-label">
-        İSİM SOYİSİM
-      </label>
-
-      <input
-        class="input"
-        id="playerNameInput"
-        type="text"
-        placeholder="Örn. Ahmet Yılmaz"
-      >
-
-    </div>
-
-    <div class="input-group">
-
-      <label class="input-label">
-        FORMA NUMARASI
-      </label>
-
-      <input
-        class="input"
-        id="playerNumberInput"
-        type="number"
-        min="0"
-        max="999"
-        placeholder="Örn. 10"
-      >
-
-    </div>
-
-    <div class="input-group">
-
-      <label class="input-label">
-        MEVKİ
-      </label>
-
-      <select
-        class="select"
-        id="playerPositionInput"
-      >
-        <option value="forvet">Forvet</option>
-        <option value="orta saha">Orta Saha</option>
-        <option value="defans">Defans</option>
-        <option value="kaleci">Kaleci</option>
-      </select>
-
-    </div>
-
-    <div class="input-group">
-
-      <label class="input-label">
-        KATILDIĞI MAÇ SAYISI
-      </label>
-
-      <input
-        class="input"
-        id="playerMatchesInput"
-        type="number"
-        min="0"
-        value="0"
-      >
-
-    </div>
-
-    <div class="modal-buttons">
-
-      <button
-        class="secondary-btn"
-        id="playerCancelBtn"
-      >
-        Vazgeç
-      </button>
-
-      <button
-        class="primary-btn"
-        id="playerSaveBtn"
-      >
-        Kaydet
-      </button>
-
-    </div>
-
-  </div>
-
-</div>
-
-
-<!-- TOAST -->
-<div
-  class="toast"
-  id="toast"
-></div>
-
-
-<!-- FIREBASE -->
 <script type="module">
-
-  import {
-    initializeApp
-  } from "https://www.gstatic.com/firebasejs/12.1.0/firebase-app.js";
-
-  import {
-    getAuth,
-    signInWithEmailAndPassword,
-    onAuthStateChanged,
-    signOut
-  } from "https://www.gstatic.com/firebasejs/12.1.0/firebase-auth.js";
-
-  import {
-    getFirestore,
-    collection,
-    doc,
-    addDoc,
-    setDoc,
-    updateDoc,
-    deleteDoc,
-    onSnapshot,
-    getDocs,
-    increment
-  } from "https://www.gstatic.com/firebasejs/12.1.0/firebase-firestore.js";
-
-
-  /* ==========================================================
-     FIREBASE CONFIG
-  ========================================================== */
-
-  const firebaseConfig = {
-
-    apiKey: "AIzaSyCSw0nzgbHrFCAJLpvmhZwYAV_aQeBMw4g",
-
-    authDomain:
-      "fcbadboys-bfc96.firebaseapp.com",
-
-    databaseURL:
-      "https://fcbadboys-bfc96-default-rtdb.firebaseio.com",
-
-    projectId:
-      "fcbadboys-bfc96",
-
-    storageBucket:
-      "fcbadboys-bfc96.firebasestorage.app",
-
-    messagingSenderId:
-      "394322712916",
-
-    appId:
-      "1:394322712916:web:8fb96c51cbf2f113e8d0c1",
-
-    measurementId:
-      "G-WT2ECTZ2K0"
-  };
-
-
-  /* ==========================================================
-     FIREBASE BAŞLAT
-  ========================================================== */
-
-  const app = initializeApp(firebaseConfig);
-
-  const auth = getAuth(app);
-
-  const db = getFirestore(app);
-
-
-  /* ==========================================================
-     SABİTLER
-  ========================================================== */
-
-  const ADMIN_EMAIL =
-    "yakups1661@gmail.com";
-
-  const playersRef =
-    collection(db, "players");
-
-
-  /* ==========================================================
-     BAŞLANGIÇ OYUNCULARI
-  ========================================================== */
-
-  const initialPlayers = [
-
-    {
-      id: "yakup-sunay",
-      name: "Yakup Sunay",
-      position: "orta saha",
-      number: 15,
-      matches: 0,
-      goals: 0,
-      assists: 0,
-      conceded: 0
-    },
-
-    {
-      id: "eren-yilmaz",
-      name: "Eren Yılmaz",
-      position: "forvet",
-      number: 10,
-      matches: 0,
-      goals: 0,
-      assists: 0,
-      conceded: 0
-    },
-
-    {
-      id: "murat-cayli",
-      name: "Murat Çaylı",
-      position: "forvet",
-      number: 7,
-      matches: 0,
-      goals: 0,
-      assists: 0,
-      conceded: 0
-    },
-
-    {
-      id: "ahmet-yavuz",
-      name: "Ahmet Yavuz",
-      position: "forvet",
-      number: 9,
-      matches: 0,
-      goals: 0,
-      assists: 0,
-      conceded: 0
-    },
-
-    {
-      id: "alper-batuhan",
-      name: "Alper Batuhan",
-      position: "forvet",
-      number: 6,
-      matches: 0,
-      goals: 0,
-      assists: 0,
-      conceded: 0
-    },
-
-    {
-      id: "ceyhun-duzdas",
-      name: "Ceyhun Düzdaş",
-      position: "kaleci",
-      number: 98,
-      matches: 0,
-      goals: 0,
-      assists: 0,
-      conceded: 0
-    },
-
-    {
-      id: "cagdas-sengul",
-      name: "Çağdaş Şengül",
-      position: "defans",
-      number: 97,
-      matches: 0,
-      goals: 0,
-      assists: 0,
-      conceded: 0
-    },
-
-    {
-      id: "cagri-sengul",
-      name: "Çağrı Şengül",
-      position: "defans",
-      number: 96,
-      matches: 0,
-      goals: 0,
-      assists: 0,
-      conceded: 0
-    },
-
-    {
-      id: "furkan-yilmaz",
-      name: "Furkan Yılmaz",
-      position: "defans",
-      number: 4,
-      matches: 0,
-      goals: 0,
-      assists: 0,
-      conceded: 0
-    },
-
-    {
-      id: "suleyman-tuncelik",
-      name: "Süleyman Tunçelik",
-      position: "defans",
-      number: 3,
-      matches: 0,
-      goals: 0,
-      assists: 0,
-      conceded: 0
-    },
-
-    {
-      id: "bulancakli-huseyin",
-      name: "Bulancaklı Hüseyin",
-      position: "kaleci",
-      number: 37,
-      matches: 0,
-      goals: 0,
-      assists: 0,
-      conceded: 0
-    },
-
-    {
-      id: "huseyin-ince",
-      name: "Hüseyin İnce",
-      position: "forvet",
-      number: 95,
-      matches: 0,
-      goals: 0,
-      assists: 0,
-      conceded: 0
-    },
-
-    {
-      id: "umut-kayis",
-      name: "Umut Kayış",
-      position: "orta saha",
-      number: 94,
-      matches: 0,
-      goals: 0,
-      assists: 0,
-      conceded: 0
-    },
-
-    {
-      id: "musa-aksu",
-      name: "Musa Aksu",
-      position: "orta saha",
-      number: 93,
-      matches: 0,
-      goals: 0,
-      assists: 0,
-      conceded: 0
-    },
-
-    {
-      id: "mustafa-akgul",
-      name: "Mustafa Akgül",
-      position: "kaleci",
-      number: 99,
-      matches: 0,
-      goals: 0,
-      assists: 0,
-      conceded: 0
-    }
-
-  ];
-
-
-  /* ==========================================================
-     DEĞİŞKENLER
-  ========================================================== */
-
-  let players = [];
-
-  let currentFilter = "all";
-
-  let currentUser = null;
-
-  let unsubscribePlayers = null;
-
-
-  /* ==========================================================
-     DOM
-  ========================================================== */
-
-  const playersContainer =
-    document.getElementById("players");
-
-  const searchInput =
-    document.getElementById("searchInput");
-
-  const totalPlayers =
-    document.getElementById("totalPlayers");
-
-  const totalGoals =
-    document.getElementById("totalGoals");
-
-  const totalAssists =
-    document.getElementById("totalAssists");
-
-  const playerCountText =
-    document.getElementById("playerCountText");
-
-  const loginModal =
-    document.getElementById("loginModal");
-
-  const playerModal =
-    document.getElementById("playerModal");
-
-  const toast =
-    document.getElementById("toast");
-
-
-  /* ==========================================================
-     TOAST
-  ========================================================== */
-
-  function showToast(message, type = "success") {
-
-    toast.textContent = message;
-
-    toast.className =
-      "toast show " +
-      (type === "error"
-        ? "error-toast"
-        : "success");
-
-    clearTimeout(window.toastTimer);
-
-    window.toastTimer =
-      setTimeout(() => {
-
-        toast.className = "toast";
-
-      }, 2800);
-  }
-
-
-  /* ==========================================================
-     POZİSYON
-  ========================================================== */
-
-  function positionText(position) {
-
-    const map = {
-      "forvet": "Forvet",
-      "orta saha": "Orta Saha",
-      "defans": "Defans",
-      "kaleci": "Kaleci"
-    };
-
-    return map[position] || position;
-  }
-
-
-  /* ==========================================================
-     FIRESTORE BAŞLANGIÇ OYUNCULARI
-  ========================================================== */
-
-  async function seedInitialPlayers() {
-
-    if (!currentUser) {
-      return;
-    }
-
-    if (
-      currentUser.email.toLowerCase() !==
-      ADMIN_EMAIL.toLowerCase()
-    ) {
-      return;
-    }
-
-    try {
-
-      const snapshot =
-        await getDocs(playersRef);
-
-      /*
-        Sadece Firestore tamamen boşsa
-        başlangıç oyuncularını ekliyoruz.
-      */
-
-      if (!snapshot.empty) {
-        return;
-      }
-
-      showToast(
-        "Başlangıç oyuncuları Firebase'e ekleniyor..."
-      );
-
-      for (const player of initialPlayers) {
-
-        const {
-          id,
-          ...playerData
-        } = player;
-
-        await setDoc(
-          doc(db, "players", id),
-          playerData
-        );
-      }
-
-      showToast(
-        "15 oyuncu başarıyla eklendi."
-      );
-
-    } catch (error) {
-
-      console.error(
-        "Başlangıç oyuncuları eklenemedi:",
-        error
-      );
-
-      showToast(
-        "Oyuncular eklenirken hata oluştu.",
-        "error"
-      );
-    }
-  }
-
-
-  /* ==========================================================
-     GERÇEK ZAMANLI OYUNCU DİNLEME
-  ========================================================== */
-
-  function listenPlayers() {
-
-    if (unsubscribePlayers) {
-      unsubscribePlayers();
-    }
-
-    unsubscribePlayers =
-      onSnapshot(
-        playersRef,
-
-        snapshot => {
-
-          players =
-            snapshot.docs.map(item => {
-
-              return {
-                id: item.id,
-                ...item.data()
-              };
-
-            });
-
-          players.sort((a, b) => {
-
-            const numberA =
-              Number(a.number || 999);
-
-            const numberB =
-              Number(b.number || 999);
-
-            return numberA - numberB;
-
-          });
-
-          renderPlayers();
-
-          updateSummary();
-
-        },
-
-        error => {
-
-          console.error(error);
-
-          playersContainer.innerHTML = `
-            <div class="empty">
-              <div class="empty-icon">⚠️</div>
-              <div>Oyuncu bilgileri alınamadı.</div>
-            </div>
-          `;
-
-          showToast(
-            "Firebase bağlantısında hata oluştu.",
-            "error"
-          );
-        }
-      );
-  }
-
-
-  /* ==========================================================
-     İSTATİSTİK ÖZETİ
-  ========================================================== */
-
-  function updateSummary() {
-
-    totalPlayers.textContent =
-      players.length;
-
-    let goals = 0;
-
-    let assists = 0;
-
-    players.forEach(player => {
-
-      goals +=
-        Number(player.goals || 0);
-
-      assists +=
-        Number(player.assists || 0);
-
-    });
-
-    totalGoals.textContent = goals;
-
-    totalAssists.textContent = assists;
-
-    playerCountText.textContent =
-      players.length + " oyuncu";
-  }
-
-
-  /* ==========================================================
-     FİLTRELENMİŞ OYUNCULAR
-  ========================================================== */
-
-  function getFilteredPlayers() {
-
-    const search =
-      searchInput.value
-        .trim()
-        .toLocaleLowerCase("tr-TR");
-
-    return players.filter(player => {
-
-      const matchesFilter =
-        currentFilter === "all" ||
-        player.position === currentFilter;
-
-      const name =
-        String(player.name || "")
-          .toLocaleLowerCase("tr-TR");
-
-      const matchesSearch =
-        !search ||
-        name.includes(search);
-
-      return matchesFilter &&
-        matchesSearch;
-
-    });
-  }
-
-
-  /* ==========================================================
-     OYUNCU KARTI
-  ========================================================== */
-
-  function playerCard(player) {
-
-    const isGoalkeeper =
-      player.position === "kaleci";
-
-    const goals =
-      Number(player.goals || 0);
-
-    const assists =
-      Number(player.assists || 0);
-
-    const conceded =
-      Number(player.conceded || 0);
-
-    const matches =
-      Number(player.matches || 0);
-
-    return `
-
-      <article
-        class="player-card"
-        data-player-id="${player.id}"
-      >
-
-        <div class="player-top">
-
-          <div class="jersey">
-
-            <div class="jersey-number">
-              ${player.number ?? "-"}
-            </div>
-
-            <div class="jersey-label">
-              FORMA
-            </div>
-
-          </div>
-
-
-          <div class="player-main">
-
-            <div class="player-name">
-              ${escapeHtml(player.name || "İsimsiz")}
-            </div>
-
-            <div class="player-position">
-              ${positionText(player.position)}
-            </div>
-
-          </div>
-
-
-          <div class="match-count">
-
-            <div class="match-count-number">
-              ${matches}
-            </div>
-
-            <div class="match-count-label">
-              Maç
-            </div>
-
-          </div>
-
-        </div>
-
-
-        <div class="stats-grid">
-
-          ${
-            isGoalkeeper
-
-            ?
-
-            `
-
-              <div class="stat-box">
-
-                <div class="stat-title">
-
-                  <span>🧤 Yediği Gol</span>
-
-                </div>
-
-                ${
-                  currentUser
-                  ?
-                  `
-
-                    <div class="counter">
-
-                      <button
-                        class="counter-btn"
-                        onclick="changeStat('${player.id}', 'conceded', -1)"
-                      >
-                        −
-                      </button>
-
-                      <div class="stat-value">
-                        ${conceded}
-                      </div>
-
-                      <button
-                        class="counter-btn plus"
-                        onclick="changeStat('${player.id}', 'conceded', 1)"
-                      >
-                        +
-                      </button>
-
-                    </div>
-
-                  `
-                  :
-                  `
-
-                    <div class="public-stat">
-
-                      <div>
-                        <div class="public-stat-value">
-                          ${conceded}
-                        </div>
-
-                        <div class="public-stat-label">
-                          YENEN GOL
-                        </div>
-                      </div>
-
-                      <span>🧤</span>
-
-                    </div>
-
-                  `
-                }
-
-              </div>
-
-
-              <div class="stat-box">
-
-                <div class="stat-title">
-
-                  <span>🎯 Maç</span>
-
-                </div>
-
-                ${
-                  currentUser
-                  ?
-                  `
-
-                    <div class="counter">
-
-                      <button
-                        class="counter-btn"
-                        onclick="changeStat('${player.id}', 'matches', -1)"
-                      >
-                        −
-                      </button>
-
-                      <div class="stat-value">
-                        ${matches}
-                      </div>
-
-                      <button
-                        class="counter-btn plus"
-                        onclick="changeStat('${player.id}', 'matches', 1)"
-                      >
-                        +
-                      </button>
-
-                    </div>
-
-                  `
-                  :
-                  `
-
-                    <div class="public-stat">
-
-                      <div>
-                        <div class="public-stat-value">
-                          ${matches}
-                        </div>
-
-                        <div class="public-stat-label">
-                          KATILIM
-                        </div>
-                      </div>
-
-                      <span>🏟️</span>
-
-                    </div>
-
-                  `
-                }
-
-              </div>
-
-            `
-
-            :
-
-            `
-
-              <div class="stat-box">
-
-                <div class="stat-title">
-
-                  <span>⚽ Gol</span>
-
-                </div>
-
-                ${
-                  currentUser
-                  ?
-                  `
-
-                    <div class="counter">
-
-                      <button
-                        class="counter-btn"
-                        onclick="changeStat('${player.id}', 'goals', -1)"
-                      >
-                        −
-                      </button>
-
-                      <div class="stat-value">
-                        ${goals}
-                      </div>
-
-                      <button
-                        class="counter-btn plus"
-                        onclick="changeStat('${player.id}', 'goals', 1)"
-                      >
-                        +
-                      </button>
-
-                    </div>
-
-                  `
-                  :
-                  `
-
-                    <div class="public-stat">
-
-                      <div>
-                        <div class="public-stat-value">
-                          ${goals}
-                        </div>
-
-                        <div class="public-stat-label">
-                          GOL
-                        </div>
-                      </div>
-
-                      <span>⚽</span>
-
-                    </div>
-
-                  `
-                }
-
-              </div>
-
-
-              <div class="stat-box">
-
-                <div class="stat-title">
-
-                  <span>🎯 Asist</span>
-
-                </div>
-
-                ${
-                  currentUser
-                  ?
-                  `
-
-                    <div class="counter">
-
-                      <button
-                        class="counter-btn"
-                        onclick="changeStat('${player.id}', 'assists', -1)"
-                      >
-                        −
-                      </button>
-
-                      <div class="stat-value">
-                        ${assists}
-                      </div>
-
-                      <button
-                        class="counter-btn plus"
-                        onclick="changeStat('${player.id}', 'assists', 1)"
-                      >
-                        +
-                      </button>
-
-                    </div>
-
-                  `
-                  :
-                  `
-
-                    <div class="public-stat">
-
-                      <div>
-                        <div class="public-stat-value">
-                          ${assists}
-                        </div>
-
-                        <div class="public-stat-label">
-                          ASİST
-                        </div>
-                      </div>
-
-                      <span>🎯</span>
-
-                    </div>
-
-                  `
-                }
-
-              </div>
-
-
-              <div class="stat-box">
-
-                <div class="stat-title">
-
-                  <span>🏟️ Maç</span>
-
-                </div>
-
-                ${
-                  currentUser
-                  ?
-                  `
-
-                    <div class="counter">
-
-                      <button
-                        class="counter-btn"
-                        onclick="changeStat('${player.id}', 'matches', -1)"
-                      >
-                        −
-                      </button>
-
-                      <div class="stat-value">
-                        ${matches}
-                      </div>
-
-                      <button
-                        class="counter-btn plus"
-                        onclick="changeStat('${player.id}', 'matches', 1)"
-                      >
-                        +
-                      </button>
-
-                    </div>
-
-                  `
-                  :
-                  `
-
-                    <div class="public-stat">
-
-                      <div>
-                        <div class="public-stat-value">
-                          ${matches}
-                        </div>
-
-                        <div class="public-stat-label">
-                          KATILIM
-                        </div>
-                      </div>
-
-                      <span>🏟️</span>
-
-                    </div>
-
-                  `
-                }
-
-              </div>
-
-            `
-          }
-
-        </div>
-
-
-        ${
-          currentUser
-          ?
-
-          `
-
-            <div class="admin-edit">
-
-              <button
-                class="small-btn"
-                onclick="editPlayer('${player.id}')"
-              >
-                ✏️ Düzenle
-              </button>
-
-              <button
-                class="small-btn delete"
-                onclick="deletePlayer('${player.id}')"
-              >
-                🗑️ Sil
-              </button>
-
-            </div>
-
-          `
-
-          :
-
-          ""
-        }
-
-      </article>
-    `;
-  }
-
-
-  /* ==========================================================
-     OYUNCULARI GÖSTER
-  ========================================================== */
-
-  function renderPlayers() {
-
-    const filtered =
-      getFilteredPlayers();
-
-    if (filtered.length === 0) {
-
-      playersContainer.innerHTML = `
-
-        <div class="empty">
-
-          <div class="empty-icon">
-            🔎
-          </div>
-
-          <div>
-            Oyuncu bulunamadı.
-          </div>
-
-        </div>
-
-      `;
-
-      return;
-    }
-
-    playersContainer.innerHTML =
-      filtered.map(playerCard).join("");
-  }
-
-
-  /* ==========================================================
-     XSS KORUMASI
-  ========================================================== */
-
-  function escapeHtml(value) {
-
-    return String(value)
-
-      .replaceAll("&", "&amp;")
-
-      .replaceAll("<", "&lt;")
-
-      .replaceAll(">", "&gt;")
-
-      .replaceAll('"', "&quot;")
-
-      .replaceAll("'", "&#039;");
-  }
-
-
-  /* ==========================================================
-     İSTATİSTİK DEĞİŞTİR
-  ========================================================== */
-
-  window.changeStat =
-    async function(
-      playerId,
-      field,
-      amount
-    ) {
-
-      if (!currentUser) {
-
-        showToast(
-          "Bu işlem için yönetici girişi gerekli.",
-          "error"
-        );
-
-        return;
-      }
-
-      if (
-        currentUser.email.toLowerCase() !==
-        ADMIN_EMAIL.toLowerCase()
-      ) {
-
-        showToast(
-          "Bu işlem için yetkiniz yok.",
-          "error"
-        );
-
-        return;
-      }
-
-      try {
-
-        const player =
-          players.find(
-            item => item.id === playerId
-          );
-
-        if (!player) {
-          return;
-        }
-
-        const currentValue =
-          Number(player[field] || 0);
-
-        /*
-          0'ın altına düşmesini engelliyoruz.
-        */
-
-        if (
-          amount < 0 &&
-          currentValue <= 0
-        ) {
-
-          return;
-        }
-
-        await updateDoc(
-
-          doc(
-            db,
-            "players",
-            playerId
-          ),
-
-          {
-            [field]:
-              increment(amount)
-          }
-
-        );
-
-      } catch (error) {
-
-        console.error(error);
-
-        showToast(
-          "İstatistik güncellenemedi.",
-          "error"
-        );
-      }
-    };
-
-
-  /* ==========================================================
-     OYUNCU EKLE MODAL
-  ========================================================== */
-
-  function openPlayerModal(player = null) {
-
-    document
-      .getElementById("playerError")
-      .classList.remove("show");
-
-    if (player) {
-
-      document
-        .getElementById("playerModalTitle")
-        .textContent =
-        "Oyuncuyu Düzenle";
-
-      document
-        .getElementById("editingPlayerId")
-        .value =
-        player.id;
-
-      document
-        .getElementById("playerNameInput")
-        .value =
-        player.name || "";
-
-      document
-        .getElementById("playerNumberInput")
-        .value =
-        player.number ?? "";
-
-      document
-        .getElementById("playerPositionInput")
-        .value =
-        player.position || "forvet";
-
-      document
-        .getElementById("playerMatchesInput")
-        .value =
-        Number(player.matches || 0);
-
-    } else {
-
-      document
-        .getElementById("playerModalTitle")
-        .textContent =
-        "Oyuncu Ekle";
-
-      document
-        .getElementById("editingPlayerId")
-        .value =
-        "";
-
-      document
-        .getElementById("playerNameInput")
-        .value =
-        "";
-
-      document
-        .getElementById("playerNumberInput")
-        .value =
-        "";
-
-      document
-        .getElementById("playerPositionInput")
-        .value =
-        "forvet";
-
-      document
-        .getElementById("playerMatchesInput")
-        .value =
-        "0";
-    }
-
-    playerModal.classList.add("show");
-  }
-
-
-  /* ==========================================================
-     OYUNCU KAYDET
-  ========================================================== */
-
-  async function savePlayer() {
-
-    if (!currentUser) {
-
-      showToast(
-        "Yönetici girişi gerekli.",
-        "error"
-      );
-
-      return;
-    }
-
-    const name =
-      document
-        .getElementById("playerNameInput")
-        .value
-        .trim();
-
-    const number =
-      Number(
-        document
-          .getElementById("playerNumberInput")
-          .value
-      );
-
-    const position =
-      document
-        .getElementById("playerPositionInput")
-        .value;
-
-    const matches =
-      Number(
-        document
-          .getElementById("playerMatchesInput")
-          .value
-      );
-
-    const editingId =
-      document
-        .getElementById("editingPlayerId")
-        .value;
-
-    const errorBox =
-      document
-        .getElementById("playerError");
-
-
-    if (!name) {
-
-      errorBox.textContent =
-        "Oyuncu adı boş bırakılamaz.";
-
-      errorBox.classList.add("show");
-
-      return;
-    }
-
-    if (
-      !Number.isFinite(number) ||
-      number < 0
-    ) {
-
-      errorBox.textContent =
-        "Geçerli bir forma numarası gir.";
-
-      errorBox.classList.add("show");
-
-      return;
-    }
-
-    if (
-      !Number.isFinite(matches) ||
-      matches < 0
-    ) {
-
-      errorBox.textContent =
-        "Maç sayısı 0 veya daha büyük olmalı.";
-
-      errorBox.classList.add("show");
-
-      return;
-    }
-
-    try {
-
-      if (editingId) {
-
-        await updateDoc(
-
-          doc(
-            db,
-            "players",
-            editingId
-          ),
-
-          {
-            name,
-            number,
-            position,
-            matches
-          }
-
-        );
-
-        showToast(
-          "Oyuncu bilgileri güncellendi."
-        );
-
-      } else {
-
-        await addDoc(
-
-          playersRef,
-
-          {
-            name,
-            number,
-            position,
-            matches,
-            goals: 0,
-            assists: 0,
-            conceded: 0
-          }
-
-        );
-
-        showToast(
-          "Yeni oyuncu eklendi."
-        );
-      }
-
-      playerModal.classList.remove("show");
-
-    } catch (error) {
-
-      console.error(error);
-
-      errorBox.textContent =
-        "Oyuncu kaydedilemedi. Firebase kurallarını kontrol et.";
-
-      errorBox.classList.add("show");
-    }
-  }
-
-
-  /* ==========================================================
-     OYUNCU DÜZENLE
-  ========================================================== */
-
-  window.editPlayer =
-    function(playerId) {
-
-      if (!currentUser) {
-        return;
-      }
-
-      const player =
-        players.find(
-          item => item.id === playerId
-        );
-
-      if (!player) {
-        return;
-      }
-
-      openPlayerModal(player);
-    };
-
-
-  /* ==========================================================
-     OYUNCU SİL
-  ========================================================== */
-
-  window.deletePlayer =
-    async function(playerId) {
-
-      if (!currentUser) {
-
-        showToast(
-          "Yönetici girişi gerekli.",
-          "error"
-        );
-
-        return;
-      }
-
-      const player =
-        players.find(
-          item => item.id === playerId
-        );
-
-      if (!player) {
-        return;
-      }
-
-      const approved =
-        confirm(
-          `"${player.name}" isimli oyuncu silinsin mi?`
-        );
-
-      if (!approved) {
-        return;
-      }
-
-      try {
-
-        await deleteDoc(
-
-          doc(
-            db,
-            "players",
-            playerId
-          )
-
-        );
-
-        showToast(
-          "Oyuncu silindi."
-        );
-
-      } catch (error) {
-
-        console.error(error);
-
-        showToast(
-          "Oyuncu silinemedi.",
-          "error"
-        );
-      }
-    };
-
-
-  /* ==========================================================
-     AUTH STATE
-  ========================================================== */
-
-  onAuthStateChanged(
-    auth,
-    async user => {
-
-      /*
-        Güvenlik:
-        Sadece belirlediğimiz e-posta
-        yönetici arayüzünü kullanabilir.
-      */
-
-      if (
-        user &&
-        user.email &&
-        user.email.toLowerCase() ===
-        ADMIN_EMAIL.toLowerCase()
-      ) {
-
-        currentUser = user;
-
-        document.body.classList.add(
-          "admin-mode"
-        );
-
-        document.getElementById(
-          "adminEmail"
-        ).textContent =
-          user.email;
-
-        document.getElementById(
-          "adminOpenBtn"
-        ).textContent =
-          "👑";
-
-        /*
-          Firestore boşsa 15 oyuncuyu
-          ilk admin girişinde oluştur.
-        */
-
-        await seedInitialPlayers();
-
-      } else {
-
-        /*
-          Başka bir hesap giriş yaparsa
-          çıkış yaptır.
-        */
-
-        if (user) {
-          await signOut(auth);
-        }
-
-        currentUser = null;
-
-        document.body.classList.remove(
-          "admin-mode"
-        );
-
-        document.getElementById(
-          "adminOpenBtn"
-        ).textContent =
-          "🔐";
-      }
-
-      renderPlayers();
-    }
-  );
-
-
-  /* ==========================================================
-     LOGIN
-  ========================================================== */
-
-  async function login() {
-
-    const email =
-      document
-        .getElementById("loginEmail")
-        .value
-        .trim();
-
-    const password =
-      document
-        .getElementById("loginPassword")
-        .value;
-
-    const errorBox =
-      document
-        .getElementById("loginError");
-
-
-    errorBox.classList.remove("show");
-
-
-    if (
-      email.toLowerCase() !==
-      ADMIN_EMAIL.toLowerCase()
-    ) {
-
-      errorBox.textContent =
-        "Bu hesap yönetici hesabı değil.";
-
-      errorBox.classList.add("show");
-
-      return;
-    }
-
-
-    if (!password) {
-
-      errorBox.textContent =
-        "Şifrenizi girin.";
-
-      errorBox.classList.add("show");
-
-      return;
-    }
-
-
-    try {
-
-      await signInWithEmailAndPassword(
-        auth,
-        email,
-        password
-      );
-
-      loginModal.classList.remove(
-        "show"
-      );
-
-      document
-        .getElementById("loginPassword")
-        .value =
-        "";
-
-      showToast(
-        "Yönetici girişi başarılı. 👑"
-      );
-
-    } catch (error) {
-
-      console.error(error);
-
-      let message =
-        "Giriş yapılamadı.";
-
-      if (
-        error.code ===
-        "auth/invalid-credential"
-      ) {
-
-        message =
-          "E-posta veya şifre yanlış.";
-
-      } else if (
-        error.code ===
-        "auth/too-many-requests"
-      ) {
-
-        message =
-          "Çok fazla deneme yapıldı. Biraz sonra tekrar deneyin.";
-      }
-
-      errorBox.textContent =
-        message;
-
-      errorBox.classList.add("show");
-    }
-  }
-
-
-  /* ==========================================================
-     LOGOUT
-  ========================================================== */
-
-  async function logout() {
-
-    try {
-
-      await signOut(auth);
-
-      showToast(
-        "Yönetici oturumu kapatıldı."
-      );
-
-    } catch (error) {
-
-      console.error(error);
-
-      showToast(
-        "Çıkış yapılamadı.",
-        "error"
-      );
-    }
-  }
-
-
-  /* ==========================================================
-     BUTONLAR
-  ========================================================== */
-
-  document
-    .getElementById("adminOpenBtn")
-    .addEventListener(
-      "click",
-      () => {
-
-        if (currentUser) {
-
-          document
-            .querySelector(".admin-panel")
-            .scrollIntoView({
-              behavior: "smooth"
-            });
-
-        } else {
-
-          loginModal.classList.add(
-            "show"
-          );
-
-        }
-
-      }
-    );
-
-
-  document
-    .getElementById("adminNav")
-    .addEventListener(
-      "click",
-      () => {
-
-        if (currentUser) {
-
-          document
-            .querySelector(".admin-panel")
-            .scrollIntoView({
-              behavior: "smooth"
-            });
-
-        } else {
-
-          loginModal.classList.add(
-            "show"
-          );
-
-        }
-
-      }
-    );
-
-
-  document
-    .getElementById("playersNav")
-    .addEventListener(
-      "click",
-      () => {
-
-        document
-          .getElementById("playersSection")
-          .scrollIntoView({
-            behavior: "smooth"
-          });
-
-      }
-    );
-
-
-  document
-    .getElementById("homeNav")
-    .addEventListener(
-      "click",
-      () => {
-
-        window.scrollTo({
-          top: 0,
-          behavior: "smooth"
-        });
-
-      }
-    );
-
-
-  document
-    .getElementById("loginBtn")
-    .addEventListener(
-      "click",
-      login
-    );
-
-
-  document
-    .getElementById("logoutBtn")
-    .addEventListener(
-      "click",
-      logout
-    );
-
-
-  document
-    .getElementById("loginCancelBtn")
-    .addEventListener(
-      "click",
-      () => {
-
-        loginModal.classList.remove(
-          "show"
-        );
-
-      }
-    );
-
-
-  document
-    .getElementById("addPlayerBtn")
-    .addEventListener(
-      "click",
-      () => {
-
-        openPlayerModal();
-
-      }
-    );
-
-
-  document
-    .getElementById("playerCancelBtn")
-    .addEventListener(
-      "click",
-      () => {
-
-        playerModal.classList.remove(
-          "show"
-        );
-
-      }
-    );
-
-
-  document
-    .getElementById("playerSaveBtn")
-    .addEventListener(
-      "click",
-      savePlayer
-    );
-
-
-  /* ==========================================================
-     MODAL DIŞINA BASINCA KAPAT
-  ========================================================== */
-
-  loginModal.addEventListener(
-    "click",
-    event => {
-
-      if (
-        event.target === loginModal
-      ) {
-
-        loginModal.classList.remove(
-          "show"
-        );
-
-      }
-
-    }
-  );
-
-
-  playerModal.addEventListener(
-    "click",
-    event => {
-
-      if (
-        event.target === playerModal
-      ) {
-
-        playerModal.classList.remove(
-          "show"
-        );
-
-      }
-
-    }
-  );
-
-
-  /* ==========================================================
-     SEARCH
-  ========================================================== */
-
-  searchInput.addEventListener(
-    "input",
-    renderPlayers
-  );
-
-
-  /* ==========================================================
-     FILTER
-  ========================================================== */
-
-  document
-    .querySelectorAll(".filter-btn")
-    .forEach(button => {
-
-      button.addEventListener(
-        "click",
-        () => {
-
-          document
-            .querySelectorAll(".filter-btn")
-            .forEach(btn => {
-
-              btn.classList.remove(
-                "active"
-              );
-
-            });
-
-          button.classList.add(
-            "active"
-          );
-
-          currentFilter =
-            button.dataset.filter;
-
-          renderPlayers();
-
-        }
-      );
-
-    });
-
-
-  /* ==========================================================
-     ENTER İLE GİRİŞ
-  ========================================================== */
-
-  document
-    .getElementById("loginPassword")
-    .addEventListener(
-      "keydown",
-      event => {
-
-        if (
-          event.key === "Enter"
-        ) {
-
-          login();
-
-        }
-
-      }
-    );
-
-
-  /* ==========================================================
-     SAYFA BAŞLANGICI
-  ========================================================== */
-
-  listenPlayers();
-
+import{initializeApp}from"https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+import{getAuth,signInWithEmailAndPassword,onAuthStateChanged,signOut}from"https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
+import{getFirestore,collection,doc,getDocs,addDoc,deleteDoc,updateDoc,onSnapshot,serverTimestamp}from"https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+
+const firebaseConfig={
+apiKey:"AIzaSyCSw0nzgbHrFCAJLpvmhZwYAV_aQeBMw4g",
+authDomain:"fcbadboys-bfc96.firebaseapp.com",
+databaseURL:"https://fcbadboys-bfc96-default-rtdb.firebaseio.com",
+projectId:"fcbadboys-bfc96",
+storageBucket:"fcbadboys-bfc96.firebasestorage.app",
+messagingSenderId:"394322712916",
+appId:"1:394322712916:web:8fb96c51cbf2f113e8d0c1",
+measurementId:"G-WT2ECTZ2K0"
+};
+
+const app=initializeApp(firebaseConfig),auth=getAuth(app),db=getFirestore(app);
+const playersRef=collection(db,"players"),matchesRef=collection(db,"matches"),photosRef=collection(db,"photos"),votesRef=collection(db,"votes");
+const state={players:[],matches:[],photos:[],votes:[],isAdmin:false};
+
+const initialPlayers=[
+["Yakup Sunay","orta saha",15],["Eren Yılmaz","forvet",10],["Murat Çaylı","forvet",7],["Ahmet Yavuz","forvet",9],["Alper Batuhan","forvet",6],
+["Ceyhun Düzdaş","kaleci",98],["Çağdaş Şengül","defans",97],["Çağrı Şengül","defans",96],["Furkan Yılmaz","defans",4],["Süleyman Tunçelik","defans",3],
+["Bulancaklı Hüseyin","kaleci",37],["Hüseyin İnce","forvet",95],["Umut Kayış","orta saha",94],["Musa Aksu","orta saha",93],["Mustafa Akgül","kaleci",99]
+];
+
+const $=id=>document.getElementById(id);
+const esc=x=>String(x??"").replace(/[&<>"']/g,m=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#039;"}[m]));
+const n=x=>Number(x||0);
+const gk=p=>String(p.position||"").toLowerCase().includes("kaleci");
+
+async function seedPlayers(){
+ const snap=await getDocs(playersRef);
+ if(!snap.empty)return;
+ for(const [name,position,number] of initialPlayers)
+  await addDoc(playersRef,{name,position,number,matches:0,goals:0,assists:0,conceded:0});
+}
+
+function nav(){
+ document.querySelectorAll(".nav-btn").forEach(b=>b.onclick=()=>{
+  document.querySelectorAll(".nav-btn").forEach(x=>x.classList.remove("active"));
+  b.classList.add("active");
+  document.querySelectorAll("main>section").forEach(s=>s.classList.add("hidden"));
+  $(b.dataset.tab).classList.remove("hidden");
+ });
+}
+nav();
+
+function playerCard(p){
+ return `<div class="player">
+ <div class="avatar">${esc(p.name.split(" ").map(x=>x[0]).slice(0,2).join(""))}</div>
+ <div class="player-info"><div class="player-name">${esc(p.name)}</div>
+ <div class="player-meta">${esc(p.position)} • #${esc(p.number)}</div>
+ <span class="badge">🏟️ ${n(p.matches)} maç</span></div>
+ <div class="number">#${esc(p.number)}</div></div>`;
+}
+
+function renderPlayers(){
+ $("players").innerHTML=state.players.length?state.players.map(playerCard).join(""):'<div class="empty">Oyuncu bulunamadı.</div>';
+}
+
+function matchCard(m){
+ const result=m.result||"";
+ return `<div class="match" data-match="${esc(m.id)}">
+ <div class="match-top"><b>FC BAD BOYS 🆚 ${esc(m.opponent)}</b><span class="score">${esc(m.score||"-")}</span></div>
+ <div style="font-size:8px;color:#777;margin-top:5px">📅 ${esc(m.date||"")} • ${esc(result)}</div>
+ <div class="actions"><button class="btn dark detail-btn" data-id="${esc(m.id)}">Detay</button>${state.isAdmin?`<button class="btn red delete-match" data-id="${esc(m.id)}">Sil</button>`:""}</div>
+ </div>`;
+}
+
+function renderMatches(){
+ $("matches").innerHTML=state.matches.length?state.matches.slice().reverse().map(matchCard).join(""):'<div class="empty">Henüz maç kaydı yok.</div>';
+ $("homeMatches").innerHTML=state.matches.slice().reverse().slice(0,5).map(matchCard).join("")||'<div class="empty">Henüz maç yok.</div>';
+}
+
+function updateDashboard(){
+ $("totalPlayers").textContent=state.players.length;
+ $("totalMatches").textContent=state.matches.length;
+ $("totalGoals").textContent=state.players.reduce((a,p)=>a+n(p.goals),0);
+ const w=state.matches.filter(m=>m.result==="Galibiyet").length;
+ const d=state.matches.filter(m=>m.result==="Beraberlik").length;
+ const l=state.matches.filter(m=>m.result==="Mağlubiyet").length;
+ const goals=state.players.reduce((a,p)=>a+n(p.goals),0);
+ const opp=state.matches.reduce((a,m)=>a+n(m.opponentGoals),0);
+ $("seasonRecord").textContent=`${w}G • ${d}B • ${l}M`;
+ $("seasonSummary").textContent=`${state.matches.length} maç • ${goals} atılan gol • ${opp} yenilen gol • averaj ${goals-opp>=0?"+":""}${goals-opp}`;
+ renderAwards();renderMatchDay();renderGallery();renderRankings();
+}
+
+function renderAwards(){
+ const pick=(field,filter=()=>true)=>state.players.filter(filter).slice().sort((a,b)=>n(b[field])-n(a[field]))[0];
+ const scorer=pick("goals"),assist=pick("assists"),app=pick("matches"),keeper=pick("conceded",gk);
+ const awards=[["🏆","Gol Kralı",scorer?.name||"Henüz yok"],["🎯","Asist Kralı",assist?.name||"Henüz yok"],["📅","En Çok Maç",app?.name||"Henüz yok"],["🧤","Kaleci Lideri",keeper?.name||"Henüz yok"]];
+ $("awards").innerHTML=awards.map(a=>`<div class="award"><div class="award-icon">${a[0]}</div><div class="award-name">${a[1]}</div><div class="award-player">${esc(a[2])}</div></div>`).join("");
+}
+
+function renderMatchDay(){
+ const up=state.matches.slice().sort((a,b)=>String(a.date).localeCompare(String(b.date))).find(m=>String(m.date)>=new Date().toISOString().slice(0,10));
+ $("matchDayBox").innerHTML=up?`<div class="match-day"><div class="big">FC BAD BOYS</div><div class="versus">VS</div><div class="big">${esc(up.opponent)}</div><div class="date">📅 ${esc(up.date)}</div></div>`:'<div class="empty">Yaklaşan maç kaydı yok.</div>';
+}
+
+function renderGallery(){
+ const arr=state.photos.slice().reverse();
+ $("gallery").innerHTML=arr.length?arr.map(p=>`<div class="gallery-item"><img src="${esc(p.url)}" alt="${esc(p.title||"Maç anısı")}" loading="lazy"><div style="position:absolute;left:7px;bottom:7px;right:7px;padding:6px;border-radius:8px;background:rgba(0,0,0,.6);font-size:8px;font-weight:900">${esc(p.title||"Maç anısı")}</div>${state.isAdmin?`<button data-photo-delete="${esc(p.id)}">×</button>`:""}</div>`).join(""):'<div class="empty" style="grid-column:1/-1">Henüz fotoğraf eklenmedi.</div>';
+}
+
+function renderRankings(){
+ const list=(field,filter=()=>true)=>state.players.filter(filter).slice().sort((a,b)=>n(b[field])-n(a[field]));
+ $("goalRanking").innerHTML=list("goals").slice(0,10).map((p,i)=>`${i+1}. <b>${esc(p.name)}</b> — ⚽ ${n(p.goals)}<br>`).join("")||"Henüz veri yok";
+ $("assistRanking").innerHTML=list("assists").slice(0,10).map((p,i)=>`${i+1}. <b>${esc(p.name)}</b> — 🎯 ${n(p.assists)}<br>`).join("")||"Henüz veri yok";
+ $("matchRanking").innerHTML=list("matches").slice(0,10).map((p,i)=>`${i+1}. <b>${esc(p.name)}</b> — 🏟️ ${n(p.matches)}<br>`).join("")||"Henüz veri yok";
+}
+
+async function addPhoto(){
+ if(!state.isAdmin)return alert("Yönetici girişi gerekli.");
+ const title=$("photoTitle").value.trim(),url=$("photoUrl").value.trim();
+ if(!url)return alert("Fotoğraf URL'si gir.");
+ try{new URL(url)}catch{return alert("Geçerli URL gir.");}
+ await addDoc(photosRef,{title,url,createdAt:serverTimestamp()});
+ $("photoTitle").value="";$("photoUrl").value="";
+}
+
+async function deletePhoto(id){
+ if(!state.isAdmin)return;
+ if(confirm("Fotoğraf silinsin mi?"))await deleteDoc(doc(db,"photos",id));
+}
+
+async function showMatch(id){
+ const m=state.matches.find(x=>x.id===id);if(!m)return;
+ $("modalTitle").textContent=`FC BAD BOYS 🆚 ${m.opponent}`;
+ $("modalBody").innerHTML=`<div class="card"><h3>${esc(m.opponent)}</h3><p>📅 ${esc(m.date)}</p><h2 style="color:var(--orange)">${esc(m.score||"-")}</h2><p>${esc(m.result||"")}</p></div>
+ <div class="card"><b>Katılan Oyuncular</b><div class="player-grid" style="margin-top:8px">${(m.lineup||[]).map(id=>state.players.find(p=>p.id===id)).filter(Boolean).map(p=>playerCard(p)).join("")}</div></div>`;
+ renderVoteArea(m);
+ $("modalBg").classList.remove("hidden");
+}
+
+function renderVoteArea(m){
+ const players=(m.lineup||[]).map(id=>state.players.find(p=>p.id===id)).filter(Boolean);
+ if(!players.length){$("matchVoteArea").innerHTML="";return}
+ const voted=state.votes.some(v=>v.matchId===m.id&&v.voter===auth.currentUser?.uid);
+ $("matchVoteArea").innerHTML=`<div class="card"><b>🗳️ Maç Sonu MVP Oylaması</b><p style="font-size:9px;color:#777">Her kullanıcı bir kez oy verebilir.</p><div class="vote-grid"><div class="vote-row"><label>⭐ MVP</label><select id="mvpSelect"><option value="">Seç...</option>${players.map(p=>`<option value="${p.id}">${esc(p.name)}</option>`).join("")}</select></div><button class="btn primary" id="voteBtn" ${voted?"disabled":""}>${voted?"Oy Kullanıldı":"Oyumu Gönder"}</button></div></div>`;
+ if(!voted)$("voteBtn").onclick=async()=>{const pid=$("mvpSelect").value;if(!pid)return alert("Oyuncu seç.");await addDoc(votesRef,{matchId:m.id,playerId:pid,voter:auth.currentUser.uid,createdAt:serverTimestamp()});alert("MVP oyun kaydedildi.");};
+}
+
+async function deleteMatch(id){
+ if(!state.isAdmin||!confirm("Bu maç silinsin mi?"))return;
+ const m=state.matches.find(x=>x.id===id);if(!m)return;
+ for(const id2 of m.lineup||[]){
+  const p=state.players.find(x=>x.id===id2);if(!p)continue;
+  const updates={matches:Math.max(0,n(p.matches)-1)};
+  const goals=(m.stats||{})[id2]?.goals||0,assists=(m.stats||{})[id2]?.assists||0,conceded=(m.stats||{})[id2]?.conceded||0;
+  updates.goals=Math.max(0,n(p.goals)-n(goals));updates.assists=Math.max(0,n(p.assists)-n(assists));updates.conceded=Math.max(0,n(p.conceded)-n(conceded));
+  await updateDoc(doc(db,"players",id2),updates);
+ }
+ await deleteDoc(doc(db,"matches",id));
+}
+
+function openModal(){ $("modalBg").classList.remove("hidden");}
+$("closeModal").onclick=()=>$("modalBg").classList.add("hidden");
+$("modalBg").onclick=e=>{if(e.target===$("modalBg"))$("modalBg").classList.add("hidden")};
+
+$("loginBtn").onclick=async()=>{
+ try{await signInWithEmailAndPassword(auth,$("email").value,$("password").value)}
+ catch(e){alert("Giriş başarısız: "+e.message)}
+};
+$("logoutBtn").onclick=()=>signOut(auth);
+
+document.addEventListener("click",e=>{
+ const d=e.target.closest(".detail-btn");if(d)showMatch(d.dataset.id);
+ const x=e.target.closest(".delete-match");if(x)deleteMatch(x.dataset.id);
+ const ph=e.target.closest("[data-photo-delete]");if(ph)deletePhoto(ph.dataset.photoDelete);
+});
+
+$("addPhoto").onclick=addPhoto;
+
+const MUSIC_URL="music.mp3";
+const audio=$("teamAudio");
+audio.src=MUSIC_URL;audio.volume=.35;
+$("musicBar").classList.add("show");
+$("musicToggle").onclick=async()=>{
+ try{
+  if(audio.paused){await audio.play();$("musicToggle").textContent="⏸"}
+  else{audio.pause();$("musicToggle").textContent="▶"}
+ }catch(e){alert("Müzik başlatılamadı. music.mp3 dosyasını kontrol et.")}
+};
+$("musicVolume").oninput=e=>audio.volume=Number(e.target.value);
+audio.onplay=()=>{$("musicToggle").textContent="⏸"};
+audio.onpause=()=>{$("musicToggle").textContent="▶"};
+
+function subscribe(){
+ onSnapshot(playersRef,s=>{state.players=s.docs.map(d=>({id:d.id,...d.data()}));renderPlayers();updateDashboard()});
+ onSnapshot(matchesRef,s=>{state.matches=s.docs.map(d=>({id:d.id,...d.data()}));renderMatches();updateDashboard()});
+ onSnapshot(photosRef,s=>{state.photos=s.docs.map(d=>({id:d.id,...d.data()}));renderGallery()});
+ onSnapshot(votesRef,s=>{state.votes=s.docs.map(d=>({id:d.id,...d.data()}))});
+}
+
+onAuthStateChanged(auth,user=>{
+ state.isAdmin=!!user;
+ $("loginBox").classList.toggle("hidden",!!user);
+ $("adminBox").classList.toggle("hidden",!user);
+ $("adminTab").classList.toggle("hidden",false);
+ renderGallery();
+});
+
+await seedPlayers();
+subscribe();
 </script>
-
 </body>
 </html>

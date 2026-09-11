@@ -2,372 +2,3446 @@
 <html lang="tr">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="theme-color" content="#ff6a00">
-<title>FC BAD BOYS</title>
+<meta name="description" content="FC BAD BOYS - Halı Saha Takım Yönetimi ve İstatistikleri">
+<title>FC BAD BOYS | Takım Merkezi</title>
+
 <style>
-:root{--orange:#ff6a00;--black:#080808;--card:#111;--line:#252525;--text:#fff;--muted:#888;--green:#21c77a;--red:#ff4545;--yellow:#ffc107}
-*{box-sizing:border-box}
-html,body{margin:0;padding:0;background:var(--black);color:var(--text);font-family:Arial,sans-serif}
-body{min-height:100vh;padding-bottom:80px}
-button,input,select{font:inherit}
+:root{
+--orange:#ff6a00;--orange2:#ff8a00;--black:#070707;--black2:#101010;
+--card:#161616;--card2:#1d1d1d;--line:rgba(255,255,255,.09);
+--text:#fff;--muted:#9f9f9f;--green:#35d07f;--red:#ff5252;
+--yellow:#ffc107;--blue:#4ea1ff;--radius:20px;
+--shadow:0 14px 45px rgba(0,0,0,.28)
+}
+
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+
+html{scroll-behavior:smooth}
+
+body{
+margin:0;
+min-height:100vh;
+background:
+radial-gradient(circle at 90% 0,rgba(255,106,0,.18),transparent 30%),
+linear-gradient(180deg,#090909,#040404);
+color:var(--text);
+font-family:Inter,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+padding-bottom:78px
+}
+
+button,input,select,textarea{font:inherit}
 button{cursor:pointer}
-.hidden{display:none!important}
-.app{max-width:700px;margin:auto}
-header{position:sticky;top:0;z-index:30;background:rgba(8,8,8,.94);backdrop-filter:blur(12px);border-bottom:1px solid var(--line);padding:14px}
-.logo{text-align:center;font-weight:1000;font-size:25px;letter-spacing:2px;color:var(--orange)}
-.logo span{color:#fff}
-.sub{text-align:center;color:#777;font-size:8px;letter-spacing:3px;margin-top:3px}
-main{padding:14px}
-.card{background:var(--card);border:1px solid var(--line);border-radius:18px;padding:15px;margin-bottom:12px}
-.hero{padding:24px;text-align:center;border-radius:22px;background:linear-gradient(145deg,#17100b,#0e0e0e);border:1px solid rgba(255,106,0,.3)}
-.hero h1{margin:0;color:var(--orange);font-size:30px}
-.hero p{color:#888;font-size:10px}
-.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:12px}
-.stat{background:#151515;border-radius:13px;padding:12px;text-align:center}
-.stat b{display:block;font-size:19px}.stat small{color:#777;font-size:8px}
-.section-head{display:flex;align-items:center;justify-content:space-between;margin:20px 2px 9px}
-.section-title{font-size:14px;margin:0}.section-note{font-size:8px;color:#777}
-.player-grid{display:grid;gap:9px}
-.player{display:flex;align-items:center;gap:11px;background:#111;border:1px solid var(--line);border-radius:15px;padding:11px}
-.avatar{width:45px;height:45px;border-radius:13px;background:linear-gradient(145deg,var(--orange),#9b3200);display:grid;place-items:center;font-weight:1000}
-.player-info{flex:1;min-width:0}.player-name{font-weight:900;font-size:12px}.player-meta{font-size:8px;color:#777;margin-top:3px}
-.number{font-size:18px;font-weight:1000;color:#ff8b3d}
-.badge{display:inline-block;padding:4px 7px;border-radius:7px;background:#202020;color:#aaa;font-size:7px;margin-top:4px}
-.actions{display:flex;gap:6px;flex-wrap:wrap;margin-top:9px}
-.btn{border:0;border-radius:10px;padding:10px 13px;font-weight:900;font-size:10px}
-.btn.primary{background:var(--orange);color:#fff}.btn.dark{background:#222;color:#fff}.btn.red{background:#531919;color:#ff7676}
-.input,select{width:100%;background:#0c0c0c;color:#fff;border:1px solid var(--line);border-radius:10px;padding:11px;outline:0}
-.input:focus,select:focus{border-color:var(--orange)}
-.form-grid{display:grid;gap:8px}
-.bottom-nav{position:fixed;bottom:0;left:0;right:0;height:68px;background:rgba(10,10,10,.97);border-top:1px solid var(--line);display:flex;justify-content:center;z-index:50}
-.nav-inner{max-width:700px;width:100%;display:grid;grid-template-columns:repeat(4,1fr)}
-.nav-btn{background:none;border:0;color:#666;font-size:9px}.nav-btn.active{color:var(--orange)}.nav-icon{display:block;font-size:19px;margin-bottom:3px}
-.modal-bg{position:fixed;inset:0;background:rgba(0,0,0,.75);z-index:80;display:flex;align-items:flex-end}
-.modal{width:100%;max-width:700px;margin:auto;background:#111;border:1px solid var(--line);border-radius:22px 22px 0 0;max-height:90vh;overflow:auto}
-.modal-head{display:flex;justify-content:space-between;padding:15px;border-bottom:1px solid var(--line)}
-.modal-body{padding:15px}.close{background:#222;color:#fff;border:0;border-radius:9px;width:35px;height:35px}
-.empty{text-align:center;color:#666;padding:25px;font-size:10px}
-.match{padding:13px;border:1px solid var(--line);border-radius:15px;background:#111;margin-bottom:8px}
-.match-top{display:flex;justify-content:space-between}.score{font-weight:1000;color:var(--orange)}
-.admin-panel{border:1px solid rgba(255,106,0,.25);background:#110d09;border-radius:18px;padding:15px}
-.music-bar{position:fixed;left:12px;right:12px;bottom:83px;z-index:55;display:none;align-items:center;gap:9px;padding:9px 11px;border:1px solid rgba(255,106,0,.22);border-radius:16px;background:rgba(15,15,15,.94);backdrop-filter:blur(16px);box-shadow:0 12px 35px rgba(0,0,0,.3)}
-.music-bar.show{display:flex}.music-disc{width:34px;height:34px;display:grid;place-items:center;border-radius:50%;background:linear-gradient(145deg,var(--orange),#8f2f00);font-size:17px}
-.music-info{min-width:0;flex:1}.music-title{font-size:10px;font-weight:950;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.music-sub{font-size:8px;color:#777}
-.music-btn{width:36px;height:36px;border:1px solid var(--line);border-radius:10px;background:#202020;color:#fff}.music-range{width:65px;accent-color:var(--orange)}
-.season-card{position:relative;overflow:hidden;padding:18px;border:1px solid rgba(255,106,0,.2);border-radius:20px;background:linear-gradient(145deg,rgba(255,106,0,.13),#111)}
-.season-card h3{margin:0;font-size:11px;color:#ff9a52;letter-spacing:1px}.season-card strong{display:block;margin-top:4px;font-size:25px}.season-card p{margin:5px 0 0;color:#888;font-size:9px}
-.award-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:9px}.award{padding:14px;border:1px solid var(--line);border-radius:16px;background:#111;text-align:center}.award-icon{font-size:25px}.award-name{font-size:10px;font-weight:950;margin-top:5px}.award-player{font-size:10px;color:#aaa;margin-top:3px}
-.gallery-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:8px}.gallery-item{position:relative;aspect-ratio:1/1;border-radius:14px;overflow:hidden;background:#111;border:1px solid var(--line)}.gallery-item img{width:100%;height:100%;object-fit:cover}.gallery-item button{position:absolute;right:6px;top:6px;width:30px;height:30px;border:0;border-radius:9px;background:rgba(0,0,0,.7);color:#fff}
-.vote-grid{display:grid;gap:8px}.vote-row{display:flex;align-items:center;gap:8px;padding:9px;background:#101010;border:1px solid var(--line);border-radius:12px}.vote-row label{flex:1;font-size:10px;font-weight:850}.vote-row select{width:125px;min-height:35px}
-.match-day{padding:20px;text-align:center;border:1px solid rgba(255,106,0,.25);border-radius:20px;background:radial-gradient(circle at 50% 0,rgba(255,106,0,.2),transparent 55%),#111}
-.match-day .big{font-size:28px;font-weight:1000}.match-day .versus{font-size:11px;color:#888;margin:5px}.match-day .date{font-size:10px;color:#aaa;margin-top:9px}
-@media(min-width:650px){.music-bar{left:auto;right:24px;width:360px}.award-grid{grid-template-columns:repeat(4,1fr)}.gallery-grid{grid-template-columns:repeat(4,1fr)}}
+button:disabled{opacity:.45;cursor:not-allowed}
+
+.app{
+width:100%;
+max-width:1150px;
+margin:auto
+}
+
+/* =========================
+   AÇILIŞ ANİMASYONU
+========================= */
+
+.intro-screen{
+position:fixed;
+inset:0;
+z-index:9999;
+display:flex;
+align-items:center;
+justify-content:center;
+background:
+radial-gradient(circle at 50% 40%,rgba(255,106,0,.2),transparent 35%),
+#050505;
+overflow:hidden;
+transition:opacity .8s ease,visibility .8s ease
+}
+
+.intro-screen.hide{
+opacity:0;
+visibility:hidden;
+pointer-events:none
+}
+
+.intro-content{
+text-align:center;
+animation:introZoom 1.2s ease forwards
+}
+
+.intro-ball{
+font-size:65px;
+animation:ballSpin 1.5s linear infinite
+}
+
+.intro-fc{
+font-size:18px;
+font-weight:1000;
+letter-spacing:7px;
+color:#aaa;
+margin-top:10px
+}
+
+.intro-title{
+font-size:clamp(42px,13vw,85px);
+font-weight:1000;
+letter-spacing:-4px;
+line-height:.9;
+margin-top:5px
+}
+
+.intro-title span{
+color:var(--orange)
+}
+
+.intro-line{
+height:3px;
+width:0;
+margin:18px auto 0;
+background:var(--orange);
+box-shadow:0 0 20px rgba(255,106,0,.8);
+animation:lineGrow 1s .4s ease forwards
+}
+
+.intro-sub{
+margin-top:15px;
+font-size:9px;
+letter-spacing:5px;
+color:#777;
+opacity:0;
+animation:fadeIn .8s .8s ease forwards
+}
+
+@keyframes introZoom{
+0%{opacity:0;transform:scale(.75)}
+100%{opacity:1;transform:scale(1)}
+}
+
+@keyframes ballSpin{
+to{transform:rotate(360deg)}
+}
+
+@keyframes lineGrow{
+to{width:190px}
+}
+
+@keyframes fadeIn{
+to{opacity:1}
+}
+
+/* =========================
+   ÜST BAR
+========================= */
+
+.topbar{
+position:sticky;
+top:0;
+z-index:50;
+display:flex;
+align-items:center;
+justify-content:space-between;
+gap:10px;
+padding:12px 15px;
+background:rgba(7,7,7,.9);
+backdrop-filter:blur(18px);
+border-bottom:1px solid var(--line)
+}
+
+.brand{
+display:flex;
+align-items:center;
+gap:10px;
+min-width:0
+}
+
+.logo{
+width:43px;
+height:43px;
+display:grid;
+place-items:center;
+border-radius:14px;
+background:linear-gradient(145deg,var(--orange),#b43c00);
+font-weight:1000;
+box-shadow:0 8px 25px rgba(255,106,0,.25)
+}
+
+.brand-title{
+font-weight:1000;
+font-size:16px
+}
+
+.brand-sub{
+font-size:10px;
+color:var(--muted);
+font-weight:800
+}
+
+.admin-status{
+display:flex;
+align-items:center;
+gap:7px;
+border:1px solid var(--line);
+border-radius:999px;
+padding:8px 10px;
+background:#111;
+font-size:10px;
+font-weight:900;
+white-space:nowrap
+}
+
+.dot{
+width:8px;
+height:8px;
+border-radius:50%;
+background:#666
+}
+
+.dot.online{
+background:var(--green);
+box-shadow:0 0 12px rgba(53,208,127,.7)
+}
+
+/* =========================
+   HERO
+========================= */
+
+.hero{
+padding:18px 14px 8px
+}
+
+.hero-card{
+position:relative;
+overflow:hidden;
+padding:25px;
+border:1px solid rgba(255,106,0,.2);
+border-radius:28px;
+background:
+radial-gradient(circle at 100% 0,rgba(255,106,0,.25),transparent 35%),
+linear-gradient(145deg,#191919,#0b0b0b);
+box-shadow:var(--shadow)
+}
+
+.hero-card:after{
+content:"⚽";
+position:absolute;
+right:-18px;
+bottom:-45px;
+font-size:170px;
+opacity:.04;
+transform:rotate(-15deg)
+}
+
+.eyebrow{
+display:inline-flex;
+padding:7px 10px;
+border-radius:999px;
+background:rgba(255,106,0,.12);
+color:#ff9b52;
+border:1px solid rgba(255,106,0,.2);
+font-size:10px;
+font-weight:900;
+letter-spacing:1px
+}
+
+.hero h1{
+margin:15px 0 7px;
+font-size:clamp(36px,10vw,65px);
+line-height:.92;
+letter-spacing:-2px;
+font-weight:1000
+}
+
+.hero h1 span{
+color:var(--orange)
+}
+
+.hero p{
+max-width:650px;
+color:#b8b8b8;
+font-size:13px;
+line-height:1.55;
+margin:0
+}
+
+.actions{
+display:flex;
+flex-wrap:wrap;
+gap:8px;
+margin-top:18px
+}
+
+.btn{
+min-height:43px;
+padding:10px 14px;
+border:0;
+border-radius:13px;
+font-weight:900;
+color:#fff;
+transition:.15s transform,.15s opacity;
+background:#222;
+border:1px solid var(--line)
+}
+
+.btn:active{
+transform:scale(.97)
+}
+
+.primary{
+background:var(--orange);
+border-color:transparent
+}
+
+.danger{
+background:rgba(255,82,82,.12);
+color:#ff8b8b;
+border-color:rgba(255,82,82,.2)
+}
+
+.green{
+background:rgba(53,208,127,.12);
+color:#7df0ad;
+border-color:rgba(53,208,127,.2)
+}
+
+/* =========================
+   GENEL BÖLÜMLER
+========================= */
+
+.section{
+padding:9px 14px
+}
+
+.section-head{
+display:flex;
+align-items:end;
+justify-content:space-between;
+gap:8px;
+margin:20px 0 12px
+}
+
+.section-title{
+margin:0;
+font-size:22px;
+font-weight:1000
+}
+
+.section-note{
+font-size:10px;
+color:var(--muted);
+font-weight:800;
+text-align:right
+}
+
+.stats{
+display:grid;
+grid-template-columns:repeat(2,1fr);
+gap:9px
+}
+
+.stat{
+padding:16px;
+border:1px solid var(--line);
+border-radius:18px;
+background:linear-gradient(145deg,#171717,#101010)
+}
+
+.stat small{
+color:var(--muted);
+font-size:9px;
+font-weight:900
+}
+
+.stat strong{
+display:block;
+margin-top:5px;
+font-size:27px;
+font-weight:1000
+}
+
+.toolbar{
+display:grid;
+grid-template-columns:1fr;
+gap:8px;
+margin-bottom:12px
+}
+
+.input,.select,.search,.textarea{
+width:100%;
+min-height:45px;
+padding:0 12px;
+color:#fff;
+background:#101010;
+border:1px solid var(--line);
+border-radius:12px;
+outline:none
+}
+
+.textarea{
+padding-top:11px;
+min-height:85px;
+resize:vertical
+}
+
+.input:focus,
+.select:focus,
+.search:focus,
+.textarea:focus{
+border-color:rgba(255,106,0,.6);
+box-shadow:0 0 0 3px rgba(255,106,0,.08)
+}
+
+.card{
+border:1px solid var(--line);
+border-radius:var(--radius);
+background:var(--card);
+padding:15px;
+box-shadow:0 8px 28px rgba(0,0,0,.16)
+}
+
+/* =========================
+   OYUNCULAR
+========================= */
+
+.player-grid{
+display:grid;
+grid-template-columns:1fr;
+gap:11px
+}
+
+.player-card{
+position:relative;
+overflow:hidden;
+border:1px solid var(--line);
+border-radius:var(--radius);
+padding:15px;
+background:
+linear-gradient(145deg,rgba(255,106,0,.05),transparent 45%),
+var(--card)
+}
+
+.player-top{
+display:flex;
+align-items:center;
+gap:11px
+}
+
+.number{
+width:48px;
+height:48px;
+flex:0 0 48px;
+display:grid;
+place-items:center;
+border-radius:15px;
+background:linear-gradient(145deg,var(--orange),#b83d00);
+font-weight:1000
+}
+
+.player-info{
+min-width:0;
+flex:1
+}
+
+.player-name{
+margin:0;
+font-size:16px;
+font-weight:950;
+white-space:nowrap;
+overflow:hidden;
+text-overflow:ellipsis
+}
+
+.position{
+display:inline-flex;
+margin-top:5px;
+padding:4px 8px;
+border-radius:999px;
+background:#242424;
+color:#bbb;
+font-size:9px;
+font-weight:900
+}
+
+.gk{
+background:rgba(255,193,7,.12);
+color:#ffd35a
+}
+
+.appearance{
+text-align:right
+}
+
+.appearance strong{
+display:block;
+font-size:20px
+}
+
+.appearance span{
+font-size:9px;
+color:var(--muted);
+font-weight:800
+}
+
+.mini-stats{
+display:grid;
+grid-template-columns:repeat(3,1fr);
+gap:7px;
+margin-top:13px
+}
+
+.mini{
+padding:9px 5px;
+text-align:center;
+background:#101010;
+border:1px solid rgba(255,255,255,.05);
+border-radius:11px
+}
+
+.mini b{
+display:block;
+font-size:15px
+}
+
+.mini span{
+font-size:8px;
+color:var(--muted);
+font-weight:800
+}
+
+.player-actions{
+display:flex;
+gap:7px;
+margin-top:10px
+}
+
+.player-actions .btn{
+flex:1;
+min-height:37px;
+padding:7px 8px;
+font-size:10px
+}
+
+/* =========================
+   SIRALAMALAR
+========================= */
+
+.rank-grid{
+display:grid;
+grid-template-columns:1fr;
+gap:10px
+}
+
+.rank-list{
+display:grid;
+gap:7px
+}
+
+.rank-row{
+display:flex;
+align-items:center;
+gap:9px;
+padding:10px;
+background:#101010;
+border:1px solid rgba(255,255,255,.05);
+border-radius:12px
+}
+
+.rank-no{
+width:25px;
+text-align:center;
+font-weight:1000;
+color:var(--orange)
+}
+
+.rank-name{
+flex:1;
+font-size:12px;
+font-weight:850
+}
+
+.rank-value{
+font-weight:1000
+}
+
+/* =========================
+   MAÇLAR
+========================= */
+
+.match-list{
+display:grid;
+gap:10px
+}
+
+.match-card{
+padding:14px;
+border:1px solid var(--line);
+border-radius:18px;
+background:linear-gradient(145deg,#171717,#101010)
+}
+
+.match-head{
+display:flex;
+justify-content:space-between;
+gap:8px
+}
+
+.match-opponent{
+font-size:16px;
+font-weight:1000
+}
+
+.badge{
+display:inline-flex;
+padding:5px 8px;
+border-radius:999px;
+font-size:9px;
+font-weight:950
+}
+
+.win{
+background:rgba(53,208,127,.12);
+color:#72eaa5
+}
+
+.draw{
+background:rgba(255,193,7,.12);
+color:#ffd35a
+}
+
+.loss{
+background:rgba(255,82,82,.12);
+color:#ff8585
+}
+
+.score{
+font-size:30px;
+font-weight:1000;
+margin:10px 0 2px
+}
+
+.match-meta{
+color:var(--muted);
+font-size:10px
+}
+
+.match-actions{
+display:flex;
+gap:7px;
+margin-top:10px
+}
+
+.match-actions .btn{
+min-height:35px;
+font-size:10px
+}
+
+/* =========================
+   ADMIN
+========================= */
+
+.admin-panel{
+display:none;
+margin-bottom:12px;
+padding:14px;
+border:1px solid rgba(255,106,0,.18);
+border-radius:18px;
+background:rgba(255,106,0,.05)
+}
+
+body.admin .admin-panel{
+display:block
+}
+
+.form-grid{
+display:grid;
+grid-template-columns:1fr;
+gap:8px
+}
+
+.form-grid.two{
+grid-template-columns:1fr 1fr
+}
+
+.checkbox-grid{
+display:grid;
+grid-template-columns:1fr 1fr;
+gap:7px;
+max-height:280px;
+overflow:auto;
+padding:2px
+}
+
+.check{
+display:flex;
+align-items:center;
+gap:7px;
+padding:9px;
+background:#111;
+border:1px solid var(--line);
+border-radius:11px;
+font-size:10px;
+font-weight:800
+}
+
+.check input{
+accent-color:var(--orange)
+}
+
+.lineup-grid{
+display:grid;
+gap:7px
+}
+
+.player-stat-row{
+display:grid;
+grid-template-columns:minmax(0,1fr) 55px 55px;
+gap:6px;
+align-items:center;
+padding:7px;
+background:#101010;
+border-radius:10px
+}
+
+.player-stat-row span{
+font-size:10px;
+font-weight:800;
+overflow:hidden;
+text-overflow:ellipsis;
+white-space:nowrap
+}
+
+.small-input{
+width:100%;
+min-height:36px;
+padding:0 7px;
+text-align:center;
+color:#fff;
+background:#181818;
+border:1px solid var(--line);
+border-radius:8px
+}
+
+/* =========================
+   SEZON / ÖDÜLLER
+========================= */
+
+.season-card{
+position:relative;
+overflow:hidden;
+padding:18px;
+border:1px solid rgba(255,106,0,.2);
+border-radius:20px;
+background:linear-gradient(145deg,rgba(255,106,0,.13),#111)
+}
+
+.season-card h3{
+margin:0;
+font-size:11px;
+color:#ff9a52;
+letter-spacing:1px
+}
+
+.season-card strong{
+display:block;
+margin-top:4px;
+font-size:25px
+}
+
+.season-card p{
+margin:5px 0 0;
+color:#888;
+font-size:9px
+}
+
+.award-grid{
+display:grid;
+grid-template-columns:repeat(2,1fr);
+gap:9px
+}
+
+.award{
+padding:14px;
+border:1px solid var(--line);
+border-radius:16px;
+background:#111;
+text-align:center
+}
+
+.award-icon{
+font-size:25px
+}
+
+.award-name{
+font-size:10px;
+font-weight:950;
+margin-top:5px
+}
+
+.award-player{
+font-size:10px;
+color:#aaa;
+margin-top:3px
+}
+
+/* =========================
+   MAÇ GÜNÜ
+========================= */
+
+.match-day{
+padding:20px;
+text-align:center;
+border:1px solid rgba(255,106,0,.25);
+border-radius:20px;
+background:
+radial-gradient(circle at 50% 0,rgba(255,106,0,.2),transparent 55%),
+#111
+}
+
+.match-day .big{
+font-size:28px;
+font-weight:1000
+}
+
+.match-day .versus{
+font-size:11px;
+color:#888;
+margin:5px
+}
+
+.match-day .date{
+font-size:10px;
+color:#aaa;
+margin-top:9px
+}
+
+/* =========================
+   FOTOĞRAF GALERİSİ
+========================= */
+
+.gallery-grid{
+display:grid;
+grid-template-columns:repeat(2,1fr);
+gap:8px
+}
+
+.gallery-item{
+position:relative;
+aspect-ratio:1/1;
+border-radius:14px;
+overflow:hidden;
+background:#111;
+border:1px solid var(--line)
+}
+
+.gallery-item img{
+width:100%;
+height:100%;
+object-fit:cover
+}
+
+.gallery-item button{
+position:absolute;
+right:6px;
+top:6px;
+width:30px;
+height:30px;
+border:0;
+border-radius:9px;
+background:rgba(0,0,0,.7);
+color:#fff
+}
+
+/* =========================
+   MVP OYLAMA
+========================= */
+
+.vote-grid{
+display:grid;
+gap:8px
+}
+
+.vote-row{
+display:flex;
+align-items:center;
+gap:8px;
+padding:9px;
+background:#101010;
+border:1px solid var(--line);
+border-radius:12px
+}
+
+.vote-row label{
+flex:1;
+font-size:10px;
+font-weight:850
+}
+
+.vote-row select{
+width:125px;
+min-height:35px
+}
+
+/* =========================
+   MODAL
+========================= */
+
+.modal-backdrop{
+position:fixed;
+inset:0;
+z-index:100;
+display:none;
+place-items:center;
+padding:15px;
+background:rgba(0,0,0,.78);
+backdrop-filter:blur(8px)
+}
+
+.modal-backdrop.show{
+display:grid
+}
+
+.modal{
+width:min(100%,520px);
+max-height:90vh;
+overflow:auto;
+padding:19px;
+border:1px solid rgba(255,106,0,.22);
+border-radius:23px;
+background:#121212;
+box-shadow:0 30px 80px rgba(0,0,0,.55)
+}
+
+.modal-head{
+display:flex;
+justify-content:space-between;
+gap:10px;
+align-items:flex-start
+}
+
+.modal h2{
+margin:0;
+font-size:21px;
+font-weight:1000
+}
+
+.modal p{
+margin:5px 0 0;
+color:#8e8e8e;
+font-size:10px;
+line-height:1.5
+}
+
+.close{
+width:35px;
+height:35px;
+border:1px solid var(--line);
+border-radius:10px;
+background:#1c1c1c;
+color:#fff;
+font-size:18px
+}
+
+.modal-body{
+margin-top:16px;
+display:grid;
+gap:10px
+}
+
+/* =========================
+   MÜZİK
+   ARTIK ALTTA DEĞİL
+   SAĞ ÜSTTE KÜÇÜK BUTON
+========================= */
+
+.music-control{
+position:fixed;
+right:14px;
+top:72px;
+z-index:70;
+width:46px;
+height:46px;
+border-radius:50%;
+border:1px solid rgba(255,106,0,.35);
+background:rgba(15,15,15,.94);
+color:#fff;
+display:grid;
+place-items:center;
+box-shadow:0 8px 25px rgba(0,0,0,.35);
+backdrop-filter:blur(12px)
+}
+
+.music-control.playing{
+background:var(--orange);
+box-shadow:0 0 22px rgba(255,106,0,.45)
+}
+
+.music-panel{
+position:fixed;
+right:14px;
+top:126px;
+z-index:69;
+width:220px;
+padding:12px;
+border:1px solid rgba(255,106,0,.2);
+border-radius:15px;
+background:rgba(15,15,15,.96);
+backdrop-filter:blur(18px);
+box-shadow:0 15px 40px rgba(0,0,0,.4);
+display:none
+}
+
+.music-panel.show{
+display:block
+}
+
+.music-title{
+font-size:10px;
+font-weight:950;
+white-space:nowrap;
+overflow:hidden;
+text-overflow:ellipsis
+}
+
+.music-sub{
+font-size:8px;
+color:#777;
+margin-top:3px
+}
+
+.music-volume{
+width:100%;
+accent-color:var(--orange);
+margin-top:8px
+}
+
+/* =========================
+   ALT MENÜ
+========================= */
+
+.bottom-nav{
+position:fixed;
+bottom:0;
+left:0;
+right:0;
+z-index:60;
+display:grid;
+grid-template-columns:repeat(5,1fr);
+padding:8px max(8px,env(safe-area-inset-left))
+calc(8px + env(safe-area-inset-bottom))
+max(8px,env(safe-area-inset-right));
+background:rgba(12,12,12,.94);
+backdrop-filter:blur(18px);
+border-top:1px solid var(--line)
+}
+
+.nav-btn{
+border:0;
+background:transparent;
+color:#777;
+font-size:9px;
+font-weight:900;
+padding:4px 2px
+}
+
+.nav-btn span{
+display:block;
+font-size:20px;
+margin-bottom:2px
+}
+
+.nav-btn.active{
+color:var(--orange)
+}
+
+.hidden{
+display:none!important
+}
+
+.toast{
+position:fixed;
+left:50%;
+bottom:85px;
+z-index:200;
+width:min(calc(100% - 28px),430px);
+padding:13px 15px;
+border:1px solid var(--line);
+border-radius:14px;
+background:#181818;
+box-shadow:var(--shadow);
+font-size:11px;
+font-weight:850;
+transform:translate(-50%,120px);
+opacity:0;
+transition:.25s;
+pointer-events:none
+}
+
+.toast.show{
+transform:translate(-50%,0);
+opacity:1
+}
+
+.toast.error{
+border-color:rgba(255,82,82,.3)
+}
+
+.toast.success{
+border-color:rgba(53,208,127,.3)
+}
+
+.login-form{
+display:grid;
+gap:10px
+}
+
+.label{
+font-size:9px;
+color:#aaa;
+font-weight:900;
+margin-bottom:5px
+}
+
+.error{
+min-height:16px;
+color:#ff7777;
+font-size:10px;
+font-weight:800
+}
+
+.footer{
+padding:30px 15px;
+text-align:center;
+color:#555;
+font-size:9px;
+line-height:1.6
+}
+
+.tab{
+display:none
+}
+
+.tab.active{
+display:block
+}
+
+.empty{
+padding:30px 15px;
+text-align:center;
+border:1px dashed #333;
+border-radius:17px;
+color:#888;
+background:#101010
+}
+
+.loading{
+text-align:center;
+padding:30px;
+color:#aaa
+}
+
+.profile-stats{
+display:grid;
+grid-template-columns:repeat(2,1fr);
+gap:8px;
+margin-top:14px
+}
+
+.profile-stat{
+padding:12px;
+background:#101010;
+border:1px solid var(--line);
+border-radius:12px
+}
+
+.profile-stat small{
+color:var(--muted);
+font-size:9px;
+font-weight:800
+}
+
+.profile-stat b{
+display:block;
+font-size:20px;
+margin-top:4px
+}
+
+@media(min-width:650px){
+.topbar,.hero,.section,.footer{
+padding-left:24px;
+padding-right:24px
+}
+
+.stats{
+grid-template-columns:repeat(4,1fr)
+}
+
+.toolbar{
+grid-template-columns:2fr 1fr
+}
+
+.player-grid{
+grid-template-columns:repeat(2,1fr)
+}
+
+.form-grid{
+grid-template-columns:repeat(2,1fr)
+}
+
+.rank-grid{
+grid-template-columns:1fr 1fr
+}
+
+.award-grid{
+grid-template-columns:repeat(4,1fr)
+}
+
+.gallery-grid{
+grid-template-columns:repeat(4,1fr)
+}
+}
+
+@media(min-width:950px){
+.player-grid{
+grid-template-columns:repeat(3,1fr)
+}
+
+.hero-card{
+padding:34px
+}
+}
 </style>
 </head>
+
 <body>
+
+<!-- =========================
+     AÇILIŞ EKRANI
+========================= -->
+
+<div class="intro-screen" id="introScreen">
+<div class="intro-content">
+<div class="intro-ball">⚽</div>
+<div class="intro-fc">FC</div>
+<div class="intro-title"><span>BAD</span> BOYS</div>
+<div class="intro-line"></div>
+<div class="intro-sub">BİRLİK • REKABET • ANILAR</div>
+</div>
+</div>
+
 <div class="app">
-<header><div class="logo">FC <span>BAD BOYS</span></div><div class="sub">HALISAHA • BİRLİK • REKABET</div></header>
+
+<header class="topbar">
+<div class="brand">
+<div class="logo">FB</div>
+<div>
+<div class="brand-title">FC BAD BOYS</div>
+<div class="brand-sub">HALI SAHA TAKIM MERKEZİ</div>
+</div>
+</div>
+
+<div class="admin-status">
+<span class="dot" id="statusDot"></span>
+<span id="statusText">Ziyaretçi</span>
+</div>
+</header>
 
 <main>
-<section id="homeTab">
-<div class="hero"><h1>FC BAD BOYS</h1><p>MAÇLARIMIZ • ANILARIMIZ • İSTATİSTİKLERİMİZ</p>
-<div class="stats"><div class="stat"><b id="totalPlayers">0</b><small>OYUNCU</small></div><div class="stat"><b id="totalMatches">0</b><small>MAÇ</small></div><div class="stat"><b id="totalGoals">0</b><small>GOL</small></div></div></div>
 
-<div class="section-head"><h2 class="section-title">🏆 Sezon</h2><span class="section-note">2026 SEZONU</span></div>
-<div class="season-card"><h3>FC BAD BOYS</h3><strong id="seasonRecord">0G • 0B • 0M</strong><p id="seasonSummary">Sezon istatistikleri maçlardan otomatik hesaplanır.</p></div>
+<section class="hero">
+<div class="hero-card">
 
-<div class="section-head"><h2 class="section-title">🏅 Ödüller</h2></div>
+<div class="eyebrow">🟠 BLACK × ORANGE</div>
+
+<h1>FC <span>BAD</span> BOYS</h1>
+
+<p>
+Maçlar, kadro, gol ve asist istatistikleri,
+oyuncu profilleri ve sezon performansı tek yerde.
+</p>
+
+<div class="actions">
+<button class="btn primary" id="loginBtn">
+🔐 Yönetici Girişi
+</button>
+
+<button class="btn hidden" id="logoutBtn">
+Çıkış Yap
+</button>
+
+<button class="btn" id="refreshBtn">
+↻ Yenile
+</button>
+</div>
+
+</div>
+</section>
+
+<section class="section tab active" id="tab-home">
+
+<div class="stats">
+
+<div class="stat">
+<small>OYUNCU</small>
+<strong id="totalPlayers">0</strong>
+</div>
+
+<div class="stat">
+<small>TOPLAM MAÇ</small>
+<strong id="totalMatches">0</strong>
+</div>
+
+<div class="stat">
+<small>GALİBİYET</small>
+<strong id="wins">0</strong>
+</div>
+
+<div class="stat">
+<small>GOL</small>
+<strong id="totalGoals">0</strong>
+</div>
+
+</div>
+
+<div class="section-head">
+<h2 class="section-title">🔥 Son Form</h2>
+<span class="section-note" id="syncText">
+Firebase bekleniyor...
+</span>
+</div>
+
+<div class="card" id="formBox"></div>
+
+<div class="section-head">
+<h2 class="section-title">📊 Sezon Özeti</h2>
+</div>
+
+<div class="stats">
+
+<div class="stat">
+<small>BERABERLİK</small>
+<strong id="draws">0</strong>
+</div>
+
+<div class="stat">
+<small>MAĞLUBİYET</small>
+<strong id="losses">0</strong>
+</div>
+
+<div class="stat">
+<small>ASİST</small>
+<strong id="totalAssists">0</strong>
+</div>
+
+<div class="stat">
+<small>AVERAGE</small>
+<strong id="goalDiff">0</strong>
+</div>
+
+</div>
+
+<div class="section-head">
+<h2 class="section-title">⚡ Son Maçlar</h2>
+</div>
+
+<div class="match-list" id="homeMatches"></div>
+
+<div class="section-head">
+<h2 class="section-title">🏆 Sezon</h2>
+<span class="section-note" id="seasonLabel">2026 SEZONU</span>
+</div>
+
+<div class="season-card">
+<h3>FC BAD BOYS</h3>
+<strong id="seasonRecord">0G • 0B • 0M</strong>
+<p id="seasonSummary">
+Sezon istatistikleri maçlardan otomatik hesaplanır.
+</p>
+</div>
+
+<div class="section-head">
+<h2 class="section-title">🏅 Ödüller</h2>
+</div>
+
 <div class="award-grid" id="awards"></div>
 
-<div class="section-head"><h2 class="section-title">🔥 Maç Günü</h2></div>
+<div class="section-head">
+<h2 class="section-title">🔥 Maç Günü</h2>
+</div>
+
 <div id="matchDayBox"></div>
 
-<div class="section-head"><h2 class="section-title">⚡ Son Maçlar</h2></div>
-<div id="homeMatches"></div>
+<div class="section-head">
+<h2 class="section-title">📸 Maç Anıları</h2>
+</div>
 
-<div class="section-head"><h2 class="section-title">📸 Maç Anıları</h2></div>
 <div class="admin-panel">
+
 <strong>📸 Fotoğraf Ekle</strong>
+
 <div class="form-grid" style="margin-top:10px">
-<input class="input" id="photoTitle" placeholder="Fotoğraf başlığı">
-<input class="input" id="photoUrl" placeholder="Fotoğraf URL'si (https://...)">
-</div>
-<div class="actions"><button class="btn primary" id="addPhoto">+ Fotoğrafı Kaydet</button></div>
-<small style="color:#777">Fotoğraf eklemek için yönetici hesabı gerekir.</small>
-</div>
-<div class="gallery-grid" id="gallery"></div>
-</section>
 
-<section id="squadTab" class="hidden">
-<div class="section-head"><h2 class="section-title">👥 Kadro</h2></div>
-<div class="player-grid" id="players"></div>
-</section>
+<input
+class="input"
+id="photoTitle"
+placeholder="Fotoğraf başlığı">
 
-<section id="matchesTab" class="hidden">
-<div class="section-head"><h2 class="section-title">⚽ Maçlar</h2></div>
-<div id="adminMatchArea"></div>
-<div id="matches"></div>
-</section>
+<input
+class="input"
+id="photoUrl"
+placeholder="Fotoğraf URL'si (https://...)">
 
-<section id="statsTab" class="hidden">
-<div class="section-head"><h2 class="section-title">📊 İstatistikler</h2></div>
-<div class="card"><h3>⚽ Gol Krallığı</h3><div id="goalRanking"></div></div>
-<div class="card"><h3>🎯 Asist Krallığı</h3><div id="assistRanking"></div></div>
-<div class="card"><h3>🏟️ En Çok Maç</h3><div id="matchRanking"></div></div>
-</section>
-
-<section id="adminTab" class="hidden">
-<div class="section-head"><h2 class="section-title">🔐 Yönetici</h2></div>
-<div id="loginBox" class="card">
-<h3>Yönetici Girişi</h3>
-<div class="form-grid">
-<input class="input" id="email" type="email" placeholder="E-posta">
-<input class="input" id="password" type="password" placeholder="Şifre">
-<button class="btn primary" id="loginBtn">Giriş Yap</button>
 </div>
-</div>
-<div id="adminBox" class="hidden">
-<div class="admin-panel">
-<h3>⚙️ Yönetim Paneli</h3>
-<p style="font-size:9px;color:#777">Buradaki işlemleri sadece yönetici hesabı yapabilir.</p>
+
 <div class="actions">
-<button class="btn primary" id="addMatchBtn">⚽ Yeni Maç</button>
-<button class="btn dark" id="logoutBtn">Çıkış</button>
+<button class="btn primary" id="addPhoto">
++ Fotoğrafı Kaydet
+</button>
 </div>
+
+<small style="color:#777">
+Fotoğraf eklemek için yönetici hesabı gerekir.
+</small>
+
 </div>
-</div>
+
+<div class="gallery-grid" id="gallery"></div>
+
 </section>
+
+<section class="section tab" id="tab-squad">
+
+<div class="section-head">
+<h2 class="section-title">👥 Kadro</h2>
+<span class="section-note">Oyuncu profiline dokun</span>
+</div>
+
+<div class="toolbar">
+
+<input
+class="search"
+id="search"
+placeholder="Oyuncu ara..."
+autocomplete="off">
+
+<select class="select" id="positionFilter">
+
+<option value="all">
+Tüm mevkiler
+</option>
+
+<option value="forvet">
+Forvet
+</option>
+
+<option value="orta saha">
+Orta Saha
+</option>
+
+<option value="defans">
+Defans
+</option>
+
+<option value="kaleci">
+Kaleci
+</option>
+
+</select>
+
+</div>
+
+<div class="admin-panel">
+
+<strong>🛠 Oyuncu Yönetimi</strong>
+
+<div class="form-grid" style="margin-top:10px">
+
+<input
+class="input"
+id="newName"
+placeholder="Ad Soyad">
+
+<input
+class="input"
+id="newNumber"
+type="number"
+min="0"
+max="99"
+placeholder="Forma No">
+
+<select
+class="select"
+id="newPosition">
+
+<option value="forvet">
+Forvet
+</option>
+
+<option value="orta saha">
+Orta Saha
+</option>
+
+<option value="defans">
+Defans
+</option>
+
+<option value="kaleci">
+Kaleci
+</option>
+
+</select>
+
+<button
+class="btn primary"
+id="addPlayer">
++ Oyuncu Ekle
+</button>
+
+</div>
+</div>
+
+<div id="players" class="loading">
+Oyuncular yükleniyor...
+</div>
+
+</section>
+
+<section class="section tab" id="tab-matches">
+
+<div class="section-head">
+<h2 class="section-title">⚽ Maçlar</h2>
+<span class="section-note">Maç arşivi</span>
+</div>
+
+<div class="admin-panel">
+
+<strong>➕ Yeni Maç Kaydet</strong>
+
+<div class="form-grid" style="margin-top:10px">
+
+<input
+class="input"
+id="opponent"
+placeholder="Rakip takım">
+
+<input
+class="input"
+id="matchDate"
+type="date">
+
+<input
+class="input"
+id="ourScore"
+type="number"
+min="0"
+placeholder="FC BAD BOYS golü">
+
+<input
+class="input"
+id="oppScore"
+type="number"
+min="0"
+placeholder="Rakip golü">
+
+</div>
+
+<div style="margin-top:10px">
+
+<div class="label">
+MAÇA KATILANLAR
+</div>
+
+<div
+class="checkbox-grid"
+id="lineupChecks">
+</div>
+
+</div>
+
+<div style="margin-top:10px">
+
+<div class="label">
+OYUNCU PERFORMANSI — GOL / ASİST
+</div>
+
+<div
+class="lineup-grid"
+id="matchPlayerStats">
+</div>
+
+</div>
+
+<div class="actions">
+
+<button
+class="btn primary"
+id="saveMatch">
+⚽ Maçı Kaydet
+</button>
+
+</div>
+
+<small style="color:#777;display:block;margin-top:8px">
+Maç kaydedildiğinde katılan oyuncuların maç sayısı,
+gol ve asistleri otomatik güncellenir.
+</small>
+
+</div>
+
+<div class="toolbar">
+
+<input
+class="search"
+id="matchSearch"
+placeholder="Rakip takım ara...">
+
+</div>
+
+<div
+class="match-list"
+id="matches">
+</div>
+
+</section>
+
+<section class="section tab" id="tab-stats">
+
+<div class="section-head">
+<h2 class="section-title">🏆 Sıralamalar</h2>
+</div>
+
+<div class="rank-grid">
+
+<div class="card">
+<h3 style="margin:0 0 10px">
+⚽ Gol Krallığı
+</h3>
+<div class="rank-list" id="scorers"></div>
+</div>
+
+<div class="card">
+<h3 style="margin:0 0 10px">
+🎯 Asist Krallığı
+</h3>
+<div class="rank-list" id="assists"></div>
+</div>
+
+<div class="card">
+<h3 style="margin:0 0 10px">
+📅 En Çok Maç
+</h3>
+<div class="rank-list" id="appearances"></div>
+</div>
+
+<div class="card">
+<h3 style="margin:0 0 10px">
+⭐ MVP Adayları
+</h3>
+<div class="rank-list" id="mvps"></div>
+</div>
+
+</div>
+
+</section>
+
+<section class="section tab" id="tab-admin">
+
+<div class="section-head">
+<h2 class="section-title">⚙️ Yönetim</h2>
+</div>
+
+<div class="card">
+
+<p style="margin-top:0;color:#bbb;font-size:12px;line-height:1.6">
+
+Bu bölüm sadece yönetici hesabıyla açılır.
+
+Maç silme işlemi,
+maçın oyuncu istatistiklerini geri alır.
+
+Müzik dosyasının yolunu JavaScript içindeki
+<b>MUSIC_URL</b> değişkeninden değiştirebilirsin.
+
+</p>
+
+<div class="actions">
+
+<button
+class="btn danger"
+id="resetInfo">
+ℹ️ Güvenlik Bilgisi
+</button>
+
+</div>
+
+</div>
+
+</section>
+
 </main>
+
+<nav class="bottom-nav">
+
+<button
+class="nav-btn active"
+data-tab="home">
+<span>🏠</span>
+Ana Sayfa
+</button>
+
+<button
+class="nav-btn"
+data-tab="squad">
+<span>👥</span>
+Kadro
+</button>
+
+<button
+class="nav-btn"
+data-tab="matches">
+<span>⚽</span>
+Maçlar
+</button>
+
+<button
+class="nav-btn"
+data-tab="stats">
+<span>🏆</span>
+İstatistik
+</button>
+
+<button
+class="nav-btn"
+data-tab="admin">
+<span>⚙️</span>
+Yönetim
+</button>
+
+</nav>
+
+<footer class="footer">
+FC BAD BOYS • Turuncu & Siyah
+<br>
+Firebase ile canlı senkronizasyon
+</footer>
+
 </div>
 
-<nav class="bottom-nav"><div class="nav-inner">
-<button class="nav-btn active" data-tab="homeTab"><span class="nav-icon">🏠</span>Ana Sayfa</button>
-<button class="nav-btn" data-tab="squadTab"><span class="nav-icon">👥</span>Kadro</button>
-<button class="nav-btn" data-tab="matchesTab"><span class="nav-icon">⚽</span>Maçlar</button>
-<button class="nav-btn" data-tab="statsTab"><span class="nav-icon">📊</span>İstatistik</button>
-</div></nav>
+<!-- MÜZİK BUTONU -->
+<button
+class="music-control"
+id="musicToggle"
+title="Takım Müziği">
+🎵
+</button>
 
-<div class="music-bar" id="musicBar">
-<div class="music-disc">🎵</div>
-<div class="music-info"><div class="music-title">FC BAD BOYS • Takım Müziği</div><div class="music-sub">Arka plan müziği</div></div>
-<button class="music-btn" id="musicToggle">▶</button>
-<input class="music-range" id="musicVolume" type="range" min="0" max="1" step=".01" value=".35">
+<div
+class="music-panel"
+id="musicPanel">
+
+<div
+class="music-title"
+id="musicTitle">
+FC BAD BOYS • Takım Müziği
 </div>
-<audio id="teamAudio" loop preload="metadata"></audio>
 
-<div id="modalBg" class="modal-bg hidden"><div class="modal">
-<div class="modal-head"><b id="modalTitle">FC BAD BOYS</b><button class="close" id="closeModal">×</button></div>
-<div class="modal-body" id="modalBody"></div>
-<div id="matchVoteArea"></div>
-</div></div>
+<div class="music-sub">
+Arka plan müziği
+</div>
 
+<input
+class="music-volume"
+id="musicVolume"
+type="range"
+min="0"
+max="1"
+step=".01"
+value=".35">
+
+</div>
+
+<audio
+id="teamAudio"
+loop
+preload="metadata">
+</audio>
+
+<div
+class="toast"
+id="toast">
+</div>
+
+<!-- GİRİŞ MODALI -->
+
+<div
+class="modal-backdrop"
+id="loginModal">
+
+<div class="modal">
+
+<div class="modal-head">
+
+<div>
+
+<h2>
+🔐 Yönetici Girişi
+</h2>
+
+<p>
+Sadece takım yöneticisi değişiklik yapabilir.
+</p>
+
+</div>
+
+<button
+class="close"
+data-close="loginModal">
+×
+</button>
+
+</div>
+
+<div class="modal-body">
+
+<form
+class="login-form"
+id="loginForm">
+
+<div>
+
+<div class="label">
+E-POSTA
+</div>
+
+<input
+class="input"
+id="email"
+type="email"
+value="yakups1661@gmail.com"
+required>
+
+</div>
+
+<div>
+
+<div class="label">
+ŞİFRE
+</div>
+
+<input
+class="input"
+id="password"
+type="password"
+autocomplete="current-password"
+placeholder="Firebase şifren"
+required>
+
+</div>
+
+<div
+class="error"
+id="loginError">
+</div>
+
+<button
+class="btn primary"
+id="loginSubmit">
+Giriş Yap
+</button>
+
+</form>
+
+</div>
+
+</div>
+</div>
+
+<!-- OYUNCU PROFİL MODALI -->
+
+<div
+class="modal-backdrop"
+id="profileModal">
+
+<div class="modal">
+
+<div class="modal-head">
+
+<div>
+
+<h2 id="profileName">
+Oyuncu
+</h2>
+
+<p id="profileSub"></p>
+
+</div>
+
+<button
+class="close"
+data-close="profileModal">
+×
+</button>
+
+</div>
+
+<div class="modal-body">
+
+<div
+class="profile-stats"
+id="profileStats">
+</div>
+
+<div
+id="profileMatches">
+</div>
+
+</div>
+
+</div>
+
+</div>
+
+<!-- MAÇ MODALI -->
+
+<div
+class="modal-backdrop"
+id="matchModal">
+
+<div class="modal">
+
+<div class="modal-head">
+
+<div>
+
+<h2 id="matchTitle">
+Maç Detayı
+</h2>
+
+<p id="matchSub"></p>
+
+</div>
+
+<button
+class="close"
+data-close="matchModal">
+×
+</button>
+
+</div>
+
+<div
+class="modal-body"
+id="matchDetail">
+</div>
+
+<div
+id="matchVoteArea">
+</div>
+
+</div>
+
+</div>
 <script type="module">
-import{initializeApp}from"https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
-import{getAuth,signInWithEmailAndPassword,onAuthStateChanged,signOut}from"https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
-import{getFirestore,collection,doc,getDocs,addDoc,deleteDoc,updateDoc,onSnapshot,serverTimestamp}from"https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 
-const firebaseConfig={
-apiKey:"AIzaSyCSw0nzgbHrFCAJLpvmhZwYAV_aQeBMw4g",
-authDomain:"fcbadboys-bfc96.firebaseapp.com",
-databaseURL:"https://fcbadboys-bfc96-default-rtdb.firebaseio.com",
-projectId:"fcbadboys-bfc96",
-storageBucket:"fcbadboys-bfc96.firebasestorage.app",
-messagingSenderId:"394322712916",
-appId:"1:394322712916:web:8fb96c51cbf2f113e8d0c1",
-measurementId:"G-WT2ECTZ2K0"
+/* =========================================================
+   FC BAD BOYS — 2/3
+   FIREBASE + OYUNCULAR + MAÇ SİSTEMİ
+========================================================= */
+
+import { initializeApp } from
+"https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+
+import {
+    getAuth,
+    onAuthStateChanged,
+    signInWithEmailAndPassword,
+    signOut
+} from
+"https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
+
+import {
+    getFirestore,
+    collection,
+    doc,
+    getDocs,
+    getDoc,
+    setDoc,
+    addDoc,
+    updateDoc,
+    deleteDoc,
+    query,
+    orderBy,
+    serverTimestamp
+} from
+"https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+
+
+/* =========================================================
+   FIREBASE AYARLARI
+========================================================= */
+
+const firebaseConfig = {
+    apiKey: "AIzaSyCSw0nzgbHrFCAJLpvmhZwYAV_aQeBMw4g",
+    authDomain: "fcbadboys-bfc96.firebaseapp.com",
+    databaseURL: "https://fcbadboys-bfc96-default-rtdb.firebaseio.com",
+    projectId: "fcbadboys-bfc96",
+    storageBucket: "fcbadboys-bfc96.firebasestorage.app",
+    messagingSenderId: "394322712916",
+    appId: "1:394322712916:web:8fb96c51cbf2f113e8d0c1",
+    measurementId: "G-WT2ECTZ2K0"
 };
 
-const app=initializeApp(firebaseConfig),auth=getAuth(app),db=getFirestore(app);
-const playersRef=collection(db,"players"),matchesRef=collection(db,"matches"),photosRef=collection(db,"photos"),votesRef=collection(db,"votes");
-const state={players:[],matches:[],photos:[],votes:[],isAdmin:false};
+const app = initializeApp(firebaseConfig);
 
-const initialPlayers=[
-["Yakup Sunay","orta saha",15],["Eren Yılmaz","forvet",10],["Murat Çaylı","forvet",7],["Ahmet Yavuz","forvet",9],["Alper Batuhan","forvet",6],
-["Ceyhun Düzdaş","kaleci",98],["Çağdaş Şengül","defans",97],["Çağrı Şengül","defans",96],["Furkan Yılmaz","defans",4],["Süleyman Tunçelik","defans",3],
-["Bulancaklı Hüseyin","kaleci",37],["Hüseyin İnce","forvet",95],["Umut Kayış","orta saha",94],["Musa Aksu","orta saha",93],["Mustafa Akgül","kaleci",99]
+const auth = getAuth(app);
+
+const db = getFirestore(app);
+
+
+/* =========================================================
+   YÖNETİCİ
+========================================================= */
+
+const ADMIN_EMAIL = "yakups1661@gmail.com";
+
+let currentUser = null;
+let isAdmin = false;
+
+
+/* =========================================================
+   SABİT OYUNCU LİSTESİ
+   FIRESTORE BOŞSA OTOMATİK OLUŞTURULUR
+========================================================= */
+
+const DEFAULT_PLAYERS = [
+
+    {
+        id: "yakup-sunay",
+        name: "Yakup Sunay",
+        position: "orta saha",
+        number: 15
+    },
+
+    {
+        id: "eren-yilmaz",
+        name: "Eren Yılmaz",
+        position: "forvet",
+        number: 10
+    },
+
+    {
+        id: "murat-cayli",
+        name: "Murat Çaylı",
+        position: "forvet",
+        number: 7
+    },
+
+    {
+        id: "ahmet-yavuz",
+        name: "Ahmet Yavuz",
+        position: "forvet",
+        number: 9
+    },
+
+    {
+        id: "alper-batuhan",
+        name: "Alper Batuhan",
+        position: "forvet",
+        number: 6
+    },
+
+    {
+        id: "ceyhun-duzdas",
+        name: "Ceyhun Düzdaş",
+        position: "kaleci",
+        number: 98
+    },
+
+    {
+        id: "cagdas-sengul",
+        name: "Çağdaş Şengül",
+        position: "defans",
+        number: 97
+    },
+
+    {
+        id: "cagri-sengul",
+        name: "Çağrı Şengül",
+        position: "defans",
+        number: 96
+    },
+
+    {
+        id: "furkan-yilmaz",
+        name: "Furkan Yılmaz",
+        position: "defans",
+        number: 4
+    },
+
+    {
+        id: "suleyman-tuncelik",
+        name: "Süleyman Tunçelik",
+        position: "defans",
+        number: 3
+    },
+
+    {
+        id: "bulancakli-huseyin",
+        name: "Bulancaklı Hüseyin",
+        position: "kaleci",
+        number: 37
+    },
+
+    {
+        id: "huseyin-ince",
+        name: "Hüseyin İnce",
+        position: "forvet",
+        number: 95
+    },
+
+    {
+        id: "umut-kayis",
+        name: "Umut Kayış",
+        position: "orta saha",
+        number: 94
+    },
+
+    {
+        id: "musa-aksu",
+        name: "Musa Aksu",
+        position: "orta saha",
+        number: 93
+    },
+
+    {
+        id: "mustafa-akgul",
+        name: "Mustafa Akgül",
+        position: "kaleci",
+        number: 99
+    }
+
 ];
 
-const $=id=>document.getElementById(id);
-const esc=x=>String(x??"").replace(/[&<>"']/g,m=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#039;"}[m]));
-const n=x=>Number(x||0);
-const gk=p=>String(p.position||"").toLowerCase().includes("kaleci");
 
-async function seedPlayers(){
- const snap=await getDocs(playersRef);
- if(!snap.empty)return;
- for(const [name,position,number] of initialPlayers)
-  await addDoc(playersRef,{name,position,number,matches:0,goals:0,assists:0,conceded:0});
+/* =========================================================
+   UYGULAMA VERİLERİ
+========================================================= */
+
+let players = [];
+
+let matches = [];
+
+let photos = [];
+
+let mvpVotes = {};
+
+let selectedPlayer = null;
+
+
+/* =========================================================
+   YARDIMCI FONKSİYONLAR
+========================================================= */
+
+const $ = id => document.getElementById(id);
+
+function escapeHTML(value) {
+
+    return String(value ?? "")
+        .replaceAll("&", "&amp;")
+        .replaceAll("<", "&lt;")
+        .replaceAll(">", "&gt;")
+        .replaceAll('"', "&quot;")
+        .replaceAll("'", "&#039;");
+
 }
 
-function nav(){
- document.querySelectorAll(".nav-btn").forEach(b=>b.onclick=()=>{
-  document.querySelectorAll(".nav-btn").forEach(x=>x.classList.remove("active"));
-  b.classList.add("active");
-  document.querySelectorAll("main>section").forEach(s=>s.classList.add("hidden"));
-  $(b.dataset.tab).classList.remove("hidden");
- });
-}
-nav();
 
-function playerCard(p){
- return `<div class="player">
- <div class="avatar">${esc(p.name.split(" ").map(x=>x[0]).slice(0,2).join(""))}</div>
- <div class="player-info"><div class="player-name">${esc(p.name)}</div>
- <div class="player-meta">${esc(p.position)} • #${esc(p.number)}</div>
- <span class="badge">🏟️ ${n(p.matches)} maç</span></div>
- <div class="number">#${esc(p.number)}</div></div>`;
+function normalizePosition(position) {
+
+    return String(position || "")
+        .trim()
+        .toLocaleLowerCase("tr-TR");
+
 }
 
-function renderPlayers(){
- $("players").innerHTML=state.players.length?state.players.map(playerCard).join(""):'<div class="empty">Oyuncu bulunamadı.</div>';
+
+function positionLabel(position) {
+
+    const p = normalizePosition(position);
+
+    if (p === "forvet") return "Forvet";
+
+    if (p === "orta saha") return "Orta Saha";
+
+    if (p === "defans") return "Defans";
+
+    if (p === "kaleci") return "Kaleci";
+
+    return position || "-";
+
 }
 
-function matchCard(m){
- const result=m.result||"";
- return `<div class="match" data-match="${esc(m.id)}">
- <div class="match-top"><b>FC BAD BOYS 🆚 ${esc(m.opponent)}</b><span class="score">${esc(m.score||"-")}</span></div>
- <div style="font-size:8px;color:#777;margin-top:5px">📅 ${esc(m.date||"")} • ${esc(result)}</div>
- <div class="actions"><button class="btn dark detail-btn" data-id="${esc(m.id)}">Detay</button>${state.isAdmin?`<button class="btn red delete-match" data-id="${esc(m.id)}">Sil</button>`:""}</div>
- </div>`;
+
+function showToast(message, type = "") {
+
+    const toast = $("toast");
+
+    if (!toast) return;
+
+    toast.textContent = message;
+
+    toast.className = "toast show " + type;
+
+    clearTimeout(window.toastTimer);
+
+    window.toastTimer = setTimeout(() => {
+
+        toast.className = "toast";
+
+    }, 2800);
+
 }
 
-function renderMatches(){
- $("matches").innerHTML=state.matches.length?state.matches.slice().reverse().map(matchCard).join(""):'<div class="empty">Henüz maç kaydı yok.</div>';
- $("homeMatches").innerHTML=state.matches.slice().reverse().slice(0,5).map(matchCard).join("")||'<div class="empty">Henüz maç yok.</div>';
+
+function openModal(id) {
+
+    const el = $(id);
+
+    if (el) el.classList.add("show");
+
 }
 
-function updateDashboard(){
- $("totalPlayers").textContent=state.players.length;
- $("totalMatches").textContent=state.matches.length;
- $("totalGoals").textContent=state.players.reduce((a,p)=>a+n(p.goals),0);
- const w=state.matches.filter(m=>m.result==="Galibiyet").length;
- const d=state.matches.filter(m=>m.result==="Beraberlik").length;
- const l=state.matches.filter(m=>m.result==="Mağlubiyet").length;
- const goals=state.players.reduce((a,p)=>a+n(p.goals),0);
- const opp=state.matches.reduce((a,m)=>a+n(m.opponentGoals),0);
- $("seasonRecord").textContent=`${w}G • ${d}B • ${l}M`;
- $("seasonSummary").textContent=`${state.matches.length} maç • ${goals} atılan gol • ${opp} yenilen gol • averaj ${goals-opp>=0?"+":""}${goals-opp}`;
- renderAwards();renderMatchDay();renderGallery();renderRankings();
+
+function closeModal(id) {
+
+    const el = $(id);
+
+    if (el) el.classList.remove("show");
+
 }
 
-function renderAwards(){
- const pick=(field,filter=()=>true)=>state.players.filter(filter).slice().sort((a,b)=>n(b[field])-n(a[field]))[0];
- const scorer=pick("goals"),assist=pick("assists"),app=pick("matches"),keeper=pick("conceded",gk);
- const awards=[["🏆","Gol Kralı",scorer?.name||"Henüz yok"],["🎯","Asist Kralı",assist?.name||"Henüz yok"],["📅","En Çok Maç",app?.name||"Henüz yok"],["🧤","Kaleci Lideri",keeper?.name||"Henüz yok"]];
- $("awards").innerHTML=awards.map(a=>`<div class="award"><div class="award-icon">${a[0]}</div><div class="award-name">${a[1]}</div><div class="award-player">${esc(a[2])}</div></div>`).join("");
+
+/* =========================================================
+   OYUNCU İSTATİSTİKLERİ
+========================================================= */
+
+function cleanPlayer(player) {
+
+    return {
+
+        id: player.id,
+
+        name: player.name || "İsimsiz Oyuncu",
+
+        position: normalizePosition(player.position),
+
+        number: Number(player.number || 0),
+
+        appearances: Number(player.appearances || 0),
+
+        goals: Number(player.goals || 0),
+
+        assists: Number(player.assists || 0),
+
+        conceded: Number(player.conceded || 0),
+
+        mvp: Number(player.mvp || 0)
+
+    };
+
 }
 
-function renderMatchDay(){
- const up=state.matches.slice().sort((a,b)=>String(a.date).localeCompare(String(b.date))).find(m=>String(m.date)>=new Date().toISOString().slice(0,10));
- $("matchDayBox").innerHTML=up?`<div class="match-day"><div class="big">FC BAD BOYS</div><div class="versus">VS</div><div class="big">${esc(up.opponent)}</div><div class="date">📅 ${esc(up.date)}</div></div>`:'<div class="empty">Yaklaşan maç kaydı yok.</div>';
+
+/* =========================================================
+   FIRESTORE — OYUNCULARI YÜKLE
+========================================================= */
+
+async function loadPlayers() {
+
+    try {
+
+        const snap = await getDocs(
+            collection(db, "players")
+        );
+
+        if (snap.empty) {
+
+            if (isAdmin) {
+
+                await createDefaultPlayers();
+
+            } else {
+
+                players = DEFAULT_PLAYERS.map(cleanPlayer);
+
+            }
+
+        } else {
+
+            players = snap.docs.map(docSnap => {
+
+                return cleanPlayer({
+                    id: docSnap.id,
+                    ...docSnap.data()
+                });
+
+            });
+
+        }
+
+        renderPlayers();
+
+        renderLineupChecks();
+
+        renderMatchPlayerStats();
+
+        updateDashboard();
+
+    } catch (error) {
+
+        console.error(error);
+
+        showToast(
+            "Oyuncular yüklenirken hata oluştu.",
+            "error"
+        );
+
+    }
+
 }
 
-function renderGallery(){
- const arr=state.photos.slice().reverse();
- $("gallery").innerHTML=arr.length?arr.map(p=>`<div class="gallery-item"><img src="${esc(p.url)}" alt="${esc(p.title||"Maç anısı")}" loading="lazy"><div style="position:absolute;left:7px;bottom:7px;right:7px;padding:6px;border-radius:8px;background:rgba(0,0,0,.6);font-size:8px;font-weight:900">${esc(p.title||"Maç anısı")}</div>${state.isAdmin?`<button data-photo-delete="${esc(p.id)}">×</button>`:""}</div>`).join(""):'<div class="empty" style="grid-column:1/-1">Henüz fotoğraf eklenmedi.</div>';
+
+/* =========================================================
+   İLK 15 OYUNCUYU FIRESTORE'A EKLE
+========================================================= */
+
+async function createDefaultPlayers() {
+
+    for (const player of DEFAULT_PLAYERS) {
+
+        const data = cleanPlayer(player);
+
+        await setDoc(
+            doc(db, "players", data.id),
+            data
+        );
+
+    }
+
+    players = DEFAULT_PLAYERS.map(cleanPlayer);
+
+    showToast(
+        "15 oyuncu Firebase'e otomatik eklendi.",
+        "success"
+    );
+
 }
 
-function renderRankings(){
- const list=(field,filter=()=>true)=>state.players.filter(filter).slice().sort((a,b)=>n(b[field])-n(a[field]));
- $("goalRanking").innerHTML=list("goals").slice(0,10).map((p,i)=>`${i+1}. <b>${esc(p.name)}</b> — ⚽ ${n(p.goals)}<br>`).join("")||"Henüz veri yok";
- $("assistRanking").innerHTML=list("assists").slice(0,10).map((p,i)=>`${i+1}. <b>${esc(p.name)}</b> — 🎯 ${n(p.assists)}<br>`).join("")||"Henüz veri yok";
- $("matchRanking").innerHTML=list("matches").slice(0,10).map((p,i)=>`${i+1}. <b>${esc(p.name)}</b> — 🏟️ ${n(p.matches)}<br>`).join("")||"Henüz veri yok";
+
+/* =========================================================
+   OYUNCULARI EKRANA BAS
+========================================================= */
+
+function renderPlayers() {
+
+    const container = $("players");
+
+    if (!container) return;
+
+    const search =
+        ($("search")?.value || "")
+            .trim()
+            .toLocaleLowerCase("tr-TR");
+
+    const filter =
+        normalizePosition(
+            $("positionFilter")?.value || "all"
+        );
+
+    let filtered = players.filter(player => {
+
+        const name =
+            player.name
+                .toLocaleLowerCase("tr-TR");
+
+        const matchesSearch =
+            !search || name.includes(search);
+
+        const matchesPosition =
+            filter === "all" ||
+            normalizePosition(player.position) === filter;
+
+        return matchesSearch && matchesPosition;
+
+    });
+
+
+    if (!filtered.length) {
+
+        container.innerHTML = `
+            <div class="empty">
+                🔎 Oyuncu bulunamadı.
+            </div>
+        `;
+
+        return;
+
+    }
+
+
+    container.className = "player-grid";
+
+
+    container.innerHTML =
+        filtered.map(player => {
+
+            const position =
+                normalizePosition(player.position);
+
+            const isGK =
+                position === "kaleci";
+
+            return `
+
+            <article class="player-card">
+
+                <div
+                    class="player-top"
+                    onclick="window.openPlayerProfile('${player.id}')"
+                    style="cursor:pointer">
+
+                    <div class="number">
+                        ${escapeHTML(player.number)}
+                    </div>
+
+                    <div class="player-info">
+
+                        <h3 class="player-name">
+                            ${escapeHTML(player.name)}
+                        </h3>
+
+                        <span class="position ${isGK ? "gk" : ""}">
+                            ${positionLabel(player.position)}
+                        </span>
+
+                    </div>
+
+                    <div class="appearance">
+
+                        <strong>
+                            ${player.appearances}
+                        </strong>
+
+                        <span>
+                            MAÇ
+                        </span>
+
+                    </div>
+
+                </div>
+
+
+                <div class="mini-stats">
+
+                    <div class="mini">
+
+                        <b>
+                            ${player.goals}
+                        </b>
+
+                        <span>
+                            ${isGK ? "YEDİĞİ GOL" : "GOL"}
+                        </span>
+
+                    </div>
+
+
+                    <div class="mini">
+
+                        <b>
+                            ${isGK ? "—" : player.assists}
+                        </b>
+
+                        <span>
+                            ASİST
+                        </span>
+
+                    </div>
+
+
+                    <div class="mini">
+
+                        <b>
+                            ${player.mvp}
+                        </b>
+
+                        <span>
+                            MVP
+                        </span>
+
+                    </div>
+
+                </div>
+
+
+                ${
+                    isAdmin
+                    ?
+                    `
+
+                    <div class="player-actions">
+
+                        ${
+                            isGK
+
+                            ?
+
+                            `
+
+                            <button
+                                class="btn danger"
+                                onclick="window.changePlayerStat('${player.id}','conceded',-1)">
+                                − Yenen Gol
+                            </button>
+
+                            <button
+                                class="btn primary"
+                                onclick="window.changePlayerStat('${player.id}','conceded',1)">
+                                + Yenen Gol
+                            </button>
+
+                            `
+
+                            :
+
+                            `
+
+                            <button
+                                class="btn danger"
+                                onclick="window.changePlayerStat('${player.id}','goals',-1)">
+                                − Gol
+                            </button>
+
+                            <button
+                                class="btn primary"
+                                onclick="window.changePlayerStat('${player.id}','goals',1)">
+                                + Gol
+                            </button>
+
+                            <button
+                                class="btn green"
+                                onclick="window.changePlayerStat('${player.id}','assists',1)">
+                                + Asist
+                            </button>
+
+                            `
+
+                        }
+
+                    </div>
+
+                    `
+
+                    :
+
+                    ""
+
+                }
+
+            </article>
+
+            `;
+
+        }).join("");
+
 }
 
-async function addPhoto(){
- if(!state.isAdmin)return alert("Yönetici girişi gerekli.");
- const title=$("photoTitle").value.trim(),url=$("photoUrl").value.trim();
- if(!url)return alert("Fotoğraf URL'si gir.");
- try{new URL(url)}catch{return alert("Geçerli URL gir.");}
- await addDoc(photosRef,{title,url,createdAt:serverTimestamp()});
- $("photoTitle").value="";$("photoUrl").value="";
-}
 
-async function deletePhoto(id){
- if(!state.isAdmin)return;
- if(confirm("Fotoğraf silinsin mi?"))await deleteDoc(doc(db,"photos",id));
-}
+/* =========================================================
+   OYUNCU İSTATİSTİĞİNİ DEĞİŞTİR
+========================================================= */
 
-async function showMatch(id){
- const m=state.matches.find(x=>x.id===id);if(!m)return;
- $("modalTitle").textContent=`FC BAD BOYS 🆚 ${m.opponent}`;
- $("modalBody").innerHTML=`<div class="card"><h3>${esc(m.opponent)}</h3><p>📅 ${esc(m.date)}</p><h2 style="color:var(--orange)">${esc(m.score||"-")}</h2><p>${esc(m.result||"")}</p></div>
- <div class="card"><b>Katılan Oyuncular</b><div class="player-grid" style="margin-top:8px">${(m.lineup||[]).map(id=>state.players.find(p=>p.id===id)).filter(Boolean).map(p=>playerCard(p)).join("")}</div></div>`;
- renderVoteArea(m);
- $("modalBg").classList.remove("hidden");
-}
+window.changePlayerStat = async function(
+    playerId,
+    field,
+    amount
+) {
 
-function renderVoteArea(m){
- const players=(m.lineup||[]).map(id=>state.players.find(p=>p.id===id)).filter(Boolean);
- if(!players.length){$("matchVoteArea").innerHTML="";return}
- const voted=state.votes.some(v=>v.matchId===m.id&&v.voter===auth.currentUser?.uid);
- $("matchVoteArea").innerHTML=`<div class="card"><b>🗳️ Maç Sonu MVP Oylaması</b><p style="font-size:9px;color:#777">Her kullanıcı bir kez oy verebilir.</p><div class="vote-grid"><div class="vote-row"><label>⭐ MVP</label><select id="mvpSelect"><option value="">Seç...</option>${players.map(p=>`<option value="${p.id}">${esc(p.name)}</option>`).join("")}</select></div><button class="btn primary" id="voteBtn" ${voted?"disabled":""}>${voted?"Oy Kullanıldı":"Oyumu Gönder"}</button></div></div>`;
- if(!voted)$("voteBtn").onclick=async()=>{const pid=$("mvpSelect").value;if(!pid)return alert("Oyuncu seç.");await addDoc(votesRef,{matchId:m.id,playerId:pid,voter:auth.currentUser.uid,createdAt:serverTimestamp()});alert("MVP oyun kaydedildi.");};
-}
+    if (!isAdmin) {
 
-async function deleteMatch(id){
- if(!state.isAdmin||!confirm("Bu maç silinsin mi?"))return;
- const m=state.matches.find(x=>x.id===id);if(!m)return;
- for(const id2 of m.lineup||[]){
-  const p=state.players.find(x=>x.id===id2);if(!p)continue;
-  const updates={matches:Math.max(0,n(p.matches)-1)};
-  const goals=(m.stats||{})[id2]?.goals||0,assists=(m.stats||{})[id2]?.assists||0,conceded=(m.stats||{})[id2]?.conceded||0;
-  updates.goals=Math.max(0,n(p.goals)-n(goals));updates.assists=Math.max(0,n(p.assists)-n(assists));updates.conceded=Math.max(0,n(p.conceded)-n(conceded));
-  await updateDoc(doc(db,"players",id2),updates);
- }
- await deleteDoc(doc(db,"matches",id));
-}
+        showToast(
+            "Bu işlemi sadece yönetici yapabilir.",
+            "error"
+        );
 
-function openModal(){ $("modalBg").classList.remove("hidden");}
-$("closeModal").onclick=()=>$("modalBg").classList.add("hidden");
-$("modalBg").onclick=e=>{if(e.target===$("modalBg"))$("modalBg").classList.add("hidden")};
+        return;
 
-$("loginBtn").onclick=async()=>{
- try{await signInWithEmailAndPassword(auth,$("email").value,$("password").value)}
- catch(e){alert("Giriş başarısız: "+e.message)}
+    }
+
+
+    const player =
+        players.find(p => p.id === playerId);
+
+    if (!player) return;
+
+
+    let current =
+        Number(player[field] || 0);
+
+    current += Number(amount);
+
+    if (current < 0) current = 0;
+
+
+    player[field] = current;
+
+
+    try {
+
+        await updateDoc(
+            doc(db, "players", playerId),
+            {
+                [field]: current
+            }
+        );
+
+        renderPlayers();
+
+        updateDashboard();
+
+        renderRankings();
+
+        showToast(
+            "Oyuncu istatistiği güncellendi.",
+            "success"
+        );
+
+    } catch (error) {
+
+        console.error(error);
+
+        showToast(
+            "İstatistik güncellenemedi.",
+            "error"
+        );
+
+    }
+
 };
-$("logoutBtn").onclick=()=>signOut(auth);
 
-document.addEventListener("click",e=>{
- const d=e.target.closest(".detail-btn");if(d)showMatch(d.dataset.id);
- const x=e.target.closest(".delete-match");if(x)deleteMatch(x.dataset.id);
- const ph=e.target.closest("[data-photo-delete]");if(ph)deletePhoto(ph.dataset.photoDelete);
-});
 
-$("addPhoto").onclick=addPhoto;
+/* =========================================================
+   OYUNCU EKLE
+========================================================= */
 
-const MUSIC_URL="music.mp3";
-const audio=$("teamAudio");
-audio.src=MUSIC_URL;audio.volume=.35;
-$("musicBar").classList.add("show");
-$("musicToggle").onclick=async()=>{
- try{
-  if(audio.paused){await audio.play();$("musicToggle").textContent="⏸"}
-  else{audio.pause();$("musicToggle").textContent="▶"}
- }catch(e){alert("Müzik başlatılamadı. music.mp3 dosyasını kontrol et.")}
-};
-$("musicVolume").oninput=e=>audio.volume=Number(e.target.value);
-audio.onplay=()=>{$("musicToggle").textContent="⏸"};
-audio.onpause=()=>{$("musicToggle").textContent="▶"};
+async function addPlayer() {
 
-function subscribe(){
- onSnapshot(playersRef,s=>{state.players=s.docs.map(d=>({id:d.id,...d.data()}));renderPlayers();updateDashboard()});
- onSnapshot(matchesRef,s=>{state.matches=s.docs.map(d=>({id:d.id,...d.data()}));renderMatches();updateDashboard()});
- onSnapshot(photosRef,s=>{state.photos=s.docs.map(d=>({id:d.id,...d.data()}));renderGallery()});
- onSnapshot(votesRef,s=>{state.votes=s.docs.map(d=>({id:d.id,...d.data()}))});
+    if (!isAdmin) {
+
+        showToast(
+            "Sadece yönetici oyuncu ekleyebilir.",
+            "error"
+        );
+
+        return;
+
+    }
+
+
+    const name =
+        $("newName")?.value.trim();
+
+    const number =
+        Number($("newNumber")?.value || 0);
+
+    const position =
+        normalizePosition(
+            $("newPosition")?.value
+        );
+
+
+    if (!name) {
+
+        showToast(
+            "Oyuncu adı gir.",
+            "error"
+        );
+
+        return;
+
+    }
+
+
+    const id =
+        "player-" +
+        Date.now() +
+        "-" +
+        Math.random()
+            .toString(36)
+            .slice(2,8);
+
+
+    const player = cleanPlayer({
+
+        id,
+
+        name,
+
+        number,
+
+        position,
+
+        appearances: 0,
+
+        goals: 0,
+
+        assists: 0,
+
+        conceded: 0,
+
+        mvp: 0
+
+    });
+
+
+    try {
+
+        await setDoc(
+            doc(db, "players", id),
+            player
+        );
+
+        players.push(player);
+
+        $("newName").value = "";
+
+        $("newNumber").value = "";
+
+        renderPlayers();
+
+        renderLineupChecks();
+
+        renderMatchPlayerStats();
+
+        updateDashboard();
+
+        showToast(
+            "Oyuncu eklendi.",
+            "success"
+        );
+
+    } catch (error) {
+
+        console.error(error);
+
+        showToast(
+            "Oyuncu eklenemedi.",
+            "error"
+        );
+
+    }
+
 }
 
-onAuthStateChanged(auth,user=>{
- state.isAdmin=!!user;
- $("loginBox").classList.toggle("hidden",!!user);
- $("adminBox").classList.toggle("hidden",!user);
- $("adminTab").classList.toggle("hidden",false);
- renderGallery();
-});
 
-await seedPlayers();
-subscribe();
+/* =========================================================
+   KADRO SEÇİM KUTULARI
+========================================================= */
+
+function renderLineupChecks() {
+
+    const container =
+        $("lineupChecks");
+
+    if (!container) return;
+
+
+    container.innerHTML =
+        players.map(player => {
+
+            return `
+
+            <label class="check">
+
+                <input
+                    type="checkbox"
+                    class="lineup-player"
+                    value="${player.id}">
+
+                <span>
+                    #${escapeHTML(player.number)}
+                    ${escapeHTML(player.name)}
+                </span>
+
+            </label>
+
+            `;
+
+        }).join("");
+
+}
+
+
+/* =========================================================
+   MAÇ OYUNCU PERFORMANS ALANI
+========================================================= */
+
+function renderMatchPlayerStats() {
+
+    const container =
+        $("matchPlayerStats");
+
+    if (!container) return;
+
+
+    container.innerHTML =
+        players.map(player => {
+
+            const isGK =
+                normalizePosition(player.position)
+                === "kaleci";
+
+
+            return `
+
+            <div
+                class="player-stat-row"
+                data-stat-player="${player.id}">
+
+                <span>
+                    #${escapeHTML(player.number)}
+                    ${escapeHTML(player.name)}
+                </span>
+
+                <input
+                    class="small-input match-goals"
+                    data-player="${player.id}"
+                    type="number"
+                    min="0"
+                    value="0"
+                    placeholder="${isGK ? "Y.Gol" : "Gol"}">
+
+                <input
+                    class="small-input match-assists"
+                    data-player="${player.id}"
+                    type="number"
+                    min="0"
+                    value="0"
+                    placeholder="Asist">
+
+            </div>
+
+            `;
+
+        }).join("");
+
+}
+
+
+/* =========================================================
+   MAÇ KAYDET
+========================================================= */
+
+async function saveMatch() {
+
+    if (!isAdmin) {
+
+        showToast(
+            "Sadece yönetici maç ekleyebilir.",
+            "error"
+        );
+
+        return;
+
+    }
+
+
+    const opponent =
+        $("opponent")?.value.trim();
+
+    const date =
+        $("matchDate")?.value;
+
+    const ourScore =
+        Number($("ourScore")?.value || 0);
+
+    const oppScore =
+        Number($("oppScore")?.value || 0);
+
+
+    if (!opponent) {
+
+        showToast(
+            "Rakip takım adını gir.",
+            "error"
+        );
+
+        return;
+
+    }
+
+
+    const lineup =
+        [...document.querySelectorAll(
+            ".lineup-player:checked"
+        )].map(input => input.value);
+
+
+    if (!lineup.length) {
+
+        showToast(
+            "En az bir oyuncu seç.",
+            "error"
+        );
+
+        return;
+
+    }
+
+
+    const playerStats = {};
+
+
+    document
+        .querySelectorAll(".player-stat-row")
+        .forEach(row => {
+
+            const id =
+                row.dataset.statPlayer;
+
+            const goalInput =
+                row.querySelector(".match-goals");
+
+            const assistInput =
+                row.querySelector(".match-assists");
+
+
+            const goals =
+                Number(goalInput?.value || 0);
+
+            const assists =
+                Number(assistInput?.value || 0);
+
+
+            if (
+                lineup.includes(id) &&
+                (goals > 0 || assists > 0)
+            ) {
+
+                playerStats[id] = {
+                    goals,
+                    assists
+                };
+
+            }
+
+        });
+
+
+    const result =
+        ourScore > oppScore
+        ? "win"
+        : ourScore < oppScore
+        ? "loss"
+        : "draw";
+
+
+    const match = {
+
+        opponent,
+
+        date:
+            date ||
+            new Date()
+                .toISOString()
+                .slice(0,10),
+
+        ourScore,
+
+        oppScore,
+
+        result,
+
+        lineup,
+
+        playerStats,
+
+        createdAt:
+            serverTimestamp()
+
+    };
+
+
+    try {
+
+        const ref =
+            await addDoc(
+                collection(db, "matches"),
+                match
+            );
+
+
+        /* Oyuncu istatistiklerini artır */
+
+        for (const playerId of lineup) {
+
+            const player =
+                players.find(
+                    p => p.id === playerId
+                );
+
+            if (!player) continue;
+
+
+            const stat =
+                playerStats[playerId] || {
+                    goals: 0,
+                    assists: 0
+                };
+
+
+            const updates = 
+         <!-- =========================================================
+     FC BAD BOYS — 3/3
+     MÜZİK + CANLI YENİLEME + SON AYARLAR
+========================================================= -->
+
+<script>
+
+/* =========================================================
+   MÜZİK SİSTEMİ
+========================================================= */
+
+const musicPlayer = document.getElementById("bgMusic");
+const musicButton = document.getElementById("musicButton");
+const musicIcon = document.getElementById("musicIcon");
+const musicText = document.getElementById("musicText");
+
+let musicStarted = false;
+
+
+/*
+   BURAYA KENDİ ŞARKI DOSYANIN YOLUNU YAZABİLİRSİN.
+
+   Örnek:
+
+   music/song.mp3
+
+   veya GitHub Pages kullanıyorsan:
+
+   https://site-adresin.com/music/song.mp3
+
+   Şarkıyı değiştirmek için sadece aşağıdaki URL'yi değiştir.
+*/
+
+const MUSIC_URL = "music/fcbadboys.mp3";
+
+
+if (musicPlayer) {
+
+    musicPlayer.src = MUSIC_URL;
+
+    musicPlayer.loop = true;
+
+    musicPlayer.volume = 0.35;
+
+}
+
+
+/* =========================================================
+   MÜZİK BAŞLAT / DURDUR
+========================================================= */
+
+function updateMusicButton() {
+
+    if (!musicPlayer || !musicButton) return;
+
+
+    if (!musicPlayer.paused) {
+
+        musicIcon.textContent = "🔊";
+
+        musicText.textContent = "Müziği Durdur";
+
+        musicButton.classList.add("playing");
+
+    } else {
+
+        musicIcon.textContent = "🎵";
+
+        musicText.textContent = "Müziği Başlat";
+
+        musicButton.classList.remove("playing");
+
+    }
+
+}
+
+
+async function toggleMusic() {
+
+    if (!musicPlayer) return;
+
+
+    try {
+
+        if (musicPlayer.paused) {
+
+            await musicPlayer.play();
+
+            musicStarted = true;
+
+        } else {
+
+            musicPlayer.pause();
+
+        }
+
+
+        updateMusicButton();
+
+    } catch (error) {
+
+        console.log(
+            "Tarayıcı müzik oynatmayı engelledi:",
+            error
+        );
+
+        showToast(
+            "Müziği başlatmak için butona tekrar dokun.",
+            "error"
+        );
+
+    }
+
+}
+
+
+musicButton?.addEventListener(
+    "click",
+    toggleMusic
+);
+
+
+musicPlayer?.addEventListener(
+    "play",
+    updateMusicButton
+);
+
+
+musicPlayer?.addEventListener(
+    "pause",
+    updateMusicButton
+);
+
+
+/* =========================================================
+   GİRİŞ ANİMASYONU
+========================================================= */
+
+function startIntroAnimation() {
+
+    const intro =
+        document.getElementById("introScreen");
+
+    if (!intro) return;
+
+
+    setTimeout(() => {
+
+        intro.classList.add("hide");
+
+    }, 2400);
+
+}
+
+
+document.addEventListener(
+    "DOMContentLoaded",
+    () => {
+
+        startIntroAnimation();
+
+        updateMusicButton();
+
+    }
+);
+
+
+/* =========================================================
+   FIREBASE CANLI YENİLEME
+   YÖNETİCİ BİR DEĞİŞİKLİK YAPTIĞINDA
+   SAYFAYI YENİLEMEDEN VERİLERİ GÜNCELLEMEK İÇİN
+========================================================= */
+
+let liveUpdateTimer = null;
+
+let lastDataSignature = "";
+
+
+async function checkForLiveUpdates() {
+
+    try {
+
+        const playerSnapshot =
+            await getDocs(
+                collection(db, "players")
+            );
+
+
+        const matchSnapshot =
+            await getDocs(
+                collection(db, "matches")
+            );
+
+
+        const playerSignature =
+            playerSnapshot.docs
+                .map(docSnap =>
+                    JSON.stringify({
+                        id: docSnap.id,
+                        data: docSnap.data()
+                    })
+                )
+                .join("|");
+
+
+        const matchSignature =
+            matchSnapshot.docs
+                .map(docSnap =>
+                    JSON.stringify({
+                        id: docSnap.id,
+                        data: docSnap.data()
+                    })
+                )
+                .join("|");
+
+
+        const signature =
+            playerSignature +
+            "||" +
+            matchSignature;
+
+
+        if (
+            lastDataSignature &&
+            signature !== lastDataSignature
+        ) {
+
+            await loadPlayers();
+
+            await loadMatches();
+
+            renderRankings();
+
+            renderMatchDay();
+
+        }
+
+
+        lastDataSignature = signature;
+
+
+    } catch (error) {
+
+        console.log(
+            "Canlı veri kontrolü:",
+            error
+        );
+
+    }
+
+}
+
+
+/*
+   Her 15 saniyede Firebase kontrol edilir.
+   Böylece başka bir telefondan yapılan değişiklik
+   diğer ziyaretçilerin ekranına kısa süre içinde gelir.
+*/
+
+liveUpdateTimer =
+    setInterval(
+        checkForLiveUpdates,
+        15000
+    );
+
+
+/* =========================================================
+   SAYFA GÖRÜNÜR OLDUĞUNDA VERİLERİ YENİLE
+========================================================= */
+
+document.addEventListener(
+    "visibilitychange",
+    async () => {
+
+        if (
+            document.visibilityState ===
+            "visible"
+        ) {
+
+            await loadPlayers();
+
+            await loadMatches();
+
+            await loadPhotos();
+
+            renderRankings();
+
+            renderMatchDay();
+
+        }
+
+    }
+);
+
+
+/* =========================================================
+   ESC İLE MODAL KAPAT
+========================================================= */
+
+document.addEventListener(
+    "keydown",
+    event => {
+
+        if (event.key !== "Escape") return;
+
+
+        document
+            .querySelectorAll(".modal.show")
+            .forEach(modal => {
+
+                modal.classList.remove(
+                    "show"
+                );
+
+            });
+
+    }
+);
+
+
+/* =========================================================
+   MOBİL TELEFON İÇİN KÜÇÜK DOKUNUŞLAR
+========================================================= */
+
+document.addEventListener(
+    "touchstart",
+    () => {
+
+        document.body.classList.add(
+            "touch-device"
+        );
+
+    },
+    {
+        once: true,
+        passive: true
+    }
+);
+
+
+/* =========================================================
+   TARİH FORMATLAMA
+========================================================= */
+
+window.formatDateTR = function(dateString) {
+
+    if (!dateString) return "-";
+
+
+    const date =
+        new Date(dateString);
+
+
+    if (Number.isNaN(date.getTime())) {
+
+        return dateString;
+
+    }
+
+
+    return date.toLocaleDateString(
+        "tr-TR",
+        {
+            day: "2-digit",
+            month: "2-digit",
+            year: "numeric"
+        }
+    );
+
+};
+
+
+/* =========================================================
+   SAYFA YÜKLENDİ MESAJI
+========================================================= */
+
+window.addEventListener(
+    "load",
+    () => {
+
+        console.log(
+            "⚽ FC BAD BOYS sitesi hazır!"
+        );
+
+        console.log(
+            "🔥 Firebase bağlantısı aktif."
+        );
+
+        console.log(
+            "📱 Mobil uyumlu arayüz aktif."
+        );
+
+    }
+);
+
 </script>
+
+
+<!-- =========================================================
+     ARKA PLAN MÜZİĞİ
+========================================================= -->
+
+<audio
+    id="bgMusic"
+    preload="auto"
+    loop>
+</audio>
+
+
+<!-- =========================================================
+     MÜZİK BUTONU
+========================================================= -->
+
+<button
+    id="musicButton"
+    class="music-button"
+    type="button">
+
+    <span id="musicIcon">
+        🎵
+    </span>
+
+    <span id="musicText">
+        Müziği Başlat
+    </span>
+
+</button>
+
+
+<!-- =========================================================
+     TOAST
+========================================================= -->
+
+<div
+    id="toast"
+    class="toast">
+</div>
+
+
+<!-- =========================================================
+     SON KAPANIŞLAR
+========================================================= -->
+
 </body>
 </html>
